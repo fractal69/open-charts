@@ -1,7 +1,14 @@
+import {
+  PRICE_SCALE_W,
+  DEFAULT_OPTIONS,
+  DEFAULT_BAR_W,
+  SCROLL_ZOOM_FACTOR,
+  MIN_BAR_W,
+  MAX_BAR_W
+} from "./core/config";
 import { _mergeoptions } from "./utils/_mergeOptions";
 import { _nicePriceSteps } from "./utils/_nicePriceSteps";
 import { _formatDate, _formatDateFull } from "./utils/time";
-import { PRICE_SCALE_W, DEFAULT_OPTIONS, DEFAULT_BAR_W } from "./core/config";
 import { _loadCssVariables } from "./render/theme";
 import { _buildLayout } from "./ui/layout";
 import { _grabCanvases } from "./render/canvas";
@@ -111,7 +118,7 @@ export class ChartEngine {
   _init() {
     _loadCssVariables(this.options);
     _buildLayout(this.area);
-    _grabCanvases(this);
+    _grabCanvases.call(this);
     this._resize();
     this._bindEvents();
     this._startLoop();

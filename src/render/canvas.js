@@ -2,7 +2,7 @@
  * Retrieves all chart DOM elements and initializes their
  * corresponding 2D rendering contexts.
  */
-export function _grabCanvases(this: any) {
+export function _grabCanvases() {
   const area = this.area;
   this.legendDiv = area.querySelector("#chart-legend");
   this.indicatorsDiv = area.querySelector("#chart-indicators");
