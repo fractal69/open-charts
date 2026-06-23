@@ -1,4 +1,4 @@
-"use strict";
+import { _mergeoptions } from "./utils/mergeOptions";
 // BLACKER CHART LIBRARY LICENSE GNU GPLv3.0
 
 // ── CONSTANTS ────────────────────────────────────────────────────────────────
@@ -51,97 +51,6 @@ const DEFAULT_OPTIONS = {
     volBear: "rgba(242,54,69,0.35)",
   },
 };
-
-export function _mergeoptions(base, patch, opts = {}) {
-  // ── Config ──────────────────────────────────────────────────────
-
-  const resolvers = opts.resolvers ?? {};
-  const strict = opts.strict ?? false;
-  const clone = opts.clone !== false;
-
-  // ── Helpers ────────────────────────────────────────────────────────────
-
-  function isPlainObject(val) {
-    if (val === null || typeof val !== "object") return false;
-    const proto = Object.getPrototypeOf(val);
-    return proto === Object.prototype || proto === null;
-  }
-
-  function ownKeys(obj) {
-    const keys = Object.keys(obj);
-    if (Object.getOwnPropertySymbols) {
-      for (const sym of Object.getOwnPropertySymbols(obj)) {
-        if (Object.prototype.propertyIsEnumerable.call(obj, sym))
-          keys.push(sym);
-      }
-    }
-    return keys;
-  }
-
-  function isProtected(target, key) {
-    try {
-      return (
-        key in target &&
-        !(
-          Object.hasOwn(target, key) &&
-          Object.prototype.propertyIsEnumerable.call(target, key)
-        )
-      );
-    } catch {
-      return false;
-    }
-  }
-
-  // ── Recursive ───────────────────────────────────────────────────
-
-  function fuse(a, b, seen) {
-    if (seen.has(b)) {
-      if (strict)
-        throw new TypeError("_mergeoptions: referencia circular detectada.");
-      return b;
-    }
-    seen.add(b);
-
-    const result = {};
-
-    if (isPlainObject(a)) {
-      for (const key of ownKeys(a)) {
-        result[key] = maybeClone(a[key], seen);
-      }
-    }
-
-    for (const key of ownKeys(b)) {
-      if (isProtected(a, key)) continue;
-
-      if (resolvers[key]) {
-        result[key] = resolvers[key](a?.[key], b[key], opts);
-        continue;
-      }
-
-      if (isPlainObject(a?.[key]) && isPlainObject(b[key])) {
-        result[key] = fuse(a[key], b[key], seen);
-        continue;
-      }
-
-      result[key] = maybeClone(b[key], seen);
-    }
-
-    return result;
-  }
-
-  function maybeClone(val, seen) {
-    if (!clone || !isPlainObject(val)) return val;
-    return fuse({}, val, seen);
-  }
-
-  if (!isPlainObject(base) || !isPlainObject(patch)) {
-    throw new TypeError(
-      "_mergeoptions: base y patch deben ser objetos planos.",
-    );
-  }
-
-  return fuse(base, patch, new WeakSet());
-}
 
 //--------------------------------------------------------------------------------------------------------------------
 //  CHART ENGINE
@@ -1878,10 +1787,4 @@ export class ChartEngine {
   removeDrawingModule(id) {
     this._drawingModules.get(id)?.destroy();
   }
-}
-
-export function createChart(container) {
-  const chart = new ChartEngine(container);
-
-  return chart;
 }

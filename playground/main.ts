@@ -1,4 +1,4 @@
-import { createChart } from "./chart";
+import { createChart } from "../src/index";
 
 function generateCandles(
   count: number,
@@ -79,7 +79,9 @@ const fakeData = generateCandles(500, {
   volatility: 0.013,
 });
 
-let chart = createChart(document.getElementById("chart-area"));
+let container = document.getElementById("chart-area");
+
+let chart = createChart(container);
 
 chart.applyOptions({
   colors: {
