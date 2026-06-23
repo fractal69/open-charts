@@ -17,28 +17,38 @@ const DEFAULT_OPTIONS = {
   zoomFactor: SCROLL_ZOOM_FACTOR,
 
   colors: {
-    bg: "#050810",
-    bg2: "#080d1a",
-    bg3: "#0d1526",
-    grid: "rgba(26,37,64,0.9)",
-    gridAlt: "rgba(26,37,64,0.4)",
-    text: "#c8d4e8",
-    textDim: "#4a5a7a",
-    bull: "#00c87a",
-    bear: "#ff4060",
-    bullDim: "rgba(0,200,122,0.15)",
-    bearDim: "rgba(255,64,96,0.15)",
-    line: "#3d7aff",
-    area1: "rgba(61,122,255,0.25)",
-    area2: "rgba(61,122,255,0.0)",
-    ma: "#ffb830",
-    bb: "#a855f7",
-    bbFill: "rgba(168,85,247,0.07)",
-    cross: "rgba(200,212,232,0.3)",
-    crossPt: "#3d7aff",
-    vol: "rgba(61,122,255,0.35)",
-    volBull: "rgba(0,200,122,0.35)",
-    volBear: "rgba(255,64,96,0.35)",
+    bg: "#181A20",
+    bg2: "#1E2329",
+    bg3: "#2B3139",
+
+    grid: "rgba(43,49,57,0.35)",
+    gridAlt: "rgba(43,49,57,0.15)",
+
+    text: "#EAECEF",
+    textDim: "#848E9C",
+
+    bull: "rgb(8,153,129)",
+    bear: "rgb(242,54,69)",
+
+    bullDim: "rgba(8,153,129,0.15)",
+    bearDim: "rgba(242,54,69,0.15)",
+
+    line: "#F0B90B",
+
+    area1: "rgba(240,185,11,0.18)",
+    area2: "rgba(240,185,11,0)",
+
+    ma: "#F0B90B",
+
+    bb: "#A970FF",
+    bbFill: "rgba(169,112,255,0.08)",
+
+    cross: "rgba(234,236,239,0.25)",
+    crossPt: "#F0B90B",
+
+    vol: "rgba(240,185,11,0.25)",
+    volBull: "rgba(8,153,129,0.35)",
+    volBear: "rgba(242,54,69,0.35)",
   },
 };
 
@@ -1172,7 +1182,7 @@ export class ChartEngine {
       (e) => {
         // Ignore panning if another tool or interaction has claimed the pointer.
         if (this._pointerClaimed) return;
-        
+
         if (e.button !== 0) return;
 
         // Mark the chart as being actively panned.

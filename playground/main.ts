@@ -83,12 +83,12 @@ let chart = createChart(document.getElementById("chart-area"));
 
 chart.applyOptions({
   colors: {
-    bg: "#000000",
-    bg2: "#000000",
-    bg3: "#000000",
+    bg: "#181A20",
+    bg2: "#1E2329",
+    bg3: "#2B3139",
     bull: "rgb(8, 153, 129)",
     bear: "rgb(242, 54, 69)",
-    grid:"#4e4c4c",
+    grid: "#2B3139",
   },
 });
 
