@@ -1,0 +1,14 @@
+import { defineConfig } from "vite";
+
+export default defineConfig({
+  root: "playground",
+  server: {
+    port: 5173,
+    open: true
+  },
+  resolve: {
+    alias: {
+      "open-charts": "/src"
+    }
+  }
+});

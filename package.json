@@ -1,0 +1,46 @@
+{
+  "name": "open-charts",
+  "version": "0.1.0",
+  "description": "Modern trading charts library",
+  "license": "GPL-3.0-only",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "vite",
+    "playground": "vite",
+    "build:lib": "tsup",
+    "prepublishOnly": "npm run build:lib"
+  },
+  "keywords": [
+    "trading",
+    "charts",
+    "candlestick",
+    "finance",
+    "typescript"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rey-sudo/open-charts/open-charts.git"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.0",
+    "vite": "^8.1.0"
+  }
+}
