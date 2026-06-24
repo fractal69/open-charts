@@ -46,6 +46,7 @@ import { _indexAtX } from "./utils/_indexAtX";
 import { _recomputeSeries } from "./core/_recomputeSeries";
 import { _updateLegend } from "./ui/_updateLegend";
 import { _isDifferentBar } from "./utils/_isDifferentBar";
+import { _updateSeriesIncremental } from "./core/_updateSeriesIncremental";
 
 //--------------------------------------------------------------------------------------------------------------------
 //  CHART ENGINE
@@ -166,23 +167,6 @@ export class ChartEngine {
   }
 
   // ── DATA LOADING ──────────────────────────────────────────────────────────
-
-  // Incremental series update — O(period) per series, not O(n).
-  // Falls back to full compute() if the series has no updateIncremental hook.
-  _updateSeriesIncremental(isNewBar) {
-    this._series.forEach((entry) => {
-      if (entry.def.updateIncremental) {
-        entry.def.updateIncremental(
-          entry.values,
-          this.data,
-          isNewBar,
-          entry.params,
-        );
-      } else {
-        entry.values = entry.def.compute(this.data, entry.params);
-      }
-    });
-  }
 
   _buildDrawingApi() {
     const engine = this;
@@ -355,7 +339,7 @@ export class ChartEngine {
         v: candle.v ?? 0,
       });
 
-      this._updateSeriesIncremental(true);
+      _updateSeriesIncremental.call(this, true);
 
       // Auto-advance viewport — slide by 1, keeping rightPadBars of empty space
       if (wasAtEdge) {
@@ -372,7 +356,7 @@ export class ChartEngine {
       if (candle.c != null) last.c = candle.c;
       if (candle.v != null) last.v = candle.v;
 
-      this._updateSeriesIncremental(false);
+      _updateSeriesIncremental.call(this, false);
     }
 
     this._liveMode = true;
