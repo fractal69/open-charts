@@ -35,6 +35,7 @@ import { _startLoop } from "./core/_startLoop";
 import { _updateScrollThumb } from "./ui/_updateScrollThumb";
 import { _updateStatusBar } from "./ui/_updateStatusBar";
 import { _visiblePriceRange } from "./core/_visiblePriceRange";
+import { _renderMain } from "./render/_renderMain";
 
 //--------------------------------------------------------------------------------------------------------------------
 //  CHART ENGINE
@@ -232,44 +233,12 @@ export class ChartEngine {
   _render() {
     if (!this.data.length) return;
     const { lo, hi } = _visiblePriceRange.call(this);
-    this._renderMain(lo, hi);
+    _renderMain.call(this, lo, hi);
     this._renderPriceScale(lo, hi);
     this._renderTimeAxis();
   }
 
   // ── MAIN PANE ─────────────────────────────────────────────────────────────
-  _renderMain(priceMin, priceMax) {
-    const p = this.panes.main;
-    const ctx = p.ctx;
-    const W = p.w;
-    const H = p.h;
-    const cw = this.chartW;
-
-    ctx.clearRect(0, 0, W, H);
-
-    // Background
-    ctx.fillStyle = this.options.colors.bg;
-    ctx.fillRect(0, 0, W, H);
-
-    // Grid
-    this._drawGrid(ctx, W, H, cw, priceMin, priceMax, p);
-
-    // ── Custom series (behind candles): fill-type series like BB render here
-    this._series.forEach(({ def, values, enabled, params }) => {
-      if (!enabled || def.layer !== "background") return;
-      ctx.save();
-      def.render(ctx, p, this, values, priceMin, priceMax, params);
-      ctx.restore();
-    });
-
-    // ── Custom series (foreground): line-type series like MA render here — above candles
-    this._series.forEach(({ def, values, enabled, params }) => {
-      if (!enabled || def.layer === "background") return;
-      ctx.save();
-      def.render(ctx, p, this, values, priceMin, priceMax, params);
-      ctx.restore();
-    });
-  }
 
   _drawGrid(ctx, W, H, cw, priceMin, priceMax, p) {
     ctx.save();
