@@ -1,3 +1,5 @@
+import { _drawGrid } from "./_drawGrid";
+
 export function _renderMain(priceMin, priceMax) {
   const p = this.panes.main;
   const ctx = p.ctx;
@@ -12,7 +14,7 @@ export function _renderMain(priceMin, priceMax) {
   ctx.fillRect(0, 0, W, H);
 
   // Grid
-  this._drawGrid(ctx, W, H, cw, priceMin, priceMax, p);
+  _drawGrid.call(this, ctx, W, H, cw, priceMin, priceMax, p);
 
   // ── Custom series (behind candles): fill-type series like BB render here
   this._series.forEach(({ def, values, enabled, params }) => {
