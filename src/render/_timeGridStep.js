@@ -1,5 +1,7 @@
+import { _barsVisible } from "../core/_barsVisible";
+
 export function _timeGridStep() {
-  const span = this._barsVisible() * this.interval; // segundos cubiertos
+  const span = _barsVisible.call(this) * this.interval; // segundos cubiertos
   if (span <= 2 * 3600) return "minute"; // ≤ 2h   → grid cada minuto
   if (span <= 48 * 3600) return "hour"; // ≤ 2d   → grid cada hora
   if (span <= 8 * 86400) return "day"; // ≤ 8d   → grid cada día

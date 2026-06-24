@@ -214,10 +214,6 @@ export class ChartEngine {
     });
   }
 
-  _barsVisible() {
-    return this.viewEnd - this.viewStart;
-  }
-
   // ── MAIN PANE ─────────────────────────────────────────────────────────────
 
   _drawGrid(ctx, W, H, cw, priceMin, priceMax, p) {
