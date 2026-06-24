@@ -58,6 +58,9 @@ import { disableSeries } from "./api/disableSeries";
 import { isSeriesEnabled } from "./api/isSeriesEnabled";
 import { getSeries } from "./api/getSeries";
 import { setSeriesParam } from "./api/setSeriesParam";
+import { setSeriesParams } from "./api/setSeriesParams";
+import { getSeriesParams } from "./api/getSeriesParams";
+import { resetZoom } from "./api/resetZoom";
 
 //--------------------------------------------------------------------------------------------------------------------
 //  CHART ENGINE
@@ -86,6 +89,9 @@ export class ChartEngine {
       isSeriesEnabled: isSeriesEnabled.bind(this),
       getSeries: getSeries.bind(this),
       setSeriesParam: setSeriesParam.bind(this),
+      setSeriesParams: setSeriesParams.bind(this),
+      getSeriesParams: getSeriesParams.bind(this),
+      resetZoom: resetZoom.bind(this),
     };
 
     this.area = area;
@@ -287,41 +293,6 @@ export class ChartEngine {
   //--------------------------------------------------------------------------------------------------------------------
   //  PUBLIC API
   //--------------------------------------------------------------------------------------------------------------------
-
-  // Modificar múltiples params de una vez
-  setSeriesParams(id, patch) {
-    const entry = this._series.get(id);
-    if (!entry) return this;
-    let needsRecompute = false;
-    for (const [key, value] of Object.entries(patch)) {
-      if (!entry.params[key]) continue;
-      entry.params[key].value = value;
-      if (entry.params[key].affectsCompute) needsRecompute = true;
-    }
-    if (needsRecompute)
-      entry.values = entry.def.compute(this.data, entry.params);
-    this.dirty = true;
-    return this;
-  }
-
-  // Snapshot serializable — { period: 20, color: '#ffb830', ... }
-  getSeriesParams(id) {
-    const entry = this._series.get(id);
-    if (!entry) return null;
-    const out = {};
-    for (const [k, field] of Object.entries(entry.params)) out[k] = field.value;
-    return out;
-  }
-
-  resetZoom() {
-    this.barWidth = DEFAULT_BAR_W;
-    const capacity = Math.floor(this.chartW / this.barWidth);
-    this.viewEnd = this.data.length + this.rightPadBars;
-    this.viewStart = Math.max(0, this.viewEnd - capacity);
-    this.dirty = true;
-    _updateScrollThumb.call(this);
-    _updateStatusBar.call(this);
-  }
 
   addDrawingModule(moduleDef) {
     if (this._drawingModules.has(moduleDef.id)) {
