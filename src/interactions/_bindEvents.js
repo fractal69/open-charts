@@ -6,6 +6,8 @@ import {
   MIN_BAR_W,
   MAX_BAR_W,
 } from "../core/config";
+import { _clampView } from "../core/_clampView";
+import { _updateScrollThumb } from "../ui/_updateScrollThumb";
 
 /**
  * Registers all user interaction and lifecycle event handlers
@@ -49,13 +51,13 @@ export function _bindEvents() {
         this.viewEnd = this.viewStart + capacity;
 
         // Ensure the visible range remains within valid bounds.
-        this._clampView();
+        _clampView.call(this);
 
         // Mark the main chart layer for redraw.
         this.dirty = true;
 
         // Synchronize the scrollbar thumb with the new viewport.
-        this._updateScrollThumb();
+        _updateScrollThumb.call(this);
 
         // Refresh status information displayed to the user.
         this._updateStatus();
@@ -166,13 +168,13 @@ export function _bindEvents() {
       this.viewEnd = this.viewStart + capacity;
 
       // Clamp viewport to valid data bounds.
-      this._clampView();
+      _clampView.call(this);
 
       // Mark chart for redraw.
       this.dirty = true;
 
       // Sync scrollbar thumb with new viewport.
-      this._updateScrollThumb();
+      _updateScrollThumb.call(this);
 
       // Update UI status indicators.
       this._updateStatus();
@@ -228,13 +230,13 @@ export function _bindEvents() {
         this.viewEnd = this.viewStart + capacity;
 
         // Ensure viewport stays within valid data bounds.
-        this._clampView();
+        _clampView.call(this);
 
         // Mark chart for redraw.
         this.dirty = true;
 
         // Update scrollbar thumb position.
-        this._updateScrollThumb();
+        _updateScrollThumb.call(this);
       }
 
       // TWO FINGERS: pinch zoom — reemplazar este bloque
@@ -256,10 +258,10 @@ export function _bindEvents() {
 
         const capacity = Math.floor(this.chartW / this.barWidth);
         this.viewEnd = this.viewStart + capacity; // <- antes: Math.min(this.data.length, ...)
-        this._clampView();
+        _clampView.call(this);
 
         this.dirty = true;
-        this._updateScrollThumb();
+        _updateScrollThumb.call(this);
       }
 
       // Update last known touch positions for next move event.
@@ -332,13 +334,13 @@ export function _bindEvents() {
       );
 
       // Ensure the viewport remains within valid bounds.
-      this._clampView();
+      _clampView.call(this);
 
       // Mark the chart for redraw.
       this.dirty = true;
 
       // Synchronize the scrollbar thumb position and size.
-      this._updateScrollThumb();
+      _updateScrollThumb.call(this);
 
       // Refresh viewport-related status information.
       this._updateStatus();

@@ -32,6 +32,7 @@ import { _grabCanvases } from "./render/canvas";
 import { _resize } from "./core/_resize";
 import { _bindEvents } from "./interactions/_bindEvents";
 import { _startLoop } from "./core/_startLoop";
+import { _updateScrollThumb } from "./ui/_updateScrollThumb";
 
 //--------------------------------------------------------------------------------------------------------------------
 //  CHART ENGINE
@@ -170,7 +171,7 @@ export class ChartEngine {
     this.viewEnd = data.length + this.rightPadBars;
     this.viewStart = Math.max(0, this.viewEnd - capacity);
     this.dirty = true;
-    this._updateScrollThumb();
+    _updateScrollThumb.call(this);
     this._updateStatus();
   }
 
@@ -195,28 +196,6 @@ export class ChartEngine {
         entry.values = entry.def.compute(this.data, entry.params);
       }
     });
-  }
-
-  /**
-   * Keeps the chart viewport within valid data limits and
-   * recalculates the visible range according to the current
-   * zoom level and available chart width.
-   */
-  _clampView() {
-    // Exit if no data is available.
-    if (!this.data.length) return;
-
-    // Calculate how many bars fit within the current chart width.
-    const capacity = Math.floor(this.chartW / this.barWidth);
-
-    // Determine the maximum allowed end index, including right padding.
-    const maxViewEnd = this.data.length + this.rightPadBars;
-
-    // Clamp the viewport end index to the valid range.
-    this.viewEnd = Math.min(Math.max(this.viewEnd, 1), maxViewEnd);
-
-    // Recalculate the viewport start index based on chart capacity.
-    this.viewStart = Math.max(0, this.viewEnd - capacity);
   }
 
   _barsVisible() {
@@ -786,45 +765,6 @@ export class ChartEngine {
     return false;
   }
 
-  /**
-   * Updates the scrollbar thumb size and position to reflect
-   * the current visible range relative to the total scrollable
-   * data range, including right-side padding.
-   */
-  _updateScrollThumb() {
-    // Exit if no data is available.
-    if (!this.data.length) return;
-
-    // Retrieve the draggable scrollbar thumb element.
-    const thumb = this.scrollThumbEl;
-
-    // Retrieve the scrollbar track element.
-    const bar = this.scrollbarEl;
-
-    // Calculate the total logical range, including right-side padding.
-    const total = this.data.length + this.rightPadBars;
-
-    // Get the current width of the scrollbar track in pixels.
-    const scrollbarWidth = bar.offsetWidth;
-
-    // Calculate the number of bars currently visible in the viewport.
-    const visible = this.viewEnd - this.viewStart;
-
-    // Compute the thumb width proportionally to the visible range,
-    // enforcing a minimum width for usability.
-    const thumbW = Math.max(20, scrollbarWidth * (visible / total));
-
-    // Compute the thumb's horizontal position based on the
-    // viewport start index relative to the total range.
-    const thumbL = scrollbarWidth * (this.viewStart / total);
-
-    // Apply the calculated width to the thumb element.
-    thumb.style.width = thumbW + "px";
-
-    // Position the thumb along the scrollbar track.
-    thumb.style.left = thumbL + "px";
-  }
-
   _updateStatus() {
     this.statusBarsEl.textContent = `${this._barsVisible()} bars`;
     this.statusZoomEl.textContent = `×${this.barWidth.toFixed(1)}`;
@@ -925,7 +865,7 @@ export class ChartEngine {
         this.viewEnd = this.data.length + this.rightPadBars;
         this.viewStart = Math.max(0, this.viewEnd - capacity);
       }
-      this._updateScrollThumb();
+      _updateScrollThumb.call(this);
       this._updateStatus();
     } else {
       // ── Tick: mutate last candle in place ─────────────────────────────
@@ -1058,7 +998,7 @@ export class ChartEngine {
     this.viewEnd = this.data.length + this.rightPadBars;
     this.viewStart = Math.max(0, this.viewEnd - capacity);
     this.dirty = true;
-    this._updateScrollThumb();
+    _updateScrollThumb.call(this);
     this._updateStatus();
   }
 

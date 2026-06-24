@@ -1,4 +1,6 @@
 import { PRICE_SCALE_W } from "./config";
+import { _updateScrollThumb } from "../ui/_updateScrollThumb";
+import { _clampView } from "./_clampView";
 
 /**
  * Resizes and reconfigures all chart canvases to match the current
@@ -121,8 +123,8 @@ export function _resize() {
   this.overlayDirty = true;
 
   // Ensure viewport constraints remain valid.
-  this._clampView();
+  _clampView.call(this);
 
   // Recalculate scrollbar thumb size and position.
-  this._updateScrollThumb();
+  _updateScrollThumb.call(this);
 }
