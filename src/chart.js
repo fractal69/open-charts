@@ -52,6 +52,12 @@ import { destroy } from "./api/detroy";
 import { update } from "./api/update";
 import { addSeries } from "./api/addSeries";
 import { removeSeries } from "./api/removeSeries";
+import { toggleSeries } from "./api/toggleSeries";
+import { enableSeries } from "./api/enableSeries";
+import { disableSeries } from "./api/disableSeries";
+import { isSeriesEnabled } from "./api/isSeriesEnabled";
+import { getSeries } from "./api/getSeries";
+import { setSeriesParam } from "./api/setSeriesParam";
 
 //--------------------------------------------------------------------------------------------------------------------
 //  CHART ENGINE
@@ -74,6 +80,12 @@ export class ChartEngine {
       update: update.bind(this),
       addSeries: addSeries.bind(this),
       removeSeries: removeSeries.bind(this),
+      toggleSeries: toggleSeries.bind(this),
+      enableSeries: enableSeries.bind(this),
+      disableSeries: disableSeries.bind(this),
+      isSeriesEnabled: isSeriesEnabled.bind(this),
+      getSeries: getSeries.bind(this),
+      setSeriesParam: setSeriesParam.bind(this),
     };
 
     this.area = area;
@@ -275,61 +287,6 @@ export class ChartEngine {
   //--------------------------------------------------------------------------------------------------------------------
   //  PUBLIC API
   //--------------------------------------------------------------------------------------------------------------------
-
-  // Toggle enabled/disabled for a series by id
-  toggleSeries(id) {
-    const entry = this._series.get(id);
-    if (!entry) return this;
-    entry.enabled = !entry.enabled;
-    _updateLegend.call(this);
-    this.dirty = true;
-    return this;
-  }
-
-  // Explicitly enable a series
-  enableSeries(id) {
-    const entry = this._series.get(id);
-    if (entry) {
-      entry.enabled = true;
-      _updateLegend.call(this);
-      this.dirty = true;
-    }
-    return this;
-  }
-
-  // Explicitly disable a series
-  disableSeries(id) {
-    const entry = this._series.get(id);
-    if (entry) {
-      entry.enabled = false;
-      _updateLegend.call(this);
-      this.dirty = true;
-    }
-    return this;
-  }
-
-  // Is a series currently enabled?
-  isSeriesEnabled(id) {
-    return this._series.get(id)?.enabled ?? false;
-  }
-
-  // Leer el entry completo (def + values + enabled + params)
-  getSeries(id) {
-    return this._series.get(id) ?? null;
-  }
-
-  // Modificar un param individual
-  setSeriesParam(id, key, value) {
-    const entry = this._series.get(id);
-    if (!entry || !entry.params[key]) return this;
-    entry.params[key].value = value;
-    // Si el param afecta el cálculo → recompute completo
-    if (entry.params[key].affectsCompute) {
-      entry.values = entry.def.compute(this.data, entry.params);
-    }
-    this.dirty = true;
-    return this;
-  }
 
   // Modificar múltiples params de una vez
   setSeriesParams(id, patch) {
