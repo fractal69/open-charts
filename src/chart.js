@@ -36,7 +36,9 @@ import { _updateScrollThumb } from "./ui/_updateScrollThumb";
 import { _updateStatusBar } from "./ui/_updateStatusBar";
 import { _visiblePriceRange } from "./core/_visiblePriceRange";
 import { _renderMain } from "./render/_renderMain";
-
+import { _renderPriceScale } from "./render/_renderPriceScale";
+import { _renderTimeAxis } from "./render/_renderTimeAxis";
+import { _xOf } from "./utils/_xOf";
 //--------------------------------------------------------------------------------------------------------------------
 //  CHART ENGINE
 //--------------------------------------------------------------------------------------------------------------------
@@ -44,6 +46,10 @@ import { _renderMain } from "./render/_renderMain";
 export class ChartEngine {
   constructor(area) {
     this.options = { ...DEFAULT_OPTIONS };
+
+    this.utils = {
+      _xOf: _xOf.bind(this)
+    };
 
     this.area = area;
 
@@ -205,11 +211,6 @@ export class ChartEngine {
     return this.viewEnd - this.viewStart;
   }
 
-  // Data index → X pixel in chart area
-  _xOf(i) {
-    return (i - this.viewStart) * this.barWidth + this.barWidth / 2;
-  }
-
   /**
    * Converts a horizontal pixel position within the chart
    * into the corresponding data index based on current zoom
@@ -225,17 +226,6 @@ export class ChartEngine {
     return (
       pane.h - ((price - priceMin) / range) * pane.h * 0.92 - pane.h * 0.04
     );
-  }
-
-  // ═══════════════════════════════════════════════════════════════════════════
-  //  RENDER PASS — only called when dirty
-  // ═══════════════════════════════════════════════════════════════════════════
-  _render() {
-    if (!this.data.length) return;
-    const { lo, hi } = _visiblePriceRange.call(this);
-    _renderMain.call(this, lo, hi);
-    this._renderPriceScale(lo, hi);
-    this._renderTimeAxis();
   }
 
   // ── MAIN PANE ─────────────────────────────────────────────────────────────
@@ -263,7 +253,7 @@ export class ChartEngine {
       i++
     ) {
       if (this._isTimeGridLine(i, timeStep)) {
-        const x = Math.round(this._xOf(i)) + 0.5;
+        const x = Math.round(this.utils._xOf(i)) + 0.5;
         ctx.strokeStyle = this.options.colors.grid;
         ctx.beginPath();
         ctx.moveTo(x, 0);
@@ -275,83 +265,13 @@ export class ChartEngine {
   }
 
   // ── TIME AXIS ─────────────────────────────────────────────────────────────
-  _renderTimeAxis() {
-    const ctx = this.ctxTime;
-    const W = this.panes.time.w;
-    const H = this.panes.time.h;
-    const cw = this.chartW;
-
-    ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = this.options.colors.bg2;
-    ctx.fillRect(0, 0, W, H);
-
-    if (!this.data.length) return;
-    const step = this._timeGridStep();
-    ctx.fillStyle = this.options.colors.textDim;
-    ctx.font = "9px Inter, sans-serif";
-    ctx.textAlign = "center";
-
-    for (
-      let i = this.viewStart;
-      i < this.viewEnd && i < this.data.length;
-      i++
-    ) {
-      if (!this._isTimeGridLine(i, step)) continue;
-      const x = this._xOf(i);
-      if (x < 16 || x > cw - 16) continue;
-      ctx.fillText(_formatDate(this.data[i].t, step), x, 15);
-    }
-  }
-
-  _renderPriceScale(priceMin, priceMax) {
-    const ctx = this.ctxPScale;
-    const W = PRICE_SCALE_W;
-    const H = this.panes.scale.h;
-    const p = this.panes.main; // yOf necesita el pane main para el height
-
-    ctx.clearRect(0, 0, W, H);
-
-    // Fondo
-    ctx.fillStyle = this.options.colors.bg2;
-    ctx.fillRect(0, 0, W, H);
-
-    // Línea separadora izquierda
-    ctx.strokeStyle = this.options.colors.grid;
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(0.5, 0);
-    ctx.lineTo(0.5, H);
-    ctx.stroke();
-
-    // Labels en cada grid step
-    const steps = _nicePriceSteps(priceMin, priceMax, 6);
-    ctx.fillStyle = this.options.colors.textDim;
-    ctx.font = "10px Inter, sans-serif";
-    ctx.textAlign = "right";
-    steps.forEach((price) => {
-      const y = Math.round(this._yOf(price, p, priceMin, priceMax)) + 0.5;
-      ctx.fillText(price.toFixed(2), W - 8, y + 3.5);
-    });
-
-    // Tag del último close — estático, no es el crosshair
-    if (!this.data.length) return;
-    const last = this.data[this.data.length - 1];
-    const y = this._yOf(last.c, p, priceMin, priceMax);
-    const bull = last.c >= last.o;
-    ctx.fillStyle = bull ? this.options.colors.bull : this.options.colors.bear;
-    ctx.fillRect(1, y - 8, W - 2, 16);
-    ctx.fillStyle = "#050810";
-    ctx.font = "10px Inter, sans-serif";
-    ctx.textAlign = "center";
-    ctx.fillText(last.c.toFixed(2), W / 2, y + 3.5);
-  }
 
   _renderDrawingModules() {
     const { lo, hi } = _visiblePriceRange.call(this);
     const p = this.panes.main;
 
     // Funciones de conversión frescas para este frame
-    const xOf = (i) => this._xOf(i);
+    const xOf = (i) => this.utils._xOf(i);
     const yOf = (price) => this._yOf(price, p, lo, hi);
     const indexAtX = (x) => this._indexAtX(x);
     const priceAtY = (y) => lo + ((hi - lo) * (p.h * 0.96 - y)) / (p.h * 0.92);
@@ -407,7 +327,7 @@ export class ChartEngine {
       // Conversiones — siempre frescas, no capturadas al mount
       // Después — directo
       xOf(i) {
-        return engine._xOf(i);
+        return this.utils._xOf(i);
       },
 
       yOf(price) {
@@ -465,7 +385,7 @@ export class ChartEngine {
   _renderOverlay() {
     this._clearOverlay(this.ctxOMain, this.panes.main);
 
-    this._renderTimeAxis();
+    _renderTimeAxis.call(this);
 
     if (!this.mouse.inside || !this.data.length) {
       // Still draw the live price line even without crosshair
@@ -497,7 +417,7 @@ export class ChartEngine {
     if (this._liveMode) this._drawLivePulse(this.ctxOMain, pMain, lo, hi);
 
     // Crosshair X (shared across panes)
-    const snapX = Math.round(this._xOf(barIdx)) + 0.5;
+    const snapX = Math.round(this.utils._xOf(barIdx)) + 0.5;
 
     if (!d) {
       const ctx = this.ctxOMain;
@@ -590,7 +510,7 @@ export class ChartEngine {
     const tCtx = this.ctxTime;
     const d = this.data[idx];
     if (!d) return;
-    const x = this._xOf(idx);
+    const x = this.utils._xOf(idx);
     const label = _formatDateFull(d.t, this.interval);
     const tw = 90;
     tCtx.save();

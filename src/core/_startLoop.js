@@ -1,3 +1,5 @@
+import { _render } from "../render/_render";
+
 export function _startLoop() {
   this._running = true;
 
@@ -16,7 +18,7 @@ export function _startLoop() {
     }
 
     if (this.dirty) {
-      this._render();
+      _render.call(this);
       this.dirty = false;
       this.drawingsDirty = true;
       this.overlayDirty = true; // overlay needs redraw after data repaint

@@ -6,6 +6,7 @@ import {
   MIN_BAR_W,
   MAX_BAR_W,
 } from "../core/config";
+import { _resize } from "../core/_resize";
 import { _clampView } from "../core/_clampView";
 import { _updateScrollThumb } from "../ui/_updateScrollThumb";
 import { _updateStatusBar } from "../ui/_updateStatusBar";

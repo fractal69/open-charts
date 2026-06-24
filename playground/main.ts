@@ -147,7 +147,7 @@ chart.addSeries({
       if (!d) continue;
 
       // Conversión de coordenadas usando los métodos del engine
-      const x = Math.round(engine._xOf(i));
+      const x = Math.round(engine.utils._xOf(i));
       const yH = Math.round(engine._yOf(d.h, pane, priceMin, priceMax));
       const yL = Math.round(engine._yOf(d.l, pane, priceMin, priceMax));
       const yO = Math.round(engine._yOf(d.o, pane, priceMin, priceMax));
@@ -286,7 +286,7 @@ chart.addSeries({
       i++
     ) {
       if (values[i] === null) continue;
-      const x = engine._xOf(i);
+      const x = engine.utils._xOf(i);
       const y = engine._yOf(values[i], pane, priceMin, priceMax);
       if (!started) {
         ctx.moveTo(x, y);
@@ -312,5 +312,3 @@ chart.addSeries({
     return { label: "MA20", value: values[i].toFixed(2), color: "#ffb830" };
   },
 });
-
-
