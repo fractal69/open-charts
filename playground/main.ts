@@ -148,10 +148,10 @@ chart.addSeries({
 
       // Conversión de coordenadas usando los métodos del engine
       const x = Math.round(engine.utils._xOf(i));
-      const yH = Math.round(engine._yOf(d.h, pane, priceMin, priceMax));
-      const yL = Math.round(engine._yOf(d.l, pane, priceMin, priceMax));
-      const yO = Math.round(engine._yOf(d.o, pane, priceMin, priceMax));
-      const yC = Math.round(engine._yOf(d.c, pane, priceMin, priceMax));
+      const yH = Math.round(engine.utils._yOf(d.h, pane, priceMin, priceMax));
+      const yL = Math.round(engine.utils._yOf(d.l, pane, priceMin, priceMax));
+      const yO = Math.round(engine.utils._yOf(d.o, pane, priceMin, priceMax));
+      const yC = Math.round(engine.utils._yOf(d.c, pane, priceMin, priceMax));
 
       const bull = d.c >= d.o;
       const col = bull ? bullCol : bearCol;
@@ -287,7 +287,7 @@ chart.addSeries({
     ) {
       if (values[i] === null) continue;
       const x = engine.utils._xOf(i);
-      const y = engine._yOf(values[i], pane, priceMin, priceMax);
+      const y = engine.utils._yOf(values[i], pane, priceMin, priceMax);
       if (!started) {
         ctx.moveTo(x, y);
         started = true;

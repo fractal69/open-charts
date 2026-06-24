@@ -39,6 +39,7 @@ import { _renderMain } from "./render/_renderMain";
 import { _renderPriceScale } from "./render/_renderPriceScale";
 import { _renderTimeAxis } from "./render/_renderTimeAxis";
 import { _xOf } from "./utils/_xOf";
+import { _yOf } from "./utils/_yOf";
 //--------------------------------------------------------------------------------------------------------------------
 //  CHART ENGINE
 //--------------------------------------------------------------------------------------------------------------------
@@ -48,7 +49,8 @@ export class ChartEngine {
     this.options = { ...DEFAULT_OPTIONS };
 
     this.utils = {
-      _xOf: _xOf.bind(this)
+      _xOf: _xOf.bind(this),
+      _yOf: _yOf.bind(this),
     };
 
     this.area = area;
@@ -220,14 +222,6 @@ export class ChartEngine {
     return Math.round((x - this.barWidth / 2) / this.barWidth) + this.viewStart;
   }
 
-  // Price → Y pixel in a pane
-  _yOf(price, pane, priceMin, priceMax) {
-    const range = priceMax - priceMin || 1;
-    return (
-      pane.h - ((price - priceMin) / range) * pane.h * 0.92 - pane.h * 0.04
-    );
-  }
-
   // ── MAIN PANE ─────────────────────────────────────────────────────────────
 
   _drawGrid(ctx, W, H, cw, priceMin, priceMax, p) {
@@ -238,7 +232,7 @@ export class ChartEngine {
     // Horizontal price grid lines
     const steps = _nicePriceSteps(priceMin, priceMax, 6);
     steps.forEach((price) => {
-      const y = Math.round(this._yOf(price, p, priceMin, priceMax)) + 0.5;
+      const y = Math.round(this.utils._yOf(price, p, priceMin, priceMax)) + 0.5;
       ctx.beginPath();
       ctx.moveTo(0, y);
       ctx.lineTo(cw, y);
@@ -272,7 +266,7 @@ export class ChartEngine {
 
     // Funciones de conversión frescas para este frame
     const xOf = (i) => this.utils._xOf(i);
-    const yOf = (price) => this._yOf(price, p, lo, hi);
+    const yOf = (price) => this.utils._yOf(price, p, lo, hi);
     const indexAtX = (x) => this._indexAtX(x);
     const priceAtY = (y) => lo + ((hi - lo) * (p.h * 0.96 - y)) / (p.h * 0.92);
 
@@ -332,7 +326,7 @@ export class ChartEngine {
 
       yOf(price) {
         const { lo, hi } = _visiblePriceRange.call(this);
-        return engine._yOf(price, engine.panes.main, lo, hi);
+        return engine.utils._yOf(price, engine.panes.main, lo, hi);
       },
       indexAtX(x) {
         return engine._indexAtX(x);
@@ -471,7 +465,7 @@ export class ChartEngine {
     ctx.setLineDash([]);
 
     // Dot at close
-    const dotY = this._yOf(d.c, pMain, lo, hi);
+    const dotY = this.utils._yOf(d.c, pMain, lo, hi);
     ctx.beginPath();
     ctx.arc(snapX - 0.5, dotY, 3, 0, Math.PI * 2);
     ctx.fillStyle = this.options.colors.crossPt;
@@ -528,7 +522,7 @@ export class ChartEngine {
     const last = this.data[this.data.length - 1];
     if (!last) return;
 
-    const y = this._yOf(last.c, pane, priceMin, priceMax);
+    const y = this.utils._yOf(last.c, pane, priceMin, priceMax);
     const bull = last.c >= last.o;
     const col = bull ? this.options.colors.bull : this.options.colors.bear;
     const snapY = Math.round(y) + 0.5;

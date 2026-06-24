@@ -34,14 +34,14 @@ export function _renderPriceScale(priceMin, priceMax) {
   ctx.font = "10px Inter, sans-serif";
   ctx.textAlign = "right";
   steps.forEach((price) => {
-    const y = Math.round(this._yOf(price, p, priceMin, priceMax)) + 0.5;
+    const y = Math.round(this.utils._yOf(price, p, priceMin, priceMax)) + 0.5;
     ctx.fillText(price.toFixed(2), W - 8, y + 3.5);
   });
 
   // Tag del último close — estático, no es el crosshair
   if (!this.data.length) return;
   const last = this.data[this.data.length - 1];
-  const y = this._yOf(last.c, p, priceMin, priceMax);
+  const y = this.utils._yOf(last.c, p, priceMin, priceMax);
   const bull = last.c >= last.o;
   ctx.fillStyle = bull ? this.options.colors.bull : this.options.colors.bear;
   ctx.fillRect(1, y - 8, W - 2, 16);
