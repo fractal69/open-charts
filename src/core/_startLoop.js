@@ -1,5 +1,6 @@
 import { _renderDrawingModules } from "../render/_renderDrawingModules";
 import { _render } from "../render/_render";
+import { _renderOverlay } from "../render/_renderOverlay";
 
 export function _startLoop() {
   this._running = true;
@@ -31,7 +32,7 @@ export function _startLoop() {
     }
 
     if (this.overlayDirty) {
-      this._renderOverlay();
+      _renderOverlay.call(this);
       this.overlayDirty = false;
     }
   };
