@@ -1,5 +1,6 @@
 import { _timeGridStep } from "./_timeGridStep";
 import { _formatDate } from "../utils/time";
+import { _isTimeGridLine } from "./_isTimeGridLine";
 
 export function _renderTimeAxis() {
   const ctx = this.ctxTime;
@@ -18,7 +19,7 @@ export function _renderTimeAxis() {
   ctx.textAlign = "center";
 
   for (let i = this.viewStart; i < this.viewEnd && i < this.data.length; i++) {
-    if (!this._isTimeGridLine(i, step)) continue;
+    if (!_isTimeGridLine.call(this, i, step)) continue;
     const x = this.utils._xOf(i);
     if (x < 16 || x > cw - 16) continue;
     ctx.fillText(_formatDate(this.data[i].t, step), x, 15);
