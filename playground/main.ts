@@ -94,7 +94,7 @@ chart.applyOptions({
   },
 });
 
-chart.setData(normalizeCandles(fakeData));
+chart.api.setData(normalizeCandles(fakeData));
 
 chart.addSeries({
   id: "candlestick",
