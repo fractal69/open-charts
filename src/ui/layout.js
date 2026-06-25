@@ -1,5 +1,5 @@
-export function _buildLayout(area: HTMLElement) {
-  const chartArea = area;
+export function _buildLayout() {
+  const chartArea = this.area;
 
   if (!chartArea) {
     console.error("Not found id chart-area");

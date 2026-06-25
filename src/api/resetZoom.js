@@ -5,7 +5,7 @@ import {
   SCROLL_ZOOM_FACTOR,
   MIN_BAR_W,
   MAX_BAR_W,
-} from "./core/config";
+} from "../core/config";
 import { _updateScrollThumb } from "../ui/_updateScrollThumb";
 import { _updateStatusBar } from "../ui/_updateStatusBar";
 

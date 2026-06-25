@@ -1,8 +1,8 @@
 import { _mergeoptions } from "../utils/_mergeOptions";
-import { _loadCssVariables } from "../render/theme";
+import { _loadCssVariables } from "../render/_loadCssVariables";
 
 export function applyOptions(newOptions) {
   this.options = _mergeoptions(this.options, newOptions);
-  _loadCssVariables(this.options);
+  _loadCssVariables.call(this);
   this.dirty = true;
 }
