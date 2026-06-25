@@ -66,7 +66,7 @@ export class ChartEngine {
   public options: ChartOptions;
   public utils: any;
   public api: any;
-  public area: any;
+  public area: HTMLElement;
   public data: any;
   public _series: any;
   public _running: any;

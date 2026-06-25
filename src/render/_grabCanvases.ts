@@ -5,31 +5,32 @@ import type { ChartEngine } from "../core/chartEngine";
  * corresponding 2D rendering contexts.
  */
 export function _grabCanvases(engine: ChartEngine) {
-  const area = engine.area;
+  const a = engine.area;
 
-  engine.legendDiv = area.querySelector("#chart-legend");
-  engine.indicatorsDiv = area.querySelector("#chart-indicators");
+  // CANVAS
+  engine.cMain = a.querySelector("#canvas-main") as HTMLCanvasElement;
+  engine.cDrawings = a.querySelector("#canvas-drawings") as HTMLCanvasElement;
+  engine.pScale = a.querySelector("#canvas-pricescale") as HTMLCanvasElement;
+  engine.oMain = a.querySelector("#canvas-overlay") as HTMLCanvasElement;
+  engine.cTime = a.querySelector("#canvas-time") as HTMLCanvasElement;
 
-  engine.cMain = area.querySelector("#canvas-main") as HTMLCanvasElement;
+  // CONTEXTS
   engine.ctxMain = engine.cMain.getContext("2d") as CanvasRenderingContext2D;
-
-  engine.cDrawings = area.querySelector("#canvas-drawings") as HTMLCanvasElement;
-  engine.ctxDrawings = engine.cDrawings.getContext("2d") as CanvasRenderingContext2D;
-
-  engine.pScale = area.querySelector("#canvas-pricescale")as HTMLCanvasElement;
+  engine.ctxDrawings = engine.cDrawings.getContext(
+    "2d",
+  ) as CanvasRenderingContext2D;
   engine.ctxPScale = engine.pScale.getContext("2d") as CanvasRenderingContext2D;
-
-  engine.oMain = area.querySelector("#canvas-overlay")as HTMLCanvasElement;
   engine.ctxOMain = engine.oMain.getContext("2d") as CanvasRenderingContext2D;
-
-  engine.cTime = area.querySelector("#canvas-time")as HTMLCanvasElement;
   engine.ctxTime = engine.cTime.getContext("2d") as CanvasRenderingContext2D;
 
-  engine.paneMainEl = area.querySelector("#pane-main");
-  engine.timeAxisEl = area.querySelector("#time-axis");
-  engine.scrollbarEl = area.querySelector("#scrollbar");
-  engine.scrollThumbEl = area.querySelector("#scrollthumb");
-  engine.statusFpsEl = area.querySelector("#status-fps");
-  engine.statusBarsEl = area.querySelector("#status-bars");
-  engine.statusZoomEl = area.querySelector("#status-zoom");
+  // CONTAINERS
+  engine.legendDiv = a.querySelector("#chart-legend") as HTMLElement;
+  engine.indicatorsDiv = a.querySelector("#chart-indicators") as HTMLElement;
+  engine.paneMainEl = a.querySelector("#pane-main") as HTMLElement;
+  engine.timeAxisEl = a.querySelector("#time-axis") as HTMLElement;
+  engine.scrollbarEl = a.querySelector("#scrollbar") as HTMLElement;
+  engine.scrollThumbEl = a.querySelector("#scrollthumb") as HTMLElement;
+  engine.statusFpsEl = a.querySelector("#status-fps") as HTMLElement;
+  engine.statusBarsEl = a.querySelector("#status-bars") as HTMLElement;
+  engine.statusZoomEl = a.querySelector("#status-zoom") as HTMLElement;
 }
