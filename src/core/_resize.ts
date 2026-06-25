@@ -1,7 +1,7 @@
 import { PRICE_SCALE_W } from "./config";
 import { _updateScrollThumb } from "../ui/_updateScrollThumb";
-import { _clampView } from "./_clampView";
 import type { ChartEngine } from "./chartEngine";
+import { _clampView } from "./_clampView";
 
 /**
  * Resizes and reconfigures all chart canvases to match the current
@@ -126,8 +126,8 @@ export function _resize(engine: ChartEngine) {
   engine.overlayDirty = true;
 
   // Ensure viewport constraints remain valid.
-  _clampView.call(engine);
+  _clampView(engine);
 
   // Recalculate scrollbar thumb size and position.
-  _updateScrollThumb.call(engine);
+  _updateScrollThumb(engine);
 }

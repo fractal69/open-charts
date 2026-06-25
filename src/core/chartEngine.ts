@@ -93,7 +93,7 @@ export class ChartEngine {
   public _fpsTime: any;
   public panes: any;
   public chartW: any;
-  public _abortController: any;
+  public _abortController: AbortController;
 
   public legendDiv!: HTMLElement;
   public indicatorsDiv!: HTMLElement;

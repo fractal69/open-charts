@@ -1,26 +1,28 @@
+import type { ChartEngine } from "../core/chartEngine";
+
 /**
  * Updates the scrollbar thumb size and position to reflect
  * the current visible range relative to the total scrollable
  * data range, including right-side padding.
  */
-export function _updateScrollThumb() {
+export function _updateScrollThumb(engine: ChartEngine) {
   // Exit if no data is available.
-  if (!this.data.length) return;
+  if (!engine.data.length) return;
 
   // Retrieve the draggable scrollbar thumb element.
-  const thumb = this.scrollThumbEl;
+  const thumb = engine.scrollThumbEl;
 
   // Retrieve the scrollbar track element.
-  const bar = this.scrollbarEl;
+  const bar = engine.scrollbarEl;
 
   // Calculate the total logical range, including right-side padding.
-  const total = this.data.length + this.rightPadBars;
+  const total = engine.data.length + engine.rightPadBars;
 
   // Get the current width of the scrollbar track in pixels.
   const scrollbarWidth = bar.offsetWidth;
 
   // Calculate the number of bars currently visible in the viewport.
-  const visible = this.viewEnd - this.viewStart;
+  const visible = engine.viewEnd - engine.viewStart;
 
   // Compute the thumb width proportionally to the visible range,
   // enforcing a minimum width for usability.
@@ -28,7 +30,7 @@ export function _updateScrollThumb() {
 
   // Compute the thumb's horizontal position based on the
   // viewport start index relative to the total range.
-  const thumbL = scrollbarWidth * (this.viewStart / total);
+  const thumbL = scrollbarWidth * (engine.viewStart / total);
 
   // Apply the calculated width to the thumb element.
   thumb.style.width = thumbW + "px";

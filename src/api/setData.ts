@@ -82,10 +82,10 @@ export function setData(this: ChartEngine, data: any): boolean {
   this.dirty = true;
 
   // Synchronize the scrollbar with the new viewport.
-  _updateScrollThumb.call(this);
+  _updateScrollThumb(this);
 
   // Refresh status bar information.
-  _updateStatusBar.call(this);
+  _updateStatusBar(this);
 
   return true;
 }

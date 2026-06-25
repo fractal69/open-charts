@@ -42,6 +42,4 @@ export function _buildLayout(engine: ChartEngine) {
       <span id="status-cursor"></span>
     </div>
   `;
-
-  return true;
 }

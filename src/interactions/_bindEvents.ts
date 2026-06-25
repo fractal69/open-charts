@@ -1,11 +1,4 @@
-import {
-  PRICE_SCALE_W,
-  DEFAULT_OPTIONS,
-  DEFAULT_BAR_W,
-  SCROLL_ZOOM_FACTOR,
-  MIN_BAR_W,
-  MAX_BAR_W,
-} from "../core/config";
+import { SCROLL_ZOOM_FACTOR, MIN_BAR_W, MAX_BAR_W } from "../core/config";
 import { _resize } from "../core/_resize";
 import { _clampView } from "../core/_clampView";
 import { _updateScrollThumb } from "../ui/_updateScrollThumb";
@@ -54,16 +47,16 @@ export function _bindEvents(engine: ChartEngine) {
         engine.viewEnd = engine.viewStart + capacity;
 
         // Ensure the visible range remains within valid bounds.
-        _clampView.call(engine);
+        _clampView(engine);
 
         // Mark the main chart layer for redraw.
         engine.dirty = true;
 
         // Synchronize the scrollbar thumb with the new viewport.
-        _updateScrollThumb.call(engine);
+        _updateScrollThumb(engine);
 
         // Refresh status information displayed to the user.
-        _updateStatusBar.call(engine);
+        _updateStatusBar(engine);
       }
 
       // Mark the overlay layer for redraw.
@@ -171,16 +164,16 @@ export function _bindEvents(engine: ChartEngine) {
       engine.viewEnd = engine.viewStart + capacity;
 
       // Clamp viewport to valid data bounds.
-      _clampView.call(engine);
+      _clampView(engine);
 
       // Mark chart for redraw.
       engine.dirty = true;
 
       // Sync scrollbar thumb with new viewport.
-      _updateScrollThumb.call(engine);
+      _updateScrollThumb(engine);
 
       // Update UI status indicators.
-      _updateStatusBar.call(engine);
+      _updateStatusBar(engine);
     },
     { passive: false, signal: engine._abortController.signal },
   );
@@ -233,13 +226,13 @@ export function _bindEvents(engine: ChartEngine) {
         engine.viewEnd = engine.viewStart + capacity;
 
         // Ensure viewport stays within valid data bounds.
-        _clampView.call(engine);
+        _clampView(engine);
 
         // Mark chart for redraw.
         engine.dirty = true;
 
         // Update scrollbar thumb position.
-        _updateScrollThumb.call(engine);
+        _updateScrollThumb(engine);
       }
 
       // TWO FINGERS: pinch zoom — reemplazar este bloque
@@ -261,10 +254,10 @@ export function _bindEvents(engine: ChartEngine) {
 
         const capacity = Math.floor(engine.chartW / engine.barWidth);
         engine.viewEnd = engine.viewStart + capacity; // <- antes: Math.min(engine.data.length, ...)
-        _clampView.call(engine);
+        _clampView(engine);
 
         engine.dirty = true;
-        _updateScrollThumb.call(engine);
+        _updateScrollThumb(engine);
       }
 
       // Update last known touch positions for next move event.
@@ -337,16 +330,16 @@ export function _bindEvents(engine: ChartEngine) {
       );
 
       // Ensure the viewport remains within valid bounds.
-      _clampView.call(engine);
+      _clampView(engine);
 
       // Mark the chart for redraw.
       engine.dirty = true;
 
       // Synchronize the scrollbar thumb position and size.
-      _updateScrollThumb.call(engine);
+      _updateScrollThumb(engine);
 
       // Refresh viewport-related status information.
-      _updateStatusBar.call(engine);
+      _updateStatusBar(engine);
     },
     { signal: engine._abortController.signal },
   );
