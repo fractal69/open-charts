@@ -81,7 +81,7 @@ const fakeData = generateCandles(500, {
 
 let container = document.getElementById("chart-area");
 
-let chart = createChart(container);
+let chart = createChart(container!);
 
 chart.api.applyOptions({
   colors: {

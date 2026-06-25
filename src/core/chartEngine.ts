@@ -71,10 +71,10 @@ export class ChartEngine {
   public _series: any;
   public _running: any;
   public _rafId: any;
-  public barWidth: any;
+  public barWidth: number;
   public interval: any;
   public rightPadBars: any;
-  public viewStart: any;
+  public viewStart: number;
   public viewEnd: any;
   public dirty: any;
   public overlayDirty: any;
