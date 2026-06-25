@@ -1,6 +1,7 @@
 import { PRICE_SCALE_W } from "./config";
 import { _updateScrollThumb } from "../ui/_updateScrollThumb";
 import { _clampView } from "./_clampView";
+import type { ChartEngine } from "./chartEngine";
 
 /**
  * Resizes and reconfigures all chart canvases to match the current
@@ -22,7 +23,7 @@ import { _clampView } from "./_clampView";
  * - Time canvas: bottom time scale.
  * - Price scale canvas: right-side price axis.
  */
-export function _resize() {
+export function _resize(engine: ChartEngine) {
   const dpr = window.devicePixelRatio || 1;
 
   /**
@@ -32,7 +33,7 @@ export function _resize() {
    * @param {HTMLCanvasElement} canvas Target canvas element.
    * @param {HTMLElement} container Container used to determine dimensions.
    */
-  const setCanvas = (canvas, container) => {
+  const setCanvas = (canvas: HTMLCanvasElement, container: HTMLElement) => {
     // Get the container's current layout dimensions.
     const r = container.getBoundingClientRect();
 
@@ -51,64 +52,66 @@ export function _resize() {
     // Scale the rendering context to match DPR coordinates.
     const ctx = canvas.getContext("2d");
 
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.scale(dpr, dpr);
+    if (ctx) {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.scale(dpr, dpr);
+    }
   };
 
   // Main chart pane-main container.
-  const pMain = this.paneMainEl;
+  const pMain = engine.paneMainEl;
 
   // Bottom time axis container.
-  const tAxis = this.timeAxisEl;
+  const tAxis = engine.timeAxisEl;
 
   // Resize chart rendering layers.
-  setCanvas(this.cMain, pMain);
+  setCanvas(engine.cMain, pMain);
 
   // Reset and resize overlay layer.
-  setCanvas(this.oMain, pMain);
+  setCanvas(engine.oMain, pMain);
 
   // Resize drawings layer.
-  setCanvas(this.cDrawings, pMain);
+  setCanvas(engine.cDrawings, pMain);
 
   // Resize time-axis layer.
-  setCanvas(this.cTime, tAxis);
+  setCanvas(engine.cTime, tAxis);
 
   // Read updated layout dimensions.
   const mainR = pMain.getBoundingClientRect();
   const timeR = tAxis.getBoundingClientRect();
 
   // Resize the fixed width / height price scale canvas.
-  this.pScale.width = Math.ceil(PRICE_SCALE_W * dpr);
-  this.pScale.height = Math.ceil(mainR.height * dpr);
-  this.pScale.style.width = Math.ceil(PRICE_SCALE_W * dpr) / dpr + "px";
-  this.pScale.style.height = Math.ceil(mainR.height * dpr) / dpr + "px";
+  engine.pScale.width = Math.ceil(PRICE_SCALE_W * dpr);
+  engine.pScale.height = Math.ceil(mainR.height * dpr);
+  engine.pScale.style.width = Math.ceil(PRICE_SCALE_W * dpr) / dpr + "px";
+  engine.pScale.style.height = Math.ceil(mainR.height * dpr) / dpr + "px";
 
   // Reset and apply DPR scaling to the price scale context.
-  this.ctxPScale.setTransform(1, 0, 0, 1, 0, 0);
-  this.ctxPScale.scale(dpr, dpr);
+  engine.ctxPScale.setTransform(1, 0, 0, 1, 0, 0);
+  engine.ctxPScale.scale(dpr, dpr);
 
   /**
    * Main chart pane geometry and rendering references.
    */
-  this.panes.main = {
+  engine.panes.main = {
     x: mainR.left,
     y: mainR.top,
     w: mainR.width,
     h: mainR.height,
-    canvas: this.cMain,
-    ctx: this.ctxMain,
-    oCtx: this.ctxOMain,
+    canvas: engine.cMain,
+    ctx: engine.ctxMain,
+    oCtx: engine.ctxOMain,
   };
 
   /**
    * Price scale pane dimensions.
    */
-  this.panes.scale = { w: PRICE_SCALE_W, h: mainR.height };
+  engine.panes.scale = { w: PRICE_SCALE_W, h: mainR.height };
 
   /**
    * Time axis pane geometry.
    */
-  this.panes.time = {
+  engine.panes.time = {
     x: timeR.left,
     y: timeR.top,
     w: timeR.width,
@@ -116,15 +119,15 @@ export function _resize() {
   };
 
   // Effective drawable chart width excluding the price scale.
-  this.chartW = mainR.width - PRICE_SCALE_W;
+  engine.chartW = mainR.width - PRICE_SCALE_W;
 
   // Request a complete redraw.
-  this.dirty = true;
-  this.overlayDirty = true;
+  engine.dirty = true;
+  engine.overlayDirty = true;
 
   // Ensure viewport constraints remain valid.
-  _clampView.call(this);
+  _clampView.call(engine);
 
   // Recalculate scrollbar thumb size and position.
-  _updateScrollThumb.call(this);
+  _updateScrollThumb.call(engine);
 }

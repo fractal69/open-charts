@@ -10,65 +10,66 @@ import { _resize } from "../core/_resize";
 import { _clampView } from "../core/_clampView";
 import { _updateScrollThumb } from "../ui/_updateScrollThumb";
 import { _updateStatusBar } from "../ui/_updateStatusBar";
+import type { ChartEngine } from "../core/chartEngine";
 
 /**
  * Registers all user interaction and lifecycle event handlers
  * required by the chart, including mouse, touch, scrolling,
  * zooming, panning, scrollbar dragging, and window resizing.
  */
-export function _bindEvents() {
-  const area = this.area;
+export function _bindEvents(engine: ChartEngine) {
+  const area = engine.area;
 
   // Track mouse movement within the chart area.
   area.addEventListener(
     "mousemove",
-    (e) => {
+    (e: any) => {
       // Update the current mouse position and mark it as inside the chart.
-      this.mouse = { x: e.clientX, y: e.clientY, inside: true };
+      engine.mouse = { x: e.clientX, y: e.clientY, inside: true };
 
       // Handle horizontal panning while dragging.
-      if (this.isPanning) {
+      if (engine.isPanning) {
         // Calculate the horizontal drag distance from the pan start point.
-        const dx = e.clientX - this.panOrigin.x;
+        const dx = e.clientX - engine.panOrigin.x;
 
         // Calculate how many bars to shift based on the horizontal pixel movement.
-        const shift = -Math.round(dx / this.barWidth);
+        const shift = -Math.round(dx / engine.barWidth);
 
         // Calculate how many bars fit in the current viewport.
-        const capacity = Math.floor(this.chartW / this.barWidth);
+        const capacity = Math.floor(engine.chartW / engine.barWidth);
 
         // Determine the maximum valid start index for the viewport.
         const maxStart = Math.max(
           0,
-          this.data.length + this.rightPadBars - capacity,
+          engine.data.length + engine.rightPadBars - capacity,
         );
 
         // Update and clamp the viewport start index.
-        this.viewStart = Math.max(
+        engine.viewStart = Math.max(
           0,
-          Math.min(maxStart, this.panOrigin.viewStart + shift),
+          Math.min(maxStart, engine.panOrigin.viewStart + shift),
         );
 
         // Recalculate the viewport end index.
-        this.viewEnd = this.viewStart + capacity;
+        engine.viewEnd = engine.viewStart + capacity;
 
         // Ensure the visible range remains within valid bounds.
-        _clampView.call(this);
+        _clampView.call(engine);
 
         // Mark the main chart layer for redraw.
-        this.dirty = true;
+        engine.dirty = true;
 
         // Synchronize the scrollbar thumb with the new viewport.
-        _updateScrollThumb.call(this);
+        _updateScrollThumb.call(engine);
 
         // Refresh status information displayed to the user.
-        _updateStatusBar.call(this);
+        _updateStatusBar.call(engine);
       }
 
       // Mark the overlay layer for redraw.
-      this.overlayDirty = true;
+      engine.overlayDirty = true;
     },
-    { signal: this._abortController.signal },
+    { signal: engine._abortController.signal },
   );
 
   // Handle pointer exit from the chart area.
@@ -76,60 +77,60 @@ export function _bindEvents() {
     "mouseleave",
     () => {
       // Mark the mouse as outside the chart bounds.
-      this.mouse.inside = false;
+      engine.mouse.inside = false;
 
       // Redraw overlay elements affected by hover state.
-      this.overlayDirty = true;
+      engine.overlayDirty = true;
     },
-    { signal: this._abortController.signal },
+    { signal: engine._abortController.signal },
   );
 
   // Restore hover state when the pointer enters the chart area.
   area.addEventListener(
     "mouseenter",
     () => {
-      this.mouse.inside = true;
+      engine.mouse.inside = true;
     },
-    { signal: this._abortController.signal },
+    { signal: engine._abortController.signal },
   );
 
   // Start a horizontal pan operation when the chart is clicked and dragged.
   area.addEventListener(
     "mousedown",
-    (e) => {
+    (e: any) => {
       // Ignore panning if another tool or interaction has claimed the pointer.
-      if (this._pointerClaimed) return;
+      if (engine._pointerClaimed) return;
 
       if (e.button !== 0) return;
 
       // Mark the chart as being actively panned.
-      this.isPanning = true;
+      engine.isPanning = true;
 
       // Store the initial pointer position and viewport state for panning calculations.
-      this.panOrigin = { x: e.clientX, viewStart: this.viewStart };
+      engine.panOrigin = { x: e.clientX, viewStart: engine.viewStart };
 
       // Update the cursor to indicate an active drag operation.
       area.style.cursor = "grabbing";
     },
-    { signal: this._abortController.signal },
+    { signal: engine._abortController.signal },
   );
 
   // End the current pan operation when the mouse button is released.
   window.addEventListener(
     "mouseup",
-    (e) => {
-      if (this.isPanning) {
-        this.isPanning = false;
+    (e: any) => {
+      if (engine.isPanning) {
+        engine.isPanning = false;
         area.style.cursor = "";
       }
     },
-    { signal: this._abortController.signal },
+    { signal: engine._abortController.signal },
   );
 
   // Handle mouse wheel zoom interaction on the chart area.
   area.addEventListener(
     "wheel",
-    (e) => {
+    (e: any) => {
       // Prevent default page scrolling behavior.
       e.preventDefault();
 
@@ -142,66 +143,66 @@ export function _bindEvents() {
       // Compute the new bar width, clamped to allowed zoom limits.
       const newBarW = Math.max(
         MIN_BAR_W,
-        Math.min(MAX_BAR_W, this.barWidth * factor),
+        Math.min(MAX_BAR_W, engine.barWidth * factor),
       );
 
       // If zoom does not change bar width, exit early.
-      if (newBarW === this.barWidth) return;
+      if (newBarW === engine.barWidth) return;
 
       // Get mouse position relative to the chart content area.
-      const localX = e.clientX - this.panes.main.x;
+      const localX = e.clientX - engine.panes.main.x;
 
       // Identify the bar index under the cursor (zoom focus point).
-      const focusIdx = this.utils._indexAtX(localX);
+      const focusIdx = engine.utils._indexAtX(localX);
 
       // Apply the new zoom level.
-      this.barWidth = newBarW;
+      engine.barWidth = newBarW;
 
       // Recalculate how many bars fit in the viewport.
-      const capacity = Math.floor(this.chartW / this.barWidth);
+      const capacity = Math.floor(engine.chartW / engine.barWidth);
 
       // Compute cursor position as a ratio of chart width.
-      const rel = localX / this.chartW;
+      const rel = localX / engine.chartW;
 
       // Adjust viewport so the focused bar stays under the cursor.
-      this.viewStart = Math.max(0, Math.round(focusIdx - rel * capacity));
+      engine.viewStart = Math.max(0, Math.round(focusIdx - rel * capacity));
 
       // Recalculate viewport end based on new capacity.
-      this.viewEnd = this.viewStart + capacity;
+      engine.viewEnd = engine.viewStart + capacity;
 
       // Clamp viewport to valid data bounds.
-      _clampView.call(this);
+      _clampView.call(engine);
 
       // Mark chart for redraw.
-      this.dirty = true;
+      engine.dirty = true;
 
       // Sync scrollbar thumb with new viewport.
-      _updateScrollThumb.call(this);
+      _updateScrollThumb.call(engine);
 
       // Update UI status indicators.
-      _updateStatusBar.call(this);
+      _updateStatusBar.call(engine);
     },
-    { passive: false, signal: this._abortController.signal },
+    { passive: false, signal: engine._abortController.signal },
   );
 
   // Initialize touch tracking state for mobile interactions (pan and pinch zoom).
-  let lastTouches = [];
+  let lastTouches: any = [];
 
   // Store initial touch points when the user starts touching the chart.
   area.addEventListener(
     "touchstart",
-    (e) => {
+    (e: any) => {
       // Copy current touch points so we can compare movement in touchmove.
       lastTouches = [...e.touches];
     },
     // Allow the browser to handle default behaviors (no preventDefault here).
-    { passive: true, signal: this._abortController.signal },
+    { passive: true, signal: engine._abortController.signal },
   );
 
   // Handle touch movement for mobile pan (1 finger) and pinch zoom (2 fingers).
   area.addEventListener(
     "touchmove",
-    (e) => {
+    (e: any) => {
       // Prevent default browser behavior (scroll/zoom page).
       e.preventDefault();
 
@@ -211,34 +212,34 @@ export function _bindEvents() {
         const dx = e.touches[0].clientX - lastTouches[0].clientX;
 
         // Convert pixel movement into bar index shift.
-        const shift = -Math.round(dx / this.barWidth);
+        const shift = -Math.round(dx / engine.barWidth);
 
         // Compute how many bars fit in the visible chart area.
-        const capacity = Math.floor(this.chartW / this.barWidth);
+        const capacity = Math.floor(engine.chartW / engine.barWidth);
 
         // Compute the maximum valid starting index (right boundary constraint).
         const maxStart = Math.max(
           0,
-          this.data.length + this.rightPadBars - capacity,
+          engine.data.length + engine.rightPadBars - capacity,
         );
 
         // Update viewport start index with clamping to valid range.
-        this.viewStart = Math.max(
+        engine.viewStart = Math.max(
           0,
-          Math.min(maxStart, this.viewStart + shift),
+          Math.min(maxStart, engine.viewStart + shift),
         );
 
         // Recompute viewport end index based on capacity.
-        this.viewEnd = this.viewStart + capacity;
+        engine.viewEnd = engine.viewStart + capacity;
 
         // Ensure viewport stays within valid data bounds.
-        _clampView.call(this);
+        _clampView.call(engine);
 
         // Mark chart for redraw.
-        this.dirty = true;
+        engine.dirty = true;
 
         // Update scrollbar thumb position.
-        _updateScrollThumb.call(this);
+        _updateScrollThumb.call(engine);
       }
 
       // TWO FINGERS: pinch zoom — reemplazar este bloque
@@ -253,29 +254,29 @@ export function _bindEvents() {
         );
         const scale = curr / prev;
 
-        this.barWidth = Math.max(
+        engine.barWidth = Math.max(
           MIN_BAR_W,
-          Math.min(MAX_BAR_W, this.barWidth * scale),
+          Math.min(MAX_BAR_W, engine.barWidth * scale),
         );
 
-        const capacity = Math.floor(this.chartW / this.barWidth);
-        this.viewEnd = this.viewStart + capacity; // <- antes: Math.min(this.data.length, ...)
-        _clampView.call(this);
+        const capacity = Math.floor(engine.chartW / engine.barWidth);
+        engine.viewEnd = engine.viewStart + capacity; // <- antes: Math.min(engine.data.length, ...)
+        _clampView.call(engine);
 
-        this.dirty = true;
-        _updateScrollThumb.call(this);
+        engine.dirty = true;
+        _updateScrollThumb.call(engine);
       }
 
       // Update last known touch positions for next move event.
       lastTouches = [...e.touches];
     },
     // Enable preventDefault because we block native touch scrolling.
-    { passive: false, signal: this._abortController.signal },
+    { passive: false, signal: engine._abortController.signal },
   );
 
   // Cache references to the scrollbar thumb and track elements.
-  const thumb = this.scrollThumbEl;
-  const scrollbar = this.scrollbarEl;
+  const thumb = engine.scrollThumbEl;
+  const scrollbar = engine.scrollbarEl;
 
   // Track scrollbar drag state and drag origin information.
   let scrollDragging = false,
@@ -291,11 +292,11 @@ export function _bindEvents() {
       // Store the initial mouse X position.
       scrollOriginX = e.clientX;
       // Store the viewport start index at drag start.
-      scrollOriginVS = this.viewStart;
+      scrollOriginVS = engine.viewStart;
       // Prevent the event from triggering chart panning.
       e.stopPropagation();
     },
-    { signal: this._abortController.signal },
+    { signal: engine._abortController.signal },
   );
 
   // Handle thumb dragging while the mouse moves.
@@ -309,7 +310,7 @@ export function _bindEvents() {
       const scrollbarWidth = scrollbar.offsetWidth;
 
       // Compute the total scrollable range, including right padding.
-      const total = this.data.length + this.rightPadBars;
+      const total = engine.data.length + engine.rightPadBars;
 
       // Convert horizontal mouse movement into a scrollbar ratio.
       const ratio = (e.clientX - scrollOriginX) / scrollbarWidth;
@@ -318,36 +319,36 @@ export function _bindEvents() {
       const shift = Math.round(ratio * total);
 
       // Calculate how many bars fit in the current viewport.
-      const capacity = Math.floor(this.chartW / this.barWidth);
+      const capacity = Math.floor(engine.chartW / engine.barWidth);
 
       // Update and clamp the viewport start index.
-      this.viewStart = Math.max(
+      engine.viewStart = Math.max(
         0,
         Math.min(
-          this.data.length + this.rightPadBars - capacity,
+          engine.data.length + engine.rightPadBars - capacity,
           scrollOriginVS + shift,
         ),
       );
 
       // Recalculate the viewport end index.
-      this.viewEnd = Math.min(
-        this.data.length + this.rightPadBars,
-        this.viewStart + capacity,
+      engine.viewEnd = Math.min(
+        engine.data.length + engine.rightPadBars,
+        engine.viewStart + capacity,
       );
 
       // Ensure the viewport remains within valid bounds.
-      _clampView.call(this);
+      _clampView.call(engine);
 
       // Mark the chart for redraw.
-      this.dirty = true;
+      engine.dirty = true;
 
       // Synchronize the scrollbar thumb position and size.
-      _updateScrollThumb.call(this);
+      _updateScrollThumb.call(engine);
 
       // Refresh viewport-related status information.
-      _updateStatusBar.call(this);
+      _updateStatusBar.call(engine);
     },
-    { signal: this._abortController.signal },
+    { signal: engine._abortController.signal },
   );
 
   // End scrollbar dragging when the mouse button is released.
@@ -356,16 +357,16 @@ export function _bindEvents() {
     () => {
       scrollDragging = false;
     },
-    { signal: this._abortController.signal },
+    { signal: engine._abortController.signal },
   );
 
   // Recalculate chart layout when the browser window is resized.
   window.addEventListener(
     "resize",
     () => {
-      _resize.call(this);
-      this.dirty = true;
+      _resize(engine);
+      engine.dirty = true;
     },
-    { signal: this._abortController.signal },
+    { signal: engine._abortController.signal },
   );
 }

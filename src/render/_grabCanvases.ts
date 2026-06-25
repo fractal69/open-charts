@@ -4,32 +4,32 @@ import type { ChartEngine } from "../core/chartEngine";
  * Retrieves all chart DOM elements and initializes their
  * corresponding 2D rendering contexts.
  */
-export function _grabCanvases(this: ChartEngine) {
-  const area = this.area;
+export function _grabCanvases(engine: ChartEngine) {
+  const area = engine.area;
 
-  this.legendDiv = area.querySelector("#chart-legend");
-  this.indicatorsDiv = area.querySelector("#chart-indicators");
+  engine.legendDiv = area.querySelector("#chart-legend");
+  engine.indicatorsDiv = area.querySelector("#chart-indicators");
 
-  this.cMain = area.querySelector("#canvas-main") as HTMLCanvasElement;
-  this.ctxMain = this.cMain.getContext("2d") as CanvasRenderingContext2D;
+  engine.cMain = area.querySelector("#canvas-main") as HTMLCanvasElement;
+  engine.ctxMain = engine.cMain.getContext("2d") as CanvasRenderingContext2D;
 
-  this.cDrawings = area.querySelector("#canvas-drawings") as HTMLCanvasElement;
-  this.ctxDrawings = this.cDrawings.getContext("2d") as CanvasRenderingContext2D;
+  engine.cDrawings = area.querySelector("#canvas-drawings") as HTMLCanvasElement;
+  engine.ctxDrawings = engine.cDrawings.getContext("2d") as CanvasRenderingContext2D;
 
-  this.pScale = area.querySelector("#canvas-pricescale")as HTMLCanvasElement;
-  this.ctxPScale = this.pScale.getContext("2d") as CanvasRenderingContext2D;
+  engine.pScale = area.querySelector("#canvas-pricescale")as HTMLCanvasElement;
+  engine.ctxPScale = engine.pScale.getContext("2d") as CanvasRenderingContext2D;
 
-  this.oMain = area.querySelector("#canvas-overlay")as HTMLCanvasElement;
-  this.ctxOMain = this.oMain.getContext("2d") as CanvasRenderingContext2D;
+  engine.oMain = area.querySelector("#canvas-overlay")as HTMLCanvasElement;
+  engine.ctxOMain = engine.oMain.getContext("2d") as CanvasRenderingContext2D;
 
-  this.cTime = area.querySelector("#canvas-time")as HTMLCanvasElement;
-  this.ctxTime = this.cTime.getContext("2d") as CanvasRenderingContext2D;
+  engine.cTime = area.querySelector("#canvas-time")as HTMLCanvasElement;
+  engine.ctxTime = engine.cTime.getContext("2d") as CanvasRenderingContext2D;
 
-  this.paneMainEl = area.querySelector("#pane-main");
-  this.timeAxisEl = area.querySelector("#time-axis");
-  this.scrollbarEl = area.querySelector("#scrollbar");
-  this.scrollThumbEl = area.querySelector("#scrollthumb");
-  this.statusFpsEl = area.querySelector("#status-fps");
-  this.statusBarsEl = area.querySelector("#status-bars");
-  this.statusZoomEl = area.querySelector("#status-zoom");
+  engine.paneMainEl = area.querySelector("#pane-main");
+  engine.timeAxisEl = area.querySelector("#time-axis");
+  engine.scrollbarEl = area.querySelector("#scrollbar");
+  engine.scrollThumbEl = area.querySelector("#scrollthumb");
+  engine.statusFpsEl = area.querySelector("#status-fps");
+  engine.statusBarsEl = area.querySelector("#status-bars");
+  engine.statusZoomEl = area.querySelector("#status-zoom");
 }

@@ -95,31 +95,31 @@ export class ChartEngine {
   public chartW: any;
   public _abortController: any;
 
-  public legendDiv: HTMLElement | undefined;
-  public indicatorsDiv: HTMLElement | undefined;
+  public legendDiv!: HTMLElement;
+  public indicatorsDiv!: HTMLElement;
 
-  public cMain: HTMLCanvasElement | undefined;
-  public ctxMain: CanvasRenderingContext2D | undefined;
+  public cMain!: HTMLCanvasElement;
+  public ctxMain!: CanvasRenderingContext2D;
 
-  public cDrawings: HTMLCanvasElement | undefined;
-  public ctxDrawings: CanvasRenderingContext2D | undefined;
+  public cDrawings!: HTMLCanvasElement;
+  public ctxDrawings!: CanvasRenderingContext2D;
 
-  public pScale: HTMLCanvasElement | undefined;
-  public ctxPScale: CanvasRenderingContext2D | undefined;
+  public pScale!: HTMLCanvasElement;
+  public ctxPScale!: CanvasRenderingContext2D;
 
-  public oMain: HTMLCanvasElement | undefined;
-  public ctxOMain: CanvasRenderingContext2D | undefined;
+  public oMain!: HTMLCanvasElement;
+  public ctxOMain!: CanvasRenderingContext2D;
 
-  public cTime: HTMLCanvasElement | undefined;
-  public ctxTime: CanvasRenderingContext2D | undefined;
+  public cTime!: HTMLCanvasElement;
+  public ctxTime!: CanvasRenderingContext2D;
 
-  public paneMainEl: HTMLElement | undefined;
-  public timeAxisEl: HTMLElement | undefined;
-  public scrollbarEl: HTMLElement | undefined;
-  public scrollThumbEl: HTMLElement | undefined;
-  public statusFpsEl: HTMLElement | undefined;
-  public statusBarsEl: HTMLElement | undefined;
-  public statusZoomEl: HTMLElement | undefined;
+  public paneMainEl!: HTMLElement;
+  public timeAxisEl!: HTMLElement;
+  public scrollbarEl!: HTMLElement;
+  public scrollThumbEl!: HTMLElement;
+  public statusFpsEl!: HTMLElement;
+  public statusBarsEl!: HTMLElement;
+  public statusZoomEl!: HTMLElement;
 
   constructor(area: HTMLElement) {
     this.options = { ...DEFAULT_OPTIONS };
@@ -245,11 +245,11 @@ export class ChartEngine {
   }
 
   _init() {
-    _loadCssVariables.call(this);
-    _buildLayout.call(this);
-    _grabCanvases.call(this);
-    _resize.call(this);
-    _bindEvents.call(this);
-    _startLoop.call(this);
+    _loadCssVariables(this);
+    _buildLayout(this);
+    _grabCanvases(this);
+    _resize(this);
+    _bindEvents(this);
+    _startLoop(this);
   }
 }

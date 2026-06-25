@@ -1,3 +1,5 @@
+import type { ChartEngine } from "../core/chartEngine";
+
 /**
  * Builds and injects the chart DOM structure into the container.
  *
@@ -10,8 +12,8 @@
  *
  * Returns `true` when the layout is successfully created.
  */
-export function _buildLayout() {
-  const chartArea = this.area;
+export function _buildLayout(engine: ChartEngine) {
+  const chartArea = engine.area;
 
   // Create the complete chart DOM structure.
   chartArea.innerHTML = `
