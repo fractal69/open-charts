@@ -6,7 +6,7 @@ import type { ChartEngine } from "../core/chartEngine";
  */
 export function _grabCanvases(this: ChartEngine) {
   const area = this.area;
-  
+
   this.legendDiv = area.querySelector("#chart-legend");
   this.indicatorsDiv = area.querySelector("#chart-indicators");
 
@@ -24,7 +24,6 @@ export function _grabCanvases(this: ChartEngine) {
 
   this.cTime = area.querySelector("#canvas-time")as HTMLCanvasElement;
   this.ctxTime = this.cTime.getContext("2d") as CanvasRenderingContext2D;
-
 
   this.paneMainEl = area.querySelector("#pane-main");
   this.timeAxisEl = area.querySelector("#time-axis");

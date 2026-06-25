@@ -101,16 +101,16 @@ export class ChartEngine {
   public cMain: HTMLCanvasElement | undefined;
   public ctxMain: CanvasRenderingContext2D | undefined;
 
-  public cDrawings: any;
+  public cDrawings: HTMLCanvasElement | undefined;
   public ctxDrawings: CanvasRenderingContext2D | undefined;
 
-  public pScale: any;
+  public pScale: HTMLCanvasElement | undefined;
   public ctxPScale: CanvasRenderingContext2D | undefined;
 
-  public oMain: any;
+  public oMain: HTMLCanvasElement | undefined;
   public ctxOMain: CanvasRenderingContext2D | undefined;
 
-  public cTime: any;
+  public cTime: HTMLCanvasElement | undefined;
   public ctxTime: CanvasRenderingContext2D | undefined;
 
   public paneMainEl: HTMLElement | undefined;
