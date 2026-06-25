@@ -1,10 +1,23 @@
+// OPEN-CHARTS
+// Copyright (C) 2026 Juan José Caballero Rey - https://github.com/rey-sudo
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see <https://www.gnu.org/licenses/>.
+
 export const PRICE_SCALE_W = 72;
 export const MIN_BAR_W = 1;
 export const MAX_BAR_W = 40;
 export const DEFAULT_BAR_W = 8;
 export const SCROLL_ZOOM_FACTOR = 0.12;
-
-export type ChartType = "candlestick" | "line" | "area";
 
 export interface ChartColors {
   bg: string;
@@ -42,7 +55,6 @@ export interface ChartColors {
 }
 
 export interface ChartOptions {
-  chartType: ChartType;
   rightPadBars: number;
   barWidth: number;
   minBarWidth: number;
@@ -52,7 +64,6 @@ export interface ChartOptions {
 }
 
 export const DEFAULT_OPTIONS: ChartOptions = {
-  chartType: "candlestick",
   rightPadBars: 20,
   barWidth: DEFAULT_BAR_W,
   minBarWidth: MIN_BAR_W,

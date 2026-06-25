@@ -13,8 +13,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-// https://nuxt.com/docs/api/configuration/nuxt-config
-
 import {
   DEFAULT_OPTIONS,
   DEFAULT_BAR_W,
