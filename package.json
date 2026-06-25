@@ -25,7 +25,8 @@
     "dev": "vite",
     "playground": "vite",
     "build:lib": "tsup",
-    "prepublishOnly": "npm run build:lib"
+    "prepublishOnly": "npm run build:lib",
+    "docs": "typedoc && serve docs"
   },
   "keywords": [
     "trading",
@@ -39,6 +40,7 @@
     "url": "https://github.com/rey-sudo/open-charts/open-charts.git"
   },
   "devDependencies": {
+    "serve": "^14.2.6",
     "tsup": "^8.5.0",
     "typedoc": "^0.28.19",
     "typescript": "^5.9.0",
