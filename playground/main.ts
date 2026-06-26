@@ -1,3 +1,5 @@
+import { ChartEngine } from "../src/core/chartEngine";
+import { RenderPane } from "../src/core/types/engine";
 import { createChart } from "../src/index";
 
 function generateCandles(
@@ -103,17 +105,17 @@ chart.api.addSeries({
   },
 
   // Las velas no calculan un indicador nuevo, devuelven directamente el clon de la data OHLC
-  compute(data: any[]): any[] {
-    return data;
+  compute(engine: ChartEngine): any[] {
+    return engine.data;
   },
 
   render(
-    ctx: any,
-    pane: any,
-    engine: any,
+    ctx: CanvasRenderingContext2D,
+    pane: RenderPane,
+    engine: ChartEngine,
     values: any[], // Mapeado a la estructura de datos OHLC
-    priceMin: any,
-    priceMax: any,
+    priceMin: number,
+    priceMax: number,
   ): void {
     // 1. Extraer configuraciones dinámicas de los params o usar defaults
     const bullCol = this.params?.bullColor?.value ?? "#00c87a";
@@ -245,11 +247,13 @@ chart.api.addSeries({
     },
   },
 
-  compute(data: any[]): any[] {
+  compute(engine: ChartEngine): any[] {
+    const data: any = engine.data;
+
     const period = 20;
-    const out: any[] = new Array(data.length).fill(null);
+    const out: any[] = new Array(data?.length).fill(null);
     let sum = 0;
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 0; i < data?.length; i++) {
       sum += data[i].c;
       if (i >= period) sum -= data[i - period].c;
       if (i >= period - 1) out[i] = sum / period;
@@ -258,13 +262,13 @@ chart.api.addSeries({
   },
 
   render(
-    ctx: any,
-    pane: any,
-    engine: any,
+    ctx: CanvasRenderingContext2D,
+    pane: RenderPane,
+    engine: ChartEngine,
     values: any[],
-    priceMin: any,
-    priceMax: any,
-    params: any,
+    priceMin: number,
+    priceMax: number,
+    params: Record<string, unknown>,
   ): void {
     ctx.strokeStyle = "#ffb830";
     ctx.lineWidth = 1.3;

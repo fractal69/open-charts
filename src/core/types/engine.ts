@@ -1,3 +1,5 @@
+import type { ChartEngine } from "../chartEngine";
+
 /**
  * Pane with geometry only.
  */
@@ -62,4 +64,50 @@ export interface PanOrigin {
 
   /** First visible bar index when the pan started. */
   viewStart: number;
+}
+
+/**
+ * Indicator definition.
+ */
+export interface SeriesDefinition {
+  /** Unique indicator identifier. */
+  id: string;
+
+  label: string;
+
+  /** Display name. */
+  params: unknown;
+
+  /** Rendering layer. */
+  layer: "background" | "foreground";
+
+  /** Recomputes the indicator values. */
+  compute(engine: ChartEngine): unknown[];
+
+  /** Renders the indicator. */
+  render(
+    ctx: CanvasRenderingContext2D,
+    pane: RenderPane,
+    engine: ChartEngine,
+    values: unknown[],
+    priceMin: number,
+    priceMax: number
+  ): void;
+}
+
+/**
+ * Registered indicator instance.
+ */
+export interface ChartSeries {
+  /** Indicator definition. */
+  def: SeriesDefinition;
+
+  /** Computed indicator values. */
+  values: unknown[];
+
+  /** Whether the indicator is currently enabled. */
+  enabled: boolean;
+
+  /** User-defined indicator parameters. */
+  params: Record<string, unknown>;
 }

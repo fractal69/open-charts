@@ -57,7 +57,7 @@ import { setSeriesParams } from "../api/setSeriesParams";
 import { getSeriesParams } from "../api/getSeriesParams";
 import { resetZoom } from "../api/resetZoom";
 import { addDrawingModule } from "../api/addDrawingModule";
-import type { ChartPanes, MouseState, PanOrigin } from "./types/engine";
+import type { ChartPanes, ChartSeries, MouseState, PanOrigin } from "./types/engine";
 
 //--------------------------------------------------------------------------------------------------------------------
 //  CHART ENGINE
@@ -74,7 +74,7 @@ export class ChartEngine {
    * Series registry — populated via addSeries()
    * Map<id, { def, values, enabled }>
    */
-  public _series: any;
+  public _series: Map<string, ChartSeries>
 
   /**
    * Indicates whether the process is currently running.
@@ -306,7 +306,7 @@ export class ChartEngine {
 
     this.data = [];
 
-    this._series = new Map();
+    this._series = new Map<string, ChartSeries>();
 
     this._running = false;
 

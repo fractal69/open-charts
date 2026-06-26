@@ -66,7 +66,7 @@ export function setData(this: ChartEngine, data: any): boolean {
   this.interval = computeInterval(data);
 
   // Recalculate all indicator and derived series values.
-  _recomputeSeries.call(this);
+  _recomputeSeries(this);
 
   // Calculate how many bars can fit in the visible chart width.
   const capacity = Math.floor(this.chartW / this.barWidth);
