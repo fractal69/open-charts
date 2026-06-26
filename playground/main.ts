@@ -85,12 +85,14 @@ let chart = createChart(container!);
 
 chart.api.applyOptions({
   colors: {
-    bg: "#181A20",
-    bg2: "#1E2329",
-    bg3: "#2B3139",
-    bull: "rgb(8, 153, 129)",
-    bear: "rgb(242, 54, 69)",
-    grid: "#2B3139",
+    bg: "#131722",
+    bg2: "#1E222D",
+    bg3: "#2A2E39",
+
+    bull: "#22AB94",
+    bear: "#F23645",
+
+    grid: "#2A2E39",
   },
 });
 
