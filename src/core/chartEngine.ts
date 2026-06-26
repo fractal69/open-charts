@@ -69,61 +69,203 @@ export class ChartEngine {
   public api: any;
   public area: HTMLElement;
   public data: any;
+
+  /**
+   * Series registry — populated via addSeries()
+   * Map<id, { def, values, enabled }>
+   */
   public _series: any;
-  public _running: any;
-  public _rafId: any;
+
+  /**
+   * Indicates whether the process is currently running.
+   */
+  public _running: boolean;
+  /**
+   *  Stores the current requestAnimationFrame ID.
+   */
+  public _rafId: number;
+
+  /**
+   * Sets the initial width, in pixels, used to render each chart bar.
+   */
   public barWidth: number;
-  public interval: any;
-  public rightPadBars: any;
+
+  /**
+   * Bar interval in seconds. Defaults to one day (86400).
+   */
+  public interval: number;
+
+  /**
+   * Number of empty bar slots reserved to the right of the last data point.
+   */
+  public rightPadBars: number;
+
+  /**
+   * Index of the first bar currently visible in the viewport.
+   */
   public viewStart: number;
-  public viewEnd: any;
+
+  /**
+   * Exclusive end index of the current visible range. May exceed
+   * data.length due to reserved right-side padding bars.
+   */
+  public viewEnd: number;
+
+  /**
+   * Indicates whether the chart needs to be redrawn.
+   *
+   * When `true`, the render loop will update the visible frame.
+   */
   public dirty: boolean;
+
+  /**
+   * Indicates whether the overlay layer needs to be redrawn.
+   *
+   * Used for transient elements such as the crosshair, cursor,
+   * selection, or drawing previews without repainting the main chart.
+   */
   public overlayDirty: boolean;
 
+  /**
+   * Stores the latest mouse coordinates and hover state,
+   * used by overlay elements.
+   */
   public mouse: any;
-  public isPanning: any;
+
+  /**
+   * Indicates whether a pan (click-and-drag navigation) interaction
+   * is currently active on the chart.
+   */
+  public isPanning: boolean;
+
+  /**
+   * Stores the pointer position and viewport state at the start
+   * of a pan operation, used to calculate drag offsets.
+   */
   public panOrigin: any;
-  public _liveMode: any;
-  public _prevClose: any;
+
+  public _liveMode: boolean;
+
   public _drawingModules: any;
-  public _pointerClaimed: any;
-  public drawingsDirty: any;
+
+  /**
+   * Indicates whether pointer input is currently owned by another interaction.
+   */
+  public _pointerClaimed: boolean;
+  public drawingsDirty: boolean;
   public _dmEventHandlers: any;
-  public fps: any;
-  public _fpsFrames: any;
-  public _fpsTime: any;
+
+  public fps: number;
+  public _fpsFrames: number;
+  public _fpsTime: number;
 
   public panes: ChartPanes;
+
   /**
    * Stores the drawable chart width, excluding the price scale area.
    */
   public chartW: number;
+
+  /**
+   * Shared abort controller used to unregister all event listeners
+   * and cancel asynchronous operations during cleanup.
+   */
   public _abortController: AbortController;
 
+  /**
+   * Floating UI containers.
+   */
   public legendDiv!: HTMLElement;
+
+  /**
+   * Floating UI containers.
+   */
   public indicatorsDiv!: HTMLElement;
 
+  /**
+   * Main chart rendering canvas.
+   */
   public cMain!: HTMLCanvasElement;
+
+  /**
+   * Main chart rendering context.
+   */
   public ctxMain!: CanvasRenderingContext2D;
 
+  /**
+   * Drawings layer canvas.
+   */
+
   public cDrawings!: HTMLCanvasElement;
+
+  /**
+   * Drawings layer rendering context.
+   */
   public ctxDrawings!: CanvasRenderingContext2D;
 
+  /**
+   * Price scale canvas.
+   */
   public pScale!: HTMLCanvasElement;
+
+  /**
+   * Price scale rendering context.
+   */
   public ctxPScale!: CanvasRenderingContext2D;
 
+  /**
+   * Overlay canvas.
+   */
   public oMain!: HTMLCanvasElement;
+
+  /**
+   * Overlay rendering context.
+   */
   public ctxOMain!: CanvasRenderingContext2D;
 
+  /**
+   * Time axis canvas.
+   */
   public cTime!: HTMLCanvasElement;
+
+  /**
+   * Time axis rendering context.
+   */
   public ctxTime!: CanvasRenderingContext2D;
 
+  /**
+   * Main chart pane element.
+   */
   public paneMainEl!: HTMLElement;
+
+  /**
+   * Time axis container element.
+   */
   public timeAxisEl!: HTMLElement;
+
+  /**
+   * Horizontal scrollbar element.
+   */
   public scrollbarEl!: HTMLElement;
+
+  /**
+   * Scrollbar thumb element.
+   */
   public scrollThumbEl!: HTMLElement;
+
+  /**
+   * FPS status label.
+   */
   public statusFpsEl!: HTMLElement;
+
+  /**
+   * Visible bars status label.
+   */
   public statusBarsEl!: HTMLElement;
+
+  /**
+   * Zoom level status label.
+   */
   public statusZoomEl!: HTMLElement;
 
   constructor(area: HTMLElement) {
@@ -156,79 +298,43 @@ export class ChartEngine {
 
     this.area = area;
 
-    // Data
     this.data = [];
 
-    // Series registry — populated via addSeries()
-    // Map<id, { def, values, enabled }>
     this._series = new Map();
 
-    /**
-     * Indicates whether the process is currently running.
-     */
     this._running = false;
 
-    /**
-     *  Stores the current requestAnimationFrame ID.
-     */
-    this._rafId = null;
+    this._rafId = 0;
 
-    /**
-     * Sets the initial width, in pixels, used to render each chart bar.
-     */
     this.barWidth = DEFAULT_BAR_W;
+
     this.interval = 86400;
-    /**
-     * Number of empty bar slots reserved to the right of the last data point.
-     */
+
     this.rightPadBars = 20;
 
-    /**
-     * Index of the first bar currently visible in the viewport.
-     */
     this.viewStart = 0;
 
-    /**
-     * Exclusive end index of the current visible range. May exceed
-     * data.length due to reserved right-side padding bars.
-     */
     this.viewEnd = 0;
 
-    // Render state
     this.dirty = true;
+
     this.overlayDirty = true;
 
-    /**
-     * Stores the latest mouse coordinates and hover state,
-     * used by overlay elements.
-     */
     this.mouse = { x: 0, y: 0, inside: false };
 
-    /**
-     * Indicates whether a pan (click-and-drag navigation) interaction
-     * is currently active on the chart.
-     */
     this.isPanning = false;
 
-    /**
-     * Stores the pointer position and viewport state at the start
-     * of a pan operation, used to calculate drag offsets.
-     */
     this.panOrigin = { x: 0, viewStart: 0 };
 
-    // Live update state
-    this._liveMode = false; // true while receiving ticks
-    this._prevClose = 0; // close of bar before current (for RSI tick)
+    this._liveMode = false;
 
-    this._drawingModules = new Map(); // Map<id, handle>
+    this._drawingModules = new Map();
 
-    /**
-     * Indicates whether pointer input is currently owned by another interaction.
-     */
     this._pointerClaimed = false;
 
-    this.drawingsDirty = false; // flag para el RAF loop
-    this._dmEventHandlers = {}; // listeners internos del engine hacia los módulos
+    this.drawingsDirty = false;
+
+    this._dmEventHandlers = {};
 
     // Perf
     this.fps = 60;
