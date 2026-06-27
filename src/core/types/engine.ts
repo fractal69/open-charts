@@ -1,3 +1,4 @@
+import { _clampView } from "../_clampView";
 import type { ChartEngine } from "../chartEngine";
 
 /**
@@ -146,9 +147,15 @@ export class ChartSeries {
       this.values = this.def.compute(data);
     }
 
-    this.engine.dirty = true;
+    const capacity = Math.floor(this.engine.chartW / this.engine.barWidth);
+
+    this.engine.viewEnd = data.length + this.engine.rightPadBars;
+    this.engine.viewStart = Math.max(0, this.engine.viewEnd - capacity);
+
+    _clampView(this.engine); 
 
     this.engine.hasData = true;
+    this.engine.dirty = true;
 
     return this;
   }

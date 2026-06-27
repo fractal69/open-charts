@@ -7,7 +7,7 @@ import type { ChartEngine } from "./chartEngine";
  */
 export function _clampView(engine: ChartEngine) {
   // Exit if no data is available.
-  if (!engine.data.length) return;
+  if (!engine.hasData) return;
 
   // Calculate how many bars fit within the current chart width.
   const capacity = Math.floor(engine.chartW / engine.barWidth);

@@ -7,7 +7,7 @@ import type { ChartEngine } from "../core/chartEngine";
  */
 export function _updateScrollThumb(engine: ChartEngine) {
   // Exit if no data is available.
-  if (!engine.data.length) return;
+  if (!engine.hasData) return;
 
   // Retrieve the draggable scrollbar thumb element.
   const thumb: HTMLElement = engine.scrollThumbEl;

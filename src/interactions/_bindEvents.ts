@@ -17,6 +17,7 @@ export function _bindEvents(engine: ChartEngine) {
   area.addEventListener(
     "mousemove",
     (e: any) => {
+    
       if (!engine.hasData) return;
 
       // Update the current mouse position and mark it as inside the chart.
