@@ -253,24 +253,17 @@ export class ChartEngineCore {
   }
 
   /**
-   * Resizes and reconfigures all chart canvases to match the current
-   * layout dimensions and device pixel ratio (DPR).
+   * Recomputes the chart layout after the container size changes.
    *
-   * This method:
-   * - Synchronizes canvas backing-store resolution with CSS dimensions.
-   * - Applies HiDPI scaling for crisp rendering on Retina displays.
-   * - Resets canvas transforms to prevent accumulated scaling.
-   * - Updates pane geometry for the main chart, price scale, and time axis.
-   * - Recalculates the available chart width.
-   * - Marks rendering layers as dirty for a full redraw.
-   * - Clamps the current viewport and updates the scroll thumb.
+   * This function synchronizes every rendering surface with the current
+   * layout, updates pane geometry, recalculates the drawable chart width,
+   * validates the viewport, and schedules a full redraw.
    *
-   * Canvas layers:
-   * - Main canvas: price series and indicators.
-   * - Overlay canvas: crosshair, hover states, and interactive elements.
-   * - Drawings canvas: user annotations and drawing tools.
-   * - Time canvas: bottom time scale.
-   * - Price scale canvas: right-side price axis.
+   * This function should be called whenever:
+   *
+   * - The window is resized.
+   * - The chart container changes size.
+   * - The device pixel ratio changes.
    */
   public resize(): void {
     _resize(this.engine);
