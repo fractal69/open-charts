@@ -9,9 +9,8 @@ import type { ChartEngine } from "../core/chartEngine";
  * - Horizontal scrollbar
  * - Legend and indicators containers
  * - Debug/status bar
- *
  */
-export function _buildLayout(engine: ChartEngine) {
+export function _buildLayout(engine: ChartEngine): void {
   const chartArea = engine.area;
 
   // Create the complete chart DOM structure.
@@ -32,6 +31,7 @@ export function _buildLayout(engine: ChartEngine) {
     </div>
 
     <div id="chart-legend"></div>
+    
     <div id="chart-indicators"></div>
 
     <div id="statusbar">

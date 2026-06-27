@@ -4,7 +4,7 @@ import type { ChartEngine } from "../core/chartEngine";
  * Applies configured color values as CSS custom properties
  * on the document root element.
  */
-export function _loadCssVariables(engine: ChartEngine) {
+export function _loadCssVariables(engine: ChartEngine): void {
   const root = document.documentElement;
 
   if (engine.options.colors) {

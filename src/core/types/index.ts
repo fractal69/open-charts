@@ -236,7 +236,6 @@ export class ChartEngineCore {
    * - Horizontal scrollbar
    * - Legend and indicators containers
    * - Debug/status bar
-   *
    */
   public buildLayout(): void {
     _buildLayout(this.engine);

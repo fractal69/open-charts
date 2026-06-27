@@ -50,7 +50,7 @@ export function _resize(engine: ChartEngine): void {
     canvas.style.height = h / dpr + "px";
 
     // Scale the rendering context to match DPR coordinates.
-    const ctx = canvas.getContext("2d");
+    const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
 
     if (ctx) {
       ctx.setTransform(1, 0, 0, 1, 0, 0);

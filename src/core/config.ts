@@ -13,11 +13,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-export const PRICE_SCALE_W = 72;
-export const MIN_BAR_W = 1;
-export const MAX_BAR_W = 40;
-export const DEFAULT_BAR_W = 8;
-export const SCROLL_ZOOM_FACTOR = 0.12;
+export const PRICE_SCALE_W: number = 72;
+export const MIN_BAR_W: number = 1;
+export const MAX_BAR_W: number = 40;
+export const DEFAULT_BAR_W: number = 8;
+export const SCROLL_ZOOM_FACTOR: number = 0.10;
 
 export interface ChartColors {
   bg: string;
