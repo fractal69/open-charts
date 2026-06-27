@@ -210,10 +210,13 @@ export class ChartEngineCore {
   constructor(private readonly engine: ChartEngine) {}
 
   /**
-   * Adds a new series to the chart.
+   * Resets the viewport to the default position.
    *
-   * @param def Series definition.
-   * @returns The created series.
+   * This function is typically called after loading a new dataset or
+   * whenever the chart should display the most recent bars.
+   *
+   * The viewport is positioned at the end of the available data, then
+   * clamped to ensure it satisfies the current chart constraints.
    */
   public resetViewport(): void {
     _resetViewport(this.engine);
