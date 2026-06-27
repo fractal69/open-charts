@@ -1,7 +1,9 @@
-export function _updateLegend() {
-  if (!this.indicatorsDiv) return;
+import type { ChartEngine } from "../core/chartEngine";
 
-  this._series.forEach(({ def, enabled }) => {
+export function _updateLegend(engine: ChartEngine) {
+  if (!engine.indicatorsDiv) return;
+
+  engine._series.forEach(({ def, enabled }) => {
     const itemId = `chart-indicators-item-${def.id}`;
     let item = document.getElementById(itemId);
 
@@ -25,10 +27,10 @@ export function _updateLegend() {
       item.innerHTML = innerHTML;
 
       item.addEventListener("click", () => {
-        this.toggleSeries(def.id);
+        engine.api.toggleSeries(def.id);
       });
 
-      this.indicatorsDiv.appendChild(item);
+      engine.indicatorsDiv.appendChild(item);
     }
   });
 }

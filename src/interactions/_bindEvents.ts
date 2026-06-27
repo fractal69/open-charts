@@ -17,6 +17,8 @@ export function _bindEvents(engine: ChartEngine) {
   area.addEventListener(
     "mousemove",
     (e: any) => {
+      if (!engine.hasData) return;
+
       // Update the current mouse position and mark it as inside the chart.
       engine.mouse = { x: e.clientX, y: e.clientY, inside: true };
 
@@ -196,6 +198,8 @@ export function _bindEvents(engine: ChartEngine) {
   area.addEventListener(
     "touchmove",
     (e: any) => {
+      if (!engine.hasData) return;
+
       // Prevent default browser behavior (scroll/zoom page).
       e.preventDefault();
 
@@ -253,7 +257,7 @@ export function _bindEvents(engine: ChartEngine) {
         );
 
         const capacity = Math.floor(engine.chartW / engine.barWidth);
-        engine.viewEnd = engine.viewStart + capacity; // <- antes: Math.min(engine.data.length, ...)
+        engine.viewEnd = engine.viewStart + capacity;
         _clampView(engine);
 
         engine.dirty = true;
@@ -296,6 +300,8 @@ export function _bindEvents(engine: ChartEngine) {
   window.addEventListener(
     "mousemove",
     (e) => {
+      if (!engine.hasData) return;
+
       // Ignore movement unless a scrollbar drag is active.
       if (!scrollDragging) return;
 

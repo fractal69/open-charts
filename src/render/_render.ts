@@ -5,9 +5,10 @@ import { _renderMain } from "./_renderMain";
 import type { ChartEngine } from "../core/chartEngine";
 
 export function _render(engine: ChartEngine) {
-  if (!engine.data.length) return;
-  const { lo, hi } = _visiblePriceRange.call(engine);
+  if (!engine.hasData) return;
+
+  const { lo, hi } = _visiblePriceRange(engine);
   _renderMain(engine, lo, hi);
-  _renderPriceScale.call(engine, lo, hi);
-  _renderTimeAxis.call(engine);
+  _renderPriceScale(engine, lo, hi);
+  _renderTimeAxis(engine);
 }

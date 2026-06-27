@@ -354,12 +354,13 @@ export class ChartEngine {
 
     this._abortController = new AbortController();
 
-    _loadCssVariables(this);
-    _buildLayout(this);
-    _grabCanvases(this);
+    this._init();
   }
 
   _init() {
+    _loadCssVariables(this);
+    _buildLayout(this);
+    _grabCanvases(this);
     _resize(this);
     _bindEvents(this);
     _startLoop(this);

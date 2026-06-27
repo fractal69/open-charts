@@ -33,7 +33,7 @@ export function addSeries(
   engine._series.set(def.id, entry);
 
   // Refresh the legend UI.
-  _updateLegend.call(engine);
+  _updateLegend(engine);
 
   // Enable method chaining.
   return entry;

@@ -10,12 +10,12 @@ import { _drawLivePulse } from "./_drawLivePulse";
 export function _renderOverlay(engine: ChartEngine) {
   _clearOverlay.call(engine, engine.ctxOMain, engine.panes.main);
 
-  _renderTimeAxis.call(engine);
+  _renderTimeAxis(engine);
 
   if (!engine.mouse.inside || !engine.data.length) {
     // Still draw the live price line even without crosshair
     if (engine._liveMode && engine.data.length) {
-      const { lo, hi } = _visiblePriceRange.call(engine);
+      const { lo, hi } = _visiblePriceRange(engine);
       _drawLivePulse.call(engine, engine.ctxOMain, engine.panes.main, lo, hi);
     }
     return;
@@ -34,12 +34,13 @@ export function _renderOverlay(engine: ChartEngine) {
     engine.viewStart,
     Math.min(engine.viewEnd - 1, engine.utils._indexAtX(localX)),
   );
-  const d = engine.data[barIdx]; // may be undefined in right-padding zone
+  const d: any = engine.data[barIdx]; // may be undefined in right-padding zone
 
-  const { lo, hi } = _visiblePriceRange.call(engine);
+  const { lo, hi } = _visiblePriceRange(engine);
 
   // Live price dash — drawn unconditionally so it survives the !d early-exit below
-  if (engine._liveMode) _drawLivePulse.call(engine, engine.ctxOMain, pMain, lo, hi);
+  if (engine._liveMode)
+    _drawLivePulse.call(engine, engine.ctxOMain, pMain, lo, hi);
 
   // Crosshair X (shared across panes)
   const snapX = Math.round(engine.utils._xOf(barIdx)) + 0.5;

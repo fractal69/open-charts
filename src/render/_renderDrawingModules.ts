@@ -2,7 +2,7 @@ import { _visiblePriceRange } from "../core/_visiblePriceRange";
 import type { ChartEngine } from "../core/chartEngine";
 
 export function _renderDrawingModules(engine: ChartEngine) {
-  const { lo, hi } = _visiblePriceRange.call(engine);
+  const { lo, hi } = _visiblePriceRange(engine);
   const p = engine.panes.main;
 
   // Funciones de conversión frescas para este frame

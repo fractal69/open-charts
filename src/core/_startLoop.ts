@@ -2,6 +2,8 @@ import { _renderDrawingModules } from "../render/_renderDrawingModules";
 import { _renderOverlay } from "../render/_renderOverlay";
 import type { ChartEngine } from "./chartEngine";
 import { _render } from "../render/_render";
+import { _clampView } from "./_clampView";
+import { _updateScrollThumb } from "../ui/_updateScrollThumb";
 
 /**
  * Starts the chart render loop.
@@ -46,6 +48,12 @@ export function _startLoop(engine: ChartEngine) {
       engine.overlayDirty = false;
     }
   };
+
+  // Ensure viewport constraints remain valid.
+  //_clampView(engine);
+
+  // Recalculate scrollbar thumb size and position.
+  //_updateScrollThumb(engine);
 
   engine._rafId = requestAnimationFrame(loop);
 }
