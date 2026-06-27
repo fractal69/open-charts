@@ -1,5 +1,5 @@
 import type { ChartEngine } from "../core/chartEngine";
-import { ChartSeries, type SeriesDefinition } from "../core/types/engine";
+import { ChartSeries, type SeriesDefinition } from "../core/types";
 import { _updateLegend } from "../ui/_updateLegend";
 
 /**

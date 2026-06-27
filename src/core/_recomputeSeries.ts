@@ -1,5 +1,5 @@
 import type { ChartEngine } from "./chartEngine";
-import type { ChartSeries } from "./types/engine";
+import type { ChartSeries } from "./types";
 
 // Recompute values for all registered series (called on full load)
 export function _recomputeSeries(engine: ChartEngine) {

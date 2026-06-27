@@ -1,5 +1,5 @@
 import type { ChartEngine } from "../src/core/chartEngine";
-import type { RenderPane, SeriesDefinition } from "../src/core/types/engine";
+import type { RenderPane, SeriesDefinition } from "../src/core/types";
 
 export const CandlestickSeries: SeriesDefinition = {
   id: "candlestick",

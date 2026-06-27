@@ -46,7 +46,7 @@ import type {
   ChartSeries,
   MouseState,
   PanOrigin,
-} from "./types/engine";
+} from "./types";
 import { _clampView } from "./_clampView";
 import { ChartEngineApi } from "../api/types";
 

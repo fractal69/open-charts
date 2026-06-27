@@ -1,5 +1,5 @@
 import type { ChartEngine } from "../../core/chartEngine";
-import type { ChartSeries, SeriesDefinition } from "../../core/types/engine";
+import type { ChartSeries, SeriesDefinition } from "../../core/types";
 import { addSeries } from "../addSeries";
 
 /**
