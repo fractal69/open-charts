@@ -1,5 +1,5 @@
 import type { ChartEngine } from "../core/chartEngine";
-import type { ChartSeries, SeriesDefinition } from "../core/types/engine";
+import { ChartSeries, type SeriesDefinition } from "../core/types/engine";
 import { _updateLegend } from "../ui/_updateLegend";
 
 /**
@@ -14,9 +14,9 @@ import { _updateLegend } from "../ui/_updateLegend";
  * @returns The chart instance for method chaining.
  */
 export function addSeries(
-  this: ChartEngine,
+  engine: ChartEngine,
   def: SeriesDefinition,
-): ChartEngine {
+): ChartSeries {
   // Clone the indicator parameter definitions.
   const params: Record<string, unknown> = {};
 
@@ -25,26 +25,16 @@ export function addSeries(
       params[key] = { ...field };
     }
   }
-
+  
   // Create the series instance.
-  const entry: ChartSeries = {
-    def,
-    values: [],
-    enabled: true,
-    params,
-  };
-
-  // Compute indicator values immediately if data is already loaded.
-  if (this.data.length) {
-    entry.values = def.compute(this);
-  }
+  const entry: ChartSeries = new ChartSeries(engine, def, params);
 
   // Register the series using its unique identifier.
-  this._series.set(def.id, entry);
+  engine._series.set(def.id, entry);
 
   // Refresh the legend UI.
-  _updateLegend.call(this);
+  _updateLegend.call(engine);
 
   // Enable method chaining.
-  return this;
+  return entry;
 }

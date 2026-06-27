@@ -84,10 +84,7 @@ let container = document.getElementById("chart-area");
 
 let chart = createChart(container!);
 
-chart.api.applyOptions({});
+const candles = chart.addSeries(CandlestickSeries);
 
-chart.api.setData(normalizeCandles(fakeData));
-
-const candles = chart.api.addSeries(CandlestickSeries);
-
+candles.setData(normalizeCandles(fakeData));
 

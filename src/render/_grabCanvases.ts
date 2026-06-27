@@ -30,7 +30,6 @@ export function _grabCanvases(engine: ChartEngine) {
   engine.timeAxisEl = a.querySelector("#time-axis") as HTMLElement;
   engine.scrollbarEl = a.querySelector("#scrollbar") as HTMLElement;
   engine.scrollThumbEl = a.querySelector("#scrollthumb") as HTMLElement;
-  engine.statusFpsEl = a.querySelector("#status-fps") as HTMLElement;
   engine.statusBarsEl = a.querySelector("#status-bars") as HTMLElement;
   engine.statusZoomEl = a.querySelector("#status-zoom") as HTMLElement;
 }

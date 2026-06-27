@@ -57,7 +57,13 @@ import { setSeriesParams } from "../api/setSeriesParams";
 import { getSeriesParams } from "../api/getSeriesParams";
 import { resetZoom } from "../api/resetZoom";
 import { addDrawingModule } from "../api/addDrawingModule";
-import type { ChartPanes, ChartSeries, MouseState, PanOrigin } from "./types/engine";
+import type {
+  ChartPanes,
+  ChartSeries,
+  MouseState,
+  PanOrigin,
+  SeriesDefinition,
+} from "./types/engine";
 
 //--------------------------------------------------------------------------------------------------------------------
 //  CHART ENGINE
@@ -68,13 +74,14 @@ export class ChartEngine {
   public utils: any;
   public api: any;
   public area: HTMLElement;
-  public data: any;
+
+  public hasData: boolean;
 
   /**
    * Series registry — populated via addSeries()
    * Map<id, { def, values, enabled }>
    */
-  public _series: Map<string, ChartSeries>
+  public _series: Map<string, ChartSeries>;
 
   /**
    * Indicates whether the process is currently running.
@@ -288,7 +295,6 @@ export class ChartEngine {
       applyOptions: applyOptions.bind(this),
       destroy: destroy.bind(this),
       update: update.bind(this),
-      addSeries: addSeries.bind(this),
       removeSeries: removeSeries.bind(this),
       toggleSeries: toggleSeries.bind(this),
       enableSeries: enableSeries.bind(this),
@@ -304,7 +310,7 @@ export class ChartEngine {
 
     this.area = area;
 
-    this.data = [];
+    this.hasData = false;
 
     this._series = new Map<string, ChartSeries>();
 
@@ -358,5 +364,13 @@ export class ChartEngine {
     _resize(this);
     _bindEvents(this);
     _startLoop(this);
+  }
+
+  get data() {
+    return this._series.values().next().value?.data || [];
+  }
+
+  addSeries(def: SeriesDefinition) {
+    return addSeries(this, def);
   }
 }

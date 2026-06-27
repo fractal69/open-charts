@@ -75,6 +75,8 @@ export interface SeriesDefinition {
 
   label: string;
 
+  color: string;
+
   /** Display name. */
   params: Record<string, any>;
 
@@ -82,7 +84,7 @@ export interface SeriesDefinition {
   layer: "background" | "foreground";
 
   /** Recomputes the indicator values. */
-  compute(engine: ChartEngine): unknown[];
+  compute(data: any): unknown[];
 
   /** Renders the indicator. */
   render(
@@ -100,18 +102,94 @@ export interface SeriesDefinition {
 }
 
 /**
- * Registered indicator instance.
+ * Represents a chart series.
+ *
+ * A series owns its data, computed values, parameters,
+ * and exposes the public API used by consumers.
  */
-export interface ChartSeries {
+export class ChartSeries {
   /** Indicator definition. */
-  def: SeriesDefinition;
+  public readonly def: SeriesDefinition;
 
-  /** Computed indicator values. */
-  values: unknown[];
+  /** Source data for the series. */
+  public data: unknown[] = [];
 
-  /** Whether the indicator is currently enabled. */
-  enabled: boolean;
+  /** Computed values used for rendering. */
+  public values: unknown[] = [];
 
-  /** User-defined indicator parameters. */
-  params: Record<string, unknown>;
+  /** Whether the series is currently visible. */
+  public enabled = true;
+
+  /** User-defined series parameters. */
+  public params: Record<string, unknown>;
+
+  constructor(
+    private readonly engine: ChartEngine,
+    def: SeriesDefinition,
+    params: Record<string, unknown> = {},
+  ) {
+    this.def = def;
+    this.params = params;
+  }
+
+  /**
+   * Replaces the series data.
+   *
+   * @param data New data set.
+   * @returns The series instance.
+   */
+  public setData(data: unknown[]): this {
+    this.data = data;
+
+    if (this.def.compute) {
+      this.values = this.def.compute(data);
+    }
+
+    this.engine.dirty = true;
+
+    this.engine.hasData = true;
+
+    return this;
+  }
+
+  /**
+   * Appends or updates the latest data point.
+   *
+   * @param bar New bar.
+   * @returns The series instance.
+   */
+  public update(bar: unknown): this {
+    this.data.push(bar);
+
+    if (this.def.compute) {
+      this.values = this.def.compute(this.data);
+    }
+
+    this.engine.dirty = true;
+    this.engine.hasData = true;
+
+    return this;
+  }
+
+  /**
+   * Enables or disables the series.
+   *
+   * @param visible Whether the series should be rendered.
+   * @returns The series instance.
+   */
+  public setVisible(visible: boolean): this {
+    this.enabled = visible;
+    this.engine.dirty = true;
+
+    return this;
+  }
+
+  /**
+   * Removes the series from the chart.
+   */
+  public remove(): void {
+    this.engine._series.delete(this.def.id);
+    this.engine.dirty = true;
+    this.engine.hasData = false;
+  }
 }
