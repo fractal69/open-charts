@@ -149,7 +149,7 @@ export function _bindEvents(engine: ChartEngine) {
       const localX = e.clientX - engine.panes.main.x;
 
       // Identify the bar index under the cursor (zoom focus point).
-      const focusIdx = engine.utils._indexAtX(localX);
+      const focusIdx = engine.utils.indexAtX(localX);
 
       // Apply the new zoom level.
       engine.barWidth = newBarW;

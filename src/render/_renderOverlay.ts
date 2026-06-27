@@ -32,7 +32,7 @@ export function _renderOverlay(engine: ChartEngine) {
   const localX = mx - pMain.x;
   const barIdx = Math.max(
     engine.viewStart,
-    Math.min(engine.viewEnd - 1, engine.utils._indexAtX(localX)),
+    Math.min(engine.viewEnd - 1, engine.utils.indexAtX(localX)),
   );
   const d: any = engine.data[barIdx]; // may be undefined in right-padding zone
 
@@ -43,7 +43,7 @@ export function _renderOverlay(engine: ChartEngine) {
     _drawLivePulse.call(engine, engine.ctxOMain, pMain, lo, hi);
 
   // Crosshair X (shared across panes)
-  const snapX = Math.round(engine.utils._xOf(barIdx)) + 0.5;
+  const snapX = Math.round(engine.utils.xOf(barIdx)) + 0.5;
 
   if (!d) {
     const ctx = engine.ctxOMain;
@@ -98,7 +98,7 @@ export function _renderOverlay(engine: ChartEngine) {
   ctx.setLineDash([]);
 
   // Dot at close
-  const dotY = engine.utils._yOf(d.c, pMain, lo, hi);
+  const dotY = engine.utils.yOf(d.c, pMain, lo, hi);
   ctx.beginPath();
   ctx.arc(snapX - 0.5, dotY, 3, 0, Math.PI * 2);
   ctx.fillStyle = engine.options.colors.crossPt;

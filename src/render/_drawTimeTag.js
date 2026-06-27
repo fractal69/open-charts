@@ -4,7 +4,7 @@ export function _drawTimeTag(idx) {
   const tCtx = this.ctxTime;
   const d = this.data[idx];
   if (!d) return;
-  const x = this.utils._xOf(idx);
+  const x = this.utils.xOf(idx);
   const label = _formatDateFull(d.t, this.interval);
   const tw = 90;
   tCtx.save();

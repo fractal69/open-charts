@@ -32,7 +32,7 @@ export function _renderPriceScale(
   ctx.font = "10px Inter, sans-serif";
   ctx.textAlign = "right";
   steps.forEach((price) => {
-    const y = Math.round(engine.utils._yOf(price, p, priceMin, priceMax)) + 0.5;
+    const y = Math.round(engine.utils.yOf(price, p, priceMin, priceMax)) + 0.5;
     ctx.fillText(price.toFixed(2), W - 8, y + 3.5);
   });
 
@@ -40,7 +40,7 @@ export function _renderPriceScale(
   if (!engine.hasData) return;
   const last: any = engine.data[engine.data.length - 1];
 
-  const y = engine.utils._yOf(last.c, p, priceMin, priceMax);
+  const y = engine.utils.yOf(last.c, p, priceMin, priceMax);
   const bull = last.c >= last.o;
   ctx.fillStyle = bull
     ? engine.options.colors.bull

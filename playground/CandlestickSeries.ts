@@ -49,11 +49,11 @@ export const CandlestickSeries: SeriesDefinition = {
       if (!d) continue;
 
       // Conversión de coordenadas usando los métodos del engine
-      const x = Math.round(engine.utils._xOf(i));
-      const yH = Math.round(engine.utils._yOf(d.h, pane, priceMin, priceMax));
-      const yL = Math.round(engine.utils._yOf(d.l, pane, priceMin, priceMax));
-      const yO = Math.round(engine.utils._yOf(d.o, pane, priceMin, priceMax));
-      const yC = Math.round(engine.utils._yOf(d.c, pane, priceMin, priceMax));
+      const x = Math.round(engine.utils.xOf(i));
+      const yH = Math.round(engine.utils.yOf(d.h, pane, priceMin, priceMax));
+      const yL = Math.round(engine.utils.yOf(d.l, pane, priceMin, priceMax));
+      const yO = Math.round(engine.utils.yOf(d.o, pane, priceMin, priceMax));
+      const yC = Math.round(engine.utils.yOf(d.c, pane, priceMin, priceMax));
 
       const bull = d.c >= d.o;
       const col = bull ? bullCol : bearCol;

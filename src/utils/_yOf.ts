@@ -1,5 +1,3 @@
-import type { ChartEngine } from "../core/chartEngine";
-
 /**
  * Converts a price value into its corresponding Y pixel coordinate
  * within a chart pane.
@@ -9,7 +7,6 @@ import type { ChartEngine } from "../core/chartEngine";
  * a small top and bottom padding (4% each) to prevent candles,
  * indicators, or drawings from touching the pane edges.
  *
- * @param this - Chart engine instance.
  * @param price - Price value to convert.
  * @param pane - Target pane containing height information.
  * @param priceMin - Lowest visible price.
@@ -17,7 +14,6 @@ import type { ChartEngine } from "../core/chartEngine";
  * @returns Y coordinate in canvas pixels.
  */
 export function _yOf(
-  this: ChartEngine,
   price: number,
   pane: any,
   priceMin: number,

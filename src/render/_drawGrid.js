@@ -10,7 +10,7 @@ export function _drawGrid(ctx, W, H, cw, priceMin, priceMax, p) {
   // Horizontal price grid lines
   const steps = _nicePriceSteps(priceMin, priceMax, 6);
   steps.forEach((price) => {
-    const y = Math.round(this.utils._yOf(price, p, priceMin, priceMax)) + 0.5;
+    const y = Math.round(this.utils.yOf(price, p, priceMin, priceMax)) + 0.5;
     ctx.beginPath();
     ctx.moveTo(0, y);
     ctx.lineTo(cw, y);
@@ -21,7 +21,7 @@ export function _drawGrid(ctx, W, H, cw, priceMin, priceMax, p) {
   const timeStep = _timeGridStep.call(this);
   for (let i = this.viewStart; i < this.viewEnd && i < this.data.length; i++) {
     if (_isTimeGridLine.call(this, i, timeStep)) {
-      const x = Math.round(this.utils._xOf(i)) + 0.5;
+      const x = Math.round(this.utils.xOf(i)) + 0.5;
       ctx.strokeStyle = this.options.colors.grid;
       ctx.beginPath();
       ctx.moveTo(x, 0);

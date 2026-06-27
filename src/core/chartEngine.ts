@@ -48,6 +48,7 @@ import {
   type MouseState,
   type PanOrigin,
 } from "./types";
+import { ChartEngineUtils } from "../utils/types";
 
 //--------------------------------------------------------------------------------------------------------------------
 //  CHART ENGINE
@@ -273,12 +274,8 @@ export class ChartEngine {
 
     this.core = new ChartEngineCore(this);
 
-    this.utils = {
-      _xOf: _xOf.bind(this),
-      _yOf: _yOf.bind(this),
-      _indexAtX: _indexAtX.bind(this),
-    };
-
+    this.utils = new ChartEngineUtils(this);
+    
     this.api = new ChartEngineApi(this);
 
     this.area = area;

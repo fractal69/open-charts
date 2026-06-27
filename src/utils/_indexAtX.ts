@@ -5,6 +5,6 @@ import type { ChartEngine } from "../core/chartEngine";
  * into the corresponding data index based on current zoom
  * (bar width) and viewport offset.
  */
-export function _indexAtX(this: ChartEngine, x: number): number {
-  return Math.round((x - this.barWidth / 2) / this.barWidth) + this.viewStart;
+export function _indexAtX(engine: ChartEngine, x: number): number {
+  return Math.round((x - engine.barWidth / 2) / engine.barWidth) + engine.viewStart;
 }

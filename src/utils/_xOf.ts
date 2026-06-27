@@ -12,6 +12,6 @@ import type { ChartEngine } from "../core/chartEngine";
  * @param i - Data index of the bar to convert.
  * @returns X coordinate in canvas pixels.
  */
-export function _xOf(this: ChartEngine, i: number): number {
-  return (i - this.viewStart) * this.barWidth + this.barWidth / 2;
+export function _xOf(engine: ChartEngine, i: number): number {
+  return (i - engine.viewStart) * engine.barWidth + engine.barWidth / 2;
 }
