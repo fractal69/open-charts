@@ -1,5 +1,4 @@
 import { PRICE_SCALE_W } from "./config";
-import { _clampView } from "./_clampView";
 import type { ChartEngine } from "./chartEngine";
 import { _updateScrollThumb } from "../ui/_updateScrollThumb";
 
@@ -131,7 +130,7 @@ export function _resize(engine: ChartEngine): void {
   engine.chartW = mainRect.width - PRICE_SCALE_W;
 
   // Keep the current viewport valid after the resize.
-  _clampView(engine);
+  engine.core.clampView();
 
   // Synchronize the scrollbar with the new viewport.
   _updateScrollThumb(engine);

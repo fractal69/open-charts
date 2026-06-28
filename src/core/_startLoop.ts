@@ -2,7 +2,6 @@ import { _renderDrawingModules } from "../render/_renderDrawingModules";
 import { _renderOverlay } from "../render/_renderOverlay";
 import type { ChartEngine } from "./chartEngine";
 import { _render } from "../render/_render";
-import { _clampView } from "./_clampView";
 import { _updateScrollThumb } from "../ui/_updateScrollThumb";
 
 /**
