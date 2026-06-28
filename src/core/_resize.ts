@@ -133,7 +133,7 @@ export function _resize(engine: ChartEngine): void {
   engine.timeScale.clampView();
 
   // Synchronize the scrollbar with the new viewport.
-  _updateScrollThumb(engine);
+  engine.timeScale.updateScrollThumb();
 
   // Schedule a full redraw.
   engine.dirty = true;

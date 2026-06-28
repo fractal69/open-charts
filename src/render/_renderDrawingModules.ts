@@ -6,9 +6,9 @@ export function _renderDrawingModules(engine: ChartEngine) {
   const p = engine.panes.main;
 
   // Funciones de conversión frescas para este frame
-  const xOf = (i: any) => engine.utils._xOf(i);
-  const yOf = (price: any) => engine.utils._yOf(price, p, lo, hi);
-  const indexAtX = (x: any) => engine.utils._indexAtX(x);
+  const xOf = (i: any) => engine.utils.xOf(i);
+  const yOf = (price: any) => engine.utils.yOf(price, p, lo, hi);
+  const indexAtX = (x: any) => engine.utils.indexAtX(x);
   const priceAtY = (y: any) =>
     lo + ((hi - lo) * (p.h * 0.96 - y)) / (p.h * 0.92);
 

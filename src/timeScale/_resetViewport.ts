@@ -1,5 +1,4 @@
-import { _clampView } from "./_clampView";
-import type { ChartEngine } from "./chartEngine";
+import type { ChartEngine } from "../core/chartEngine";
 
 /**
  * Resets the viewport to the default position.
@@ -26,7 +25,10 @@ export function _resetViewport(engine: ChartEngine): void {
   engine.viewEnd = data.length + engine.rightPadBars;
 
   // Clamp the viewport to the current chart capacity.
-  _clampView(engine);
+  engine.timeScale.clampView();
+
+  // Synchronize the scrollbar with the new viewport.
+  engine.timeScale.updateScrollThumb();
 
   // Request a redraw.
   engine.dirty = true;

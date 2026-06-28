@@ -1,9 +1,24 @@
 import type { ChartEngine } from "../core/chartEngine";
 
 /**
- * Updates the scrollbar thumb size and position to reflect
- * the current visible range relative to the total scrollable
- * data range, including right-side padding.
+ * Synchronizes the scrollbar thumb with the current viewport.
+ *
+ * The thumb position and size are derived from the logical visible
+ * range (`viewStart` / `viewEnd`) and the total logical range
+ * (`data.length + rightPadBars`).
+ *
+ * This function should be called whenever any value that affects the
+ * viewport or the scrollbar geometry changes, including:
+ *
+ * - After panning the chart.
+ * - After zooming (mouse wheel or pinch).
+ * - After resetting or fitting the viewport.
+ * - After loading or replacing the dataset.
+ * - After adding or removing bars.
+ * - After changing the right-side padding.
+ * - After resizing the chart (the scrollbar width changes).
+ *
+ * @param engine Chart engine instance.
  */
 export function _updateScrollThumb(engine: ChartEngine) {
   // Exit if no data is available.

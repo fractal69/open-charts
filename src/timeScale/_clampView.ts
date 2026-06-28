@@ -1,4 +1,4 @@
-import type { ChartEngine } from "./chartEngine";
+import type { ChartEngine } from "../core/chartEngine";
 
 /**
  * Clamps the current viewport to a valid visible range.
