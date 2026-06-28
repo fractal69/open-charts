@@ -49,6 +49,7 @@ import {
   type PanOrigin,
 } from "./types";
 import { ChartEngineUtils } from "../utils/types";
+import { ChartTimeScale } from "../timeScale/types";
 
 //--------------------------------------------------------------------------------------------------------------------
 //  CHART ENGINE
@@ -61,6 +62,9 @@ export class ChartEngine {
 
   public utils: ChartEngineUtils;
   public api: ChartEngineApi;
+
+  public timeScale: ChartTimeScale;
+
   public area: HTMLElement;
 
   public hasData: boolean;
@@ -275,8 +279,10 @@ export class ChartEngine {
     this.core = new ChartEngineCore(this);
 
     this.utils = new ChartEngineUtils(this);
-    
+
     this.api = new ChartEngineApi(this);
+
+    this.timeScale = new ChartTimeScale(this);
 
     this.area = area;
 

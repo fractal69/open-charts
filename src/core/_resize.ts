@@ -130,7 +130,7 @@ export function _resize(engine: ChartEngine): void {
   engine.chartW = mainRect.width - PRICE_SCALE_W;
 
   // Keep the current viewport valid after the resize.
-  engine.core.clampView();
+  engine.timeScale.clampView();
 
   // Synchronize the scrollbar with the new viewport.
   _updateScrollThumb(engine);
