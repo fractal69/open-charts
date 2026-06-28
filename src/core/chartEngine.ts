@@ -27,7 +27,6 @@ import { _startLoop } from "../core/_startLoop";
 import { _updateScrollThumb } from "../timeScale/_updateScrollThumb";
 import { _updateStatusBar } from "../ui/_updateStatusBar";
 import { _visiblePriceRange } from "../core/_visiblePriceRange";
-import { _renderMain } from "../render/_renderMain";
 import { _renderPriceScale } from "../render/_renderPriceScale";
 import { _renderTimeAxis } from "../render/_renderTimeAxis";
 import { _timeGridStep } from "../render/_timeGridStep";
