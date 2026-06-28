@@ -1,7 +1,7 @@
+import type { ChartEngine } from "../src/core/chartEngine";
+import type { MainPane, SeriesDefinition } from "../src/core/types";
 
-chart.api.addSeries(CandlestickSeries);
-
-chart.api.addSeries({
+export const MovingAverageSeries: SeriesDefinition = {
   id: "ma",
   label: "MA 20",
   color: "#ffb830",
@@ -33,9 +33,7 @@ chart.api.addSeries({
     },
   },
 
-  compute(engine: ChartEngine): any[] {
-    const data: any = engine.data;
-
+  compute(data: any): any[] {
     const period = 20;
     const out: any[] = new Array(data?.length).fill(null);
     let sum = 0;
@@ -49,15 +47,15 @@ chart.api.addSeries({
 
   render(
     ctx: CanvasRenderingContext2D,
-    pane: RenderPane,
+    pane: MainPane,
     engine: ChartEngine,
+    data: any,
     values: any[],
     priceMin: number,
     priceMax: number,
-    params: Record<string, unknown>,
   ): void {
     ctx.strokeStyle = "#ffb830";
-    ctx.lineWidth = 1.3;
+    ctx.lineWidth = 2;
     ctx.lineJoin = "round";
     ctx.beginPath();
     let started = false;
@@ -67,8 +65,8 @@ chart.api.addSeries({
       i++
     ) {
       if (values[i] === null) continue;
-      const x = engine.utils._xOf(i);
-      const y = engine.utils._yOf(values[i], pane, priceMin, priceMax);
+      const x = engine.utils.xOf(i);
+      const y = engine.utils.yOf(values[i], pane, priceMin, priceMax);
       if (!started) {
         ctx.moveTo(x, y);
         started = true;
@@ -92,4 +90,4 @@ chart.api.addSeries({
     if (values[i] === null) return null;
     return { label: "MA20", value: values[i].toFixed(2), color: "#ffb830" };
   },
-});
+};

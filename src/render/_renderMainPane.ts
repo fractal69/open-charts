@@ -24,8 +24,6 @@ function _renderLayer(
     if (!enabled) return;
 
     if (def.layer !== layer) return;
-    
-    console.log("RENDERIZANDO", layer, def.layer);
 
     ctx.save();
 

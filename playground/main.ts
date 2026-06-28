@@ -1,5 +1,6 @@
 import { createChart } from "../src/index";
 import { CandlestickSeries } from "./CandlestickSeries";
+import { MovingAverageSeries } from "./MovingAverageSeries";
 
 function generateCandles(
   count: number,
@@ -87,3 +88,8 @@ let chart = createChart(container!);
 const candles = chart.api.addSeries(CandlestickSeries);
 
 candles.setData(normalizeCandles(fakeData));
+
+
+const MAseries = chart.api.addSeries(MovingAverageSeries);
+
+MAseries.setData(normalizeCandles(fakeData));

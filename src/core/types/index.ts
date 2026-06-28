@@ -81,15 +81,17 @@ export interface SeriesDefinition {
   /** Unique indicator identifier. */
   id: string;
 
+  /** UI label text */
   label: string;
 
+  /** Tag color */
   color: string;
-
-  /** Display name. */
-  params: Record<string, any>;
 
   /** Rendering layer. */
   layer: "background" | "foreground";
+
+  /** Display name. */
+  params: Record<string, any>;
 
   /** Recomputes the indicator values. */
   compute(data: any): unknown[];
@@ -174,6 +176,7 @@ export class ChartSeries {
       this.values = this.def.compute(this.data);
     }
 
+    this.engine.timeScale.resetViewport();
     this.engine.dirty = true;
     this.engine.hasData = true;
 
