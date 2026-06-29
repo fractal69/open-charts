@@ -1,4 +1,3 @@
-import { _clearOverlay } from "./_clearOverlay";
 import { _renderTimeAxis } from "./_renderTimeAxis";
 import { _visiblePriceRange } from "../core/_visiblePriceRange";
 import { _drawPriceTag } from "./_drawPriceTag";
@@ -7,13 +6,16 @@ import { _updateOHLCVlegend } from "../ui/_updateOHLCVlegend";
 import type { ChartEngine } from "../core/chartEngine";
 import { _drawLivePulse } from "./_drawLivePulse";
 import { _drawCrosshairPriceTag } from "./_drawCrosshairPriceTag";
+import type { MainPane } from "../core/types";
+
+function _clearOverlay(ctx: CanvasRenderingContext2D, pane: MainPane) {
+  ctx.clearRect(0, 0, pane.w, pane.h);
+}
 
 export function _renderOverlay(engine: ChartEngine): void {
   _clearOverlay(engine.ctxOMain, engine.panes.main);
 
-  _renderTimeAxis(engine);
-
-  const { lo, hi } = _visiblePriceRange(engine);
+  const { lo, hi } = engine.core.visiblePriceRange();
 
   // Always draw the live price pulse.
   if (engine._liveMode && engine.hasData) {

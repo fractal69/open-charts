@@ -37,12 +37,6 @@ export function _renderTimeAxis(engine: ChartEngine): void {
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
 
-  console.log(step);
-
-  console.log(engine.interval);
-
-  console.log(data[0].time, data[1].time);
-
   for (let i = engine.viewStart; i < engine.viewEnd && i < data.length; i++) {
     // Skip bars that do not align with the current grid interval.
     if (!_isTimeGridLine(engine, i, step)) continue;
