@@ -25,7 +25,7 @@ export function _drawPriceLine(
   ctx.save();
   ctx.fillStyle = color;
 
-  const radius = 0.8;
+  const radius = 0.75;
   const spacing = 6;
 
   for (let x = 0; x <= engine.chartW; x += spacing) {
