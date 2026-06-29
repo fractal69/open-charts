@@ -1,95 +1,68 @@
-import { _renderTimeAxis } from "./_renderTimeAxis";
 import { _visiblePriceRange } from "../core/_visiblePriceRange";
-import { _drawPriceTag } from "./_drawPriceTag";
+import { _drawCrosshair } from "./_drawCrosshair";
+import { _drawCrosshairPoint } from "./_drawCrosshairPoint";
+import { _drawCrosshairPriceTag } from "./_drawCrosshairPriceTag";
+import { _drawLivePulse } from "./_drawLivePulse";
 import { _drawTimeTag } from "./_drawTimeTag";
 import { _updateOHLCVlegend } from "../ui/_updateOHLCVlegend";
 import type { ChartEngine } from "../core/chartEngine";
-import { _drawLivePulse } from "./_drawLivePulse";
-import { _drawCrosshairPriceTag } from "./_drawCrosshairPriceTag";
-import type { MainPane } from "../core/types";
+import { _renderTimeAxis } from "./_renderTimeAxis";
 
-function _clearOverlay(ctx: CanvasRenderingContext2D, pane: MainPane) {
-  ctx.clearRect(0, 0, pane.w, pane.h);
-}
-
+/**
+ * Renders the interactive overlay layer.
+ *
+ * The overlay is drawn on top of the main chart and contains
+ * all transient UI elements such as:
+ * - Live price pulse.
+ * - Crosshair.
+ * - Crosshair price tag.
+ * - Selected bar marker.
+ * - Time label.
+ * - OHLC legend.
+ */
 export function _renderOverlay(engine: ChartEngine): void {
-  _clearOverlay(engine.ctxOMain, engine.panes.main);
+  const ctx = engine.ctxOMain;
+  const pane = engine.panes.main;
+
+  // Clear the previous overlay frame.
+  ctx.clearRect(0, 0, pane.w, pane.h);
 
   const { lo, hi } = engine.core.visiblePriceRange();
 
-  // Always draw the live price pulse.
+  // Always render the live price pulse.
   if (engine._liveMode && engine.hasData) {
-    _drawLivePulse(engine.ctxOMain, engine.panes.main, lo, hi);
+    _drawLivePulse(ctx, pane, lo, hi);
   }
 
+  // Nothing else to render if the cursor is outside the chart.
   if (!engine.mouse.inside || !engine.hasData) {
     return;
   }
 
-  const ctx = engine.ctxOMain;
-  const pane = engine.panes.main;
-
   const localX = engine.mouse.x - pane.x;
   const localY = engine.mouse.y - pane.y;
 
-  const barIdx = Math.max(
+  const barIndex = Math.max(
     engine.viewStart,
     Math.min(engine.viewEnd - 1, engine.utils.indexAtX(localX)),
   );
 
-  const bar: any = engine.data[barIdx];
+  const bar: any = engine.data[barIndex];
 
-  // Crosshair X position.
-  const snapX = Math.round(engine.utils.xOf(barIdx)) + 0.5;
-
-  ctx.save();
-
-  ctx.strokeStyle = engine.options.colors.cross;
-  ctx.lineWidth = 1;
-  ctx.setLineDash([4, 4]);
-
-  // Vertical crosshair.
-  ctx.beginPath();
-  ctx.moveTo(snapX, 0);
-  ctx.lineTo(snapX, pane.h);
-  ctx.stroke();
-
-  // Draw horizontal crosshair only inside the main pane.
-  if (localY >= 0 && localY <= pane.h) {
-    ctx.beginPath();
-    ctx.moveTo(0, localY + 0.5);
-    ctx.lineTo(engine.chartW, localY + 0.5);
-    ctx.stroke();
-
-    const crossPrice = engine.utils.priceAtY(localY, pane, lo, hi);
-
-    _drawCrosshairPriceTag(
-      engine,
-      crossPrice,
-      engine.options.colors.cross,
-      lo,
-      hi,
-    );
-  }
-
-  ctx.restore();
+  // Draw the crosshair.
+  _drawCrosshair(engine, barIndex, localY, lo, hi);
 
   // Nothing else to draw if the cursor is over the right padding.
   if (!bar) {
     return;
   }
 
-  // Highlight the bar close.
-  const dotY = engine.utils.yOf(bar.close, pane, lo, hi);
-
-  ctx.beginPath();
-  ctx.arc(snapX - 0.5, dotY, 3, 0, Math.PI * 2);
-  ctx.fillStyle = engine.options.colors.crossPt;
-  ctx.fill();
+  // Highlight the selected bar.
+  _drawCrosshairPoint(engine, bar.close, barIndex, lo, hi);
 
   // Draw the time label.
-  _drawTimeTag(engine, barIdx);
+  _drawTimeTag(engine, barIndex);
 
   // Update the OHLC legend.
-  _updateOHLCVlegend(engine, bar, barIdx);
+  _updateOHLCVlegend(engine, bar, barIndex);
 }
