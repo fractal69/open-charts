@@ -3,7 +3,9 @@
 // SYMBOL INFO
 // SYMBOL STATS
 
-export function _updateOHLCVlegend(d, i) {
+import type { ChartEngine } from "../core/chartEngine";
+
+export function _updateOHLCVlegend(engine: ChartEngine, d: any, i: number) {
   //----------------------------------------------------------
   const bull = d.close >= d.open;
   const chg = d.close - d.open;
@@ -28,7 +30,7 @@ export function _updateOHLCVlegend(d, i) {
     ohlcContainer = document.createElement("div");
     ohlcContainer.id = "chart-legend-content";
     ohlcContainer.innerHTML = content;
-    this.legendDiv.appendChild(ohlcContainer);
+    engine.legendDiv.appendChild(ohlcContainer);
   }
   //----------------------------------------------------------
 }

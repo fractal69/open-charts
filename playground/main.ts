@@ -7,7 +7,7 @@ function generateCandles(
   {
     startPrice = 63332,
     startTs = Date.now(),
-    intervalMs = 60_000,
+    intervalMs = 30 * 60 * 1000,
     trend = 0.0001, // tendencia promedio por vela
     volatility = 0.002, // volatilidad
   } = {},

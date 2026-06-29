@@ -29,13 +29,13 @@ export function _drawGrid(
   });
 
   // Vertical time grid lines
-  const timeStep = _timeGridStep.call(engine);
+  const timeStep = _timeGridStep(engine);
   for (
     let i = engine.viewStart;
     i < engine.viewEnd && i < engine.data.length;
     i++
   ) {
-    if (_isTimeGridLine.call(engine, i, timeStep)) {
+    if (_isTimeGridLine(engine, i, timeStep)) {
       const x = Math.round(engine.utils.xOf(i)) + 0.5;
       ctx.strokeStyle = engine.options.colors.grid;
       ctx.beginPath();

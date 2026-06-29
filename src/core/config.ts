@@ -81,7 +81,7 @@ export const DEFAULT_OPTIONS: ChartOptions = {
     gridAlt: "rgba(42,42,42,0.6)",
 
     text: "#E4E4E7",
-    textDim: "#6b6b6b",
+    textDim: "#ffffff",
 
     bull: "#089981",
     bear: "#F23645",

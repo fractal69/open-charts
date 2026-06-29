@@ -135,6 +135,8 @@ export class ChartSeries {
   /** Whether the series is currently visible. */
   public enabled = true;
 
+  public interval: number = 0;
+
   /** User-defined series parameters. */
   public params: Record<string, unknown>;
 
@@ -145,6 +147,28 @@ export class ChartSeries {
   ) {
     this.def = def;
     this.params = params;
+  }
+
+  /**
+   * Returns the interval between consecutive bars in seconds.
+   *
+   * The interval is inferred from the primary series data.
+   * If there are fewer than two bars, zero is returned.
+   *
+   * @returns Bar interval in seconds.
+   */
+  public getInterval(): number {
+    const data: any[] = this.data;
+
+    for (let i = 1; i < data.length; i++) {
+      const interval = data[i].time - data[i - 1].time;
+
+      if (interval > 0) {
+        return interval;
+      }
+    }
+
+    return 0;
   }
 
   /**
@@ -160,6 +184,7 @@ export class ChartSeries {
       this.values = this.def.compute(data);
     }
 
+    this.interval = this.getInterval();
     this.engine.timeScale.resetViewport();
     this.engine.hasData = true;
     this.engine.dirty = true;
@@ -180,6 +205,7 @@ export class ChartSeries {
       this.values = this.def.compute(this.data);
     }
 
+    this.interval = this.getInterval();
     this.engine.timeScale.resetViewport();
     this.engine.dirty = true;
     this.engine.hasData = true;

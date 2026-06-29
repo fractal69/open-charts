@@ -97,11 +97,6 @@ export class ChartEngine {
   public barWidth: number;
 
   /**
-   * Bar interval in seconds. Defaults to one day (86400).
-   */
-  public interval: number;
-
-  /**
    * Number of empty bar slots reserved to the right of the last data point.
    */
   public rightPadBars: number;
@@ -302,8 +297,6 @@ export class ChartEngine {
 
     this.barWidth = DEFAULT_BAR_W;
 
-    this.interval = 86400;
-
     this.rightPadBars = 20;
 
     this.viewStart = 0;
@@ -350,5 +343,17 @@ export class ChartEngine {
 
   get data() {
     return this._series.values().next().value?.data || [];
+  }
+
+  /**
+   * Returns the inferred chart interval in seconds.
+   *
+   * The interval is calculated from the first two bars of the
+   * primary series. If there are fewer than two bars, zero is returned.
+   *
+   * @returns Bar interval in seconds.
+   */
+  public get interval(): number {
+    return this._series.values().next().value?.interval || 0;
   }
 }
