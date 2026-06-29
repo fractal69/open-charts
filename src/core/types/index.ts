@@ -5,6 +5,7 @@ import { _grabCanvases } from "../_grabCanvases";
 import { _resize } from "../_resize";
 import { _bindEvents } from "../_bindEvents";
 import { _startLoop } from "../_startLoop";
+import { _visiblePriceRange, type PriceRange } from "../_visiblePriceRange";
 
 /**
  * Pane with geometry only.
@@ -184,9 +185,16 @@ export class ChartSeries {
       this.values = this.def.compute(data);
     }
 
-    this.interval = this.getInterval();
-    this.engine.timeScale.resetViewport();
     this.engine.hasData = true;
+
+    this.interval = this.getInterval();
+
+    this.engine.timeScale.resetViewport();
+
+    this.engine.hasData = true;
+
+    this.engine.priceScale.updateLayout();
+
     this.engine.dirty = true;
 
     return this;
@@ -204,11 +212,15 @@ export class ChartSeries {
     if (this.def.compute) {
       this.values = this.def.compute(this.data);
     }
+    this.engine.hasData = true;
 
     this.interval = this.getInterval();
+
     this.engine.timeScale.resetViewport();
+
+    this.engine.priceScale.updateLayout();
+
     this.engine.dirty = true;
-    this.engine.hasData = true;
 
     return this;
   }
@@ -311,5 +323,9 @@ export class ChartCore {
    */
   public startLoop(): void {
     _startLoop(this.engine);
+  }
+
+  public visiblePriceRange(): PriceRange {
+    return _visiblePriceRange(this.engine);
   }
 }

@@ -1,6 +1,11 @@
 import type { ChartEngine } from "./chartEngine";
 
-export function _visiblePriceRange(engine: ChartEngine) {
+export type PriceRange = {
+  lo: number;
+  hi: number;
+};
+
+export function _visiblePriceRange(engine: ChartEngine): PriceRange {
   const data = engine.data;
 
   if (!data?.length) {

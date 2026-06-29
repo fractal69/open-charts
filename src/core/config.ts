@@ -64,6 +64,8 @@ export interface ChartOptions {
   zoomFactor: number;
   colors: ChartColors;
 
+  priceScaleWidth: number;
+
   fontSizeNormal: string;
   fontSizeSmall: string;
   fontFamily: string;
@@ -76,14 +78,16 @@ export const DEFAULT_OPTIONS: ChartOptions = {
   maxBarWidth: MAX_BAR_W,
   zoomFactor: SCROLL_ZOOM_FACTOR,
 
+  priceScaleWidth: PRICE_SCALE_W,
+
   fontSizeNormal: "12px",
   fontSizeSmall: "9px",
   fontFamily: "Inter, sans-serif",
 
   colors: {
     bg: "#0F0F0F",
-    bg2: "#0F0F0F",
-    bg3: "#0F0F0F",
+    bg2: "#1A1A1A",
+    bg3: "#242424",
 
     grid: "rgba(42,42,42,0.5)",
     gridAlt: "rgba(42,42,42,0.6)",

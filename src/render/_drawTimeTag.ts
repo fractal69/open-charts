@@ -18,7 +18,7 @@ export function _drawTimeTag(
 
   const ctx = engine.ctxTime;
   const x = engine.utils.xOf(index);
-  const W = 90;
+  const W = 100;
   const H = engine.panes.time.h;
 
   // Format the timestamp according to the current interval.
@@ -27,12 +27,12 @@ export function _drawTimeTag(
   ctx.save();
 
   // Draw the tag background.
-  ctx.fillStyle = engine.options.colors.cross;
+  ctx.fillStyle = engine.options.colors.bg3;
   ctx.fillRect(x - W / 2, 0, W, H);
 
   // Draw the formatted time.
-  ctx.fillStyle = engine.options.colors.bg;
-  ctx.font = "9px Inter, sans-serif";
+  ctx.fillStyle = engine.options.colors.textDim;
+  ctx.font = `${engine.options.fontSizeNormal} ${engine.options.fontFamily}`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.fillText(label, x, H / 2);

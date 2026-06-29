@@ -48,6 +48,7 @@ import {
 } from "./types";
 import { ChartUtils } from "../utils/types";
 import { ChartTimeScale } from "../timeScale/types";
+import { ChartPriceScale } from "../priceScale/types";
 
 //--------------------------------------------------------------------------------------------------------------------
 //  CHART ENGINE
@@ -68,6 +69,8 @@ export class ChartEngine {
 
   /** Horizontal time scale and viewport management. */
   public timeScale: ChartTimeScale;
+
+  public priceScale: ChartPriceScale;
 
   /** Root HTML element that hosts the chart. */
   public area: HTMLElement;
@@ -284,6 +287,8 @@ export class ChartEngine {
     this.api = new ChartApi(this);
 
     this.timeScale = new ChartTimeScale(this);
+
+    this.priceScale = new ChartPriceScale(this);
 
     this.area = area;
 

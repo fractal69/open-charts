@@ -20,7 +20,7 @@ export function _renderTimeAxis(engine: ChartEngine): void {
   ctx.clearRect(0, 0, pane.w, pane.h);
 
   // Paint the background.
-  ctx.fillStyle = engine.options.colors.bg2;
+  ctx.fillStyle = engine.options.colors.bg;
   ctx.fillRect(0, 0, pane.w, pane.h);
 
   // Nothing to render if there is no data.

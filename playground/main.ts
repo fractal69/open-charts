@@ -76,7 +76,7 @@ function normalizeCandle(candle: any) {
 }
 
 const fakeData = generateCandles(500, {
-  startPrice: 63332,
+  startPrice: 60_000,
   trend: 0.0002, // alcista
   volatility: 0.013,
 });

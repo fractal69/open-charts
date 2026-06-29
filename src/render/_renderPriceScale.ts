@@ -1,13 +1,9 @@
 import type { ChartEngine } from "../core/chartEngine";
 import { PRICE_SCALE_W } from "../core/config";
+import { _formatPrice } from "../utils/_formatPrice";
 import { _nicePriceSteps } from "../utils/_nicePriceSteps";
 import { _drawPriceLine } from "./_drawPriceLine";
 import { _drawPriceTag } from "./_drawPriceTag";
-
-
-
-
-
 
 export function _renderPriceScale(
   engine: ChartEngine,
@@ -43,10 +39,12 @@ export function _renderPriceScale(
   const steps = _nicePriceSteps(priceMin, priceMax, 6);
 
   steps.forEach((price) => {
+    const text =  _formatPrice(price);
+
     const y =
       Math.round(engine.utils.yOf(price, pane, priceMin, priceMax)) + 0.5;
 
-    ctx.fillText(price.toFixed(2), W - 8, y + 3.5);
+    ctx.fillText(text, engine.options.priceScaleWidth - 8, y + 3.5);
   });
 
   // Draw the last price tag for every enabled series.
