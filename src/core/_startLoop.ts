@@ -3,6 +3,7 @@ import { _renderOverlay } from "../render/_renderOverlay";
 import type { ChartEngine } from "./chartEngine";
 import { _render } from "../render/_render";
 import { _updateScrollThumb } from "../timeScale/_updateScrollThumb";
+import { _renderTimeAxis } from "../render/_renderTimeAxis";
 
 /**
  * Starts the chart render loop.
@@ -38,12 +39,15 @@ export function _startLoop(engine: ChartEngine) {
     // Redraw the drawings layer if needed.
     if (engine.drawingsDirty) {
       _renderDrawingModules(engine);
+
       engine.drawingsDirty = false;
     }
 
     // Redraw the overlay layer if needed.
     if (engine.overlayDirty) {
+      _renderTimeAxis(engine);
       _renderOverlay(engine);
+
       engine.overlayDirty = false;
     }
   };
