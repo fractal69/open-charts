@@ -83,16 +83,7 @@ export function _renderMainPane(
   _drawBackground(engine, ctx, pane);
 
   // Draw the grid.
-  _drawGrid(
-    engine,
-    ctx,
-    pane.w,
-    pane.h,
-    engine.chartW,
-    priceMin,
-    priceMax,
-    pane,
-  );
+  _drawGrid(engine, ctx, pane, priceMin, priceMax);
 
   // Render background series.
   _renderLayer(engine, ctx, pane, priceMin, priceMax, "background");

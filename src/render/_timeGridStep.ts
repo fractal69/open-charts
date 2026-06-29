@@ -14,34 +14,15 @@ import type { ChartEngine } from "../core/chartEngine";
 export function _timeGridStep(
   engine: ChartEngine,
 ): "minute" | "hour" | "day" | "week" | "month" | "quarter" | "year" {
+
   const span = _barsVisible(engine) * engine.interval;
 
-  // Sub-minute and minute charts.
-  if (engine.interval < 3600) {
-    if (span <= 2 * 3600) return "minute";
-    if (span <= 2 * 86400) return "hour";
-    if (span <= 60 * 86400) return "day";
-    return "week";
-  }
+  if (span <= 2 * 3600) return "minute";
+  if (span <= 2 * 86400) return "hour";
+  if (span <= 14 * 86400) return "day";
+  if (span <= 120 * 86400) return "week";
+  if (span <= 730 * 86400) return "month";
+  if (span <= 3650 * 86400) return "quarter";
 
-  // Hourly charts.
-  if (engine.interval < 86400) {
-    if (span <= 14 * 86400) return "day";
-    if (span <= 120 * 86400) return "week";
-    return "month";
-  }
-
-  // Daily charts.
-  if (engine.interval < 7 * 86400) {
-    if (span <= 365 * 86400) return "month";
-    return "quarter";
-  }
-
-  // Weekly charts.
-  if (engine.interval < 30 * 86400) {
-    return "quarter";
-  }
-
-  // Monthly and higher.
   return "year";
 }
