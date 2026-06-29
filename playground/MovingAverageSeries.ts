@@ -6,7 +6,7 @@ export const MovingAverageSeries: SeriesDefinition = {
   label: "MA 20",
   color: "#ffb830",
   layer: "foreground",
-
+  priceTagColor: "#ffb830",
   params: {
     period: {
       type: "number",
@@ -89,5 +89,12 @@ export const MovingAverageSeries: SeriesDefinition = {
   tooltipRow(values: any[], i: number): any {
     if (values[i] === null) return null;
     return { label: "MA20", value: values[i].toFixed(2), color: "#ffb830" };
+  },
+
+  lastValue(data: any, values: any[]) {
+    for (let i = values.length - 1; i >= 0; i--) {
+      if (values[i] != null) return values[i];
+    }
+    return null;
   },
 };

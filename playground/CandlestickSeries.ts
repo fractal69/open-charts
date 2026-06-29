@@ -8,8 +8,8 @@ export const CandlestickSeries: SeriesDefinition = {
   color: "red",
   priceTagColor: "#F23645",
   params: {
-    bullColor: { type: "color", label: "Bullish Color", value: "#00c87a" },
-    bearColor: { type: "color", label: "Bearish Color", value: "#ff4060" },
+    bullColor: { type: "color", label: "Bullish Color", value: "#089981" },
+    bearColor: { type: "color", label: "Bearish Color", value: "#F23645" },
     showBodyDetails: {
       type: "boolean",
       label: "Fancy Body fills",

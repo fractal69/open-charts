@@ -1,13 +1,13 @@
 import type { ChartEngine } from "../core/chartEngine";
 
 /**
- * Draws the horizontal guide line associated with a price tag.
+ * Draws a dotted horizontal price line.
  *
  * @param engine Chart engine instance.
- * @param price Price represented by the line.
+ * @param price Price value.
  * @param color Line color.
- * @param priceMin Lowest visible price.
- * @param priceMax Highest visible price.
+ * @param priceMin Visible minimum price.
+ * @param priceMax Visible maximum price.
  */
 export function _drawPriceLine(
   engine: ChartEngine,
@@ -19,19 +19,17 @@ export function _drawPriceLine(
   const ctx = engine.ctxMain;
   const pane = engine.panes.main;
 
-  // Convert the price into a screen Y coordinate.
-  const y = Math.round(engine.utils.yOf(price, pane, priceMin, priceMax)) + 0.5;
+  const y = Math.round(engine.utils.yOf(price, pane, priceMin, priceMax));
 
   ctx.save();
   ctx.fillStyle = color;
+  ctx.globalAlpha = 0.9;
 
-  const radius = 0.75;
+  const size = 1;
   const spacing = 6;
 
   for (let x = 0; x <= engine.chartW; x += spacing) {
-    ctx.beginPath();
-    ctx.arc(x, y, radius, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.fillRect(x, y, size, size);
   }
 
   ctx.restore();
