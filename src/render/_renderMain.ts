@@ -68,7 +68,7 @@ export function _drawBackground(
  * @param priceMin Lowest visible price.
  * @param priceMax Highest visible price.
  */
-export function _renderMainPane(
+export function _renderMain(
   engine: ChartEngine,
   priceMin: number,
   priceMax: number,

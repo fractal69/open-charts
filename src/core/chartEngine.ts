@@ -122,6 +122,8 @@ export class ChartEngine {
    */
   public dirty: boolean;
 
+  public timeAxisDirty: boolean;
+
   /**
    * Indicates whether the overlay layer needs to be redrawn.
    *
@@ -309,6 +311,8 @@ export class ChartEngine {
     this.viewEnd = 0;
 
     this.dirty = true;
+
+    this.timeAxisDirty = true;
 
     this.overlayDirty = true;
 

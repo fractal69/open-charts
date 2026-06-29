@@ -62,6 +62,7 @@ export function _bindEvents(engine: ChartEngine) {
 
       // Mark the overlay layer for redraw.
       engine.overlayDirty = true;
+      engine.timeAxisDirty = true;
     },
     { signal: engine._abortController.signal },
   );
@@ -75,6 +76,7 @@ export function _bindEvents(engine: ChartEngine) {
 
       // Redraw overlay elements affected by hover state.
       engine.overlayDirty = true;
+      engine.timeAxisDirty = true;
     },
     { signal: engine._abortController.signal },
   );
