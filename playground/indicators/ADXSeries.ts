@@ -35,7 +35,7 @@ export const ADXSeries: SeriesDefinition<
 
   color: "#6CFF4C",
 
-  layer: "foreground",
+  layer: "background",
 
   params: {
     diLength: 14,

@@ -39,7 +39,7 @@ export const SqueezeSeries: SeriesDefinition<
 
   color: "#00ff00",
 
-  layer: "foreground",
+  layer: "background",
 
   params: {
     length: 20,
