@@ -141,4 +141,26 @@ export const CandlestickSeries: SeriesDefinition<
     const last = data.at(-1);
     return last ? last.close : null;
   },
+
+  valueRange(data, values, start, end) {
+    let lo = Infinity;
+    let hi = -Infinity;
+
+    for (let i = start; i < end; i++) {
+      const bar = data[i];
+
+      if (!bar) {
+        continue;
+      }
+
+      lo = Math.min(lo, bar.low);
+      hi = Math.max(hi, bar.high);
+    }
+
+    if (!Number.isFinite(lo) || !Number.isFinite(hi)) {
+      return { lo: 0, hi: 1 };
+    }
+
+    return { lo, hi };
+  },
 };

@@ -81,13 +81,13 @@ const fakeData = generateCandles(500, {
   volatility: 0.013,
 });
 
-/** 
+
 let chart1 = createChart(document.getElementById("chart-left")!);
 
 const candles1 = chart1.api.addSeries(CandlestickSeries);
 
 candles1.setData(normalizeCandles(fakeData));
-
+/** 
 //const MAseries = chart.api.addSeries(MovingAverageSeries);
 
 //MAseries.setData(normalizeCandles(fakeData));
