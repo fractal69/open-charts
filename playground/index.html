@@ -72,14 +72,13 @@
         background: transparent;
       }
 
-      .chart-area {
-        flex: 1 0 600px;
+      #chart-left,
+      #chart-right {
         min-height: 600px;
-        position: relative;
       }
 
       .indicator-pane {
-        height: 200px;
+
         flex-shrink: 0;
         border-top: 1px solid #333;
         background: rgba(255, 255, 255, 0.15);
@@ -94,7 +93,7 @@
         <div class="chart-column">
           <div id="chart-left" class="chart-area"></div>
 
-          <div id="left-pane-1" class="indicator-pane"></div>
+          <div id="left-pane-1" class="chart-area indicator-pane"></div>
           <div id="left-pane-2" class="indicator-pane"></div>
           <div id="left-pane-3" class="indicator-pane"></div>
           <div id="left-pane-4" class="indicator-pane"></div>

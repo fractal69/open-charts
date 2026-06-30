@@ -96,3 +96,10 @@ let chart2 = createChart(document.getElementById("chart-right")!);
 const candles2 = chart2.api.addSeries(CandlestickSeries);
 
 candles2.setData(normalizeCandles(fakeData));
+
+
+let indicatorLeft1 = createChart(document.getElementById("left-pane-1")!);
+
+const ADX1 = indicatorLeft1.api.addSeries(CandlestickSeries);
+
+ADX1.setData(normalizeCandles(fakeData));
