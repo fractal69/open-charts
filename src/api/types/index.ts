@@ -1,5 +1,5 @@
 import type { ChartEngine } from "../../core/chartEngine";
-import type { ChartSeries, SeriesDefinition } from "../../core/types";
+import type { AnyChartSeries, ChartSeries, SeriesDefinition } from "../../core/types";
 import { addSeries } from "../addSeries";
 
 /**
@@ -18,7 +18,7 @@ export class ChartApi {
    * @param def Indicator definition.
    * @returns The chart instance for method chaining.
    */
-  public addSeries(def: SeriesDefinition): ChartSeries {
+  public addSeries(def: SeriesDefinition): AnyChartSeries {
     return addSeries(this.engine, def);
   }
 }

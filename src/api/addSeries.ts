@@ -1,5 +1,9 @@
 import type { ChartEngine } from "../core/chartEngine";
-import { ChartSeries, type SeriesDefinition } from "../core/types";
+import {
+  ChartSeries,
+  type AnyChartSeries,
+  type SeriesDefinition,
+} from "../core/types";
 import { _updateLegend } from "../ui/_updateLegend";
 
 /**
@@ -13,21 +17,25 @@ import { _updateLegend } from "../ui/_updateLegend";
  * @param def Indicator definition.
  * @returns The chart instance for method chaining.
  */
-export function addSeries(
+export function addSeries<
+  TData,
+  TValue,
+  TParams extends Record<string, unknown>,
+>(
   engine: ChartEngine,
-  def: SeriesDefinition,
-): ChartSeries {
+  def: SeriesDefinition<TData, TValue, TParams>,
+): AnyChartSeries {
   // Clone the indicator parameter definitions.
   const params: Record<string, unknown> = {};
 
   if (def.params) {
     for (const [key, field] of Object.entries(def.params)) {
-      params[key] = { ...field };
+      params[key] = { ...(field as any) };
     }
   }
-  
+
   // Create the series instance.
-  const entry: ChartSeries = new ChartSeries(engine, def, params);
+  const entry: AnyChartSeries = new ChartSeries(engine, def, params);
 
   // Register the series using its unique identifier.
   engine._series.set(def.id, entry);

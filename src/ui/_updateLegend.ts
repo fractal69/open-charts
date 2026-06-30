@@ -1,36 +1,42 @@
 import type { ChartEngine } from "../core/chartEngine";
 
-export function _updateLegend(engine: ChartEngine) {
-  if (!engine.indicatorsDiv) return;
+export function _updateLegend(engine: ChartEngine): void {
+  const container = engine.indicatorsDiv;
 
-  engine._series.forEach(({ def, enabled }) => {
-    const itemId = `chart-indicators-item-${def.id}`;
-    let item = document.getElementById(itemId);
+  if (!container) return;
+
+  engine._series.forEach((series) => {
+    const { def, enabled } = series;
+
+    const id = `chart-indicators-item-${def.id}`;
+
+    let item = container.querySelector<HTMLElement>(`#${id}`);
 
     const opacity = enabled ? "1" : "0.4";
-    const title = enabled ? "click to hide" : "click to show";
-    const innerHTML =
-      `<div class="chart-indicators-item-dot" style="background:${def.color}"></div>` +
-      `<span>${def.label}</span>`;
+    const title = enabled ? "Click to hide" : "Click to show";
 
-    if (item) {
-      item.style.opacity = opacity;
-      item.title = title;
-      item.innerHTML = innerHTML;
-    } else {
+    if (!item) {
       item = document.createElement("div");
-      item.id = itemId;
+      item.id = id;
       item.className = "chart-indicators-item";
       item.style.cursor = "pointer";
-      item.style.opacity = opacity;
-      item.title = title;
-      item.innerHTML = innerHTML;
+
+      item.innerHTML = `
+        <div
+          class="chart-indicators-item-dot"
+          style="background:${def.color}"
+        ></div>
+        <span>${def.label}</span>
+      `;
 
       item.addEventListener("click", () => {
-        engine.api.toggleSeries(def.id);
+        //engine.api?.toggleSeries(def.id);
       });
 
-      engine.indicatorsDiv.appendChild(item);
+      container.appendChild(item);
     }
+
+    item.style.opacity = opacity;
+    item.title = title;
   });
 }
