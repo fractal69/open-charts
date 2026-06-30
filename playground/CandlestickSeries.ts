@@ -31,7 +31,7 @@ export const CandlestickSeries: SeriesDefinition<
   },
 
   // Las velas no calculan un indicador nuevo, devuelven directamente el clon de la data OHLC
-  compute(data: any): any[] {
+  compute(data: OHLCV[]): any[] {
     return data;
   },
 
@@ -39,8 +39,8 @@ export const CandlestickSeries: SeriesDefinition<
     ctx: CanvasRenderingContext2D,
     pane: MainPane,
     engine: ChartEngine,
-    data: any,
-    values: any[], // Mapeado a la estructura de datos OHLC
+    data: OHLCV[],
+    values: OHLCV[], // Mapeado a la estructura de datos OHLC
     priceMin: number,
     priceMax: number,
   ): void {
@@ -114,7 +114,7 @@ export const CandlestickSeries: SeriesDefinition<
   },
 
   // No requiere lógica incremental compleja ya que el engine refresca la data OHLC nativamente
-  updateIncremental(values: any[], data: any[], isNewBar: boolean): void {
+  updateIncremental(values: OHLCV[], data: OHLCV[], isNewBar: boolean): void {
     if (isNewBar) {
       values.push(data[data.length - 1]);
     } else {
@@ -123,7 +123,7 @@ export const CandlestickSeries: SeriesDefinition<
   },
 
   // Fila del Tooltip para mostrar los valores OHLC en un formato legible
-  tooltipRow(values: any[], i: number): any {
+  tooltipRow(values: OHLCV[], i: number): any {
     const d = values[i];
     if (!d) return null;
 
@@ -137,7 +137,7 @@ export const CandlestickSeries: SeriesDefinition<
     };
   },
 
-  lastValue(data: any, values: any) {
+  lastValue(data: OHLCV[], values: OHLCV[]) {
     const last = data.at(-1);
     return last ? last.close : null;
   },
