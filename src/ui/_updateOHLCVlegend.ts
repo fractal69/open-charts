@@ -16,7 +16,7 @@ export function _updateOHLCVlegend(engine: ChartEngine, d: any, i: number) {
   );
 
   const content =
-    `<span class="chart-legend-item"><span class="chart-legend-label">Bitcoin / Tether USD · SPOT · CRYPTO</span></span>` +
+    `<span class="chart-legend-item"><span class="chart-legend-symbol">Bitcoin / Tether USD · 4h </span></span>` +
     `<span class="chart-legend-item"><span class="chart-legend-label">O</span><span class="chart-legend-val">${d.open.toFixed(2)}</span></span>` +
     `<span class="chart-legend-item"><span class="chart-legend-label">H</span><span class="chart-legend-val">${d.high.toFixed(2)}</span></span>` +
     `<span class="chart-legend-item"><span class="chart-legend-label">L</span><span class="chart-legend-val">${d.low.toFixed(2)}</span></span>` +
