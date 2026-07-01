@@ -1,0 +1,102 @@
+[
+  {
+    "timestamp": "2026-06-30T10:00:00Z",
+    "buy_qty": 120,
+    "sell_qty": 80,
+    "delta_pct": 0.20,
+    "signal": 0.20,
+    "bubble_color": "green",
+    "bubble_size": 18.0,
+    "show_bubble": true
+  },
+  {
+    "timestamp": "2026-06-30T10:01:00Z",
+    "buy_qty": 140,
+    "sell_qty": 90,
+    "delta_pct": 0.217,
+    "signal": 0.202,
+    "bubble_color": "green",
+    "bubble_size": 18.08,
+    "show_bubble": true
+  },
+  {
+    "timestamp": "2026-06-30T10:02:00Z",
+    "buy_qty": 160,
+    "sell_qty": 100,
+    "delta_pct": 0.231,
+    "signal": 0.205,
+    "bubble_color": "green",
+    "bubble_size": 18.20,
+    "show_bubble": true
+  },
+  {
+    "timestamp": "2026-06-30T10:03:00Z",
+    "buy_qty": 180,
+    "sell_qty": 110,
+    "delta_pct": 0.241,
+    "signal": 0.209,
+    "bubble_color": "green",
+    "bubble_size": 18.36,
+    "show_bubble": true
+  },
+  {
+    "timestamp": "2026-06-30T10:04:00Z",
+    "buy_qty": 130,
+    "sell_qty": 120,
+    "delta_pct": 0.04,
+    "signal": 0.193,
+    "bubble_color": "green",
+    "bubble_size": 17.72,
+    "show_bubble": true
+  },
+  {
+    "timestamp": "2026-06-30T10:05:00Z",
+    "buy_qty": 100,
+    "sell_qty": 140,
+    "delta_pct": -0.167,
+    "signal": 0.159,
+    "bubble_color": "green",
+    "bubble_size": 16.36,
+    "show_bubble": true
+  },
+  {
+    "timestamp": "2026-06-30T10:06:00Z",
+    "buy_qty": 90,
+    "sell_qty": 160,
+    "delta_pct": -0.28,
+    "signal": 0.117,
+    "bubble_color": "gray",
+    "bubble_size": 0,
+    "show_bubble": false
+  },
+  {
+    "timestamp": "2026-06-30T10:07:00Z",
+    "buy_qty": 80,
+    "sell_qty": 180,
+    "delta_pct": -0.385,
+    "signal": 0.069,
+    "bubble_color": "gray",
+    "bubble_size": 0,
+    "show_bubble": false
+  },
+  {
+    "timestamp": "2026-06-30T10:08:00Z",
+    "buy_qty": 110,
+    "sell_qty": 130,
+    "delta_pct": -0.083,
+    "signal": 0.055,
+    "bubble_color": "gray",
+    "bubble_size": 0,
+    "show_bubble": false
+  },
+  {
+    "timestamp": "2026-06-30T10:09:00Z",
+    "buy_qty": 150,
+    "sell_qty": 100,
+    "delta_pct": 0.20,
+    "signal": 0.069,
+    "bubble_color": "gray",
+    "bubble_size": 0,
+    "show_bubble": false
+  }
+]
