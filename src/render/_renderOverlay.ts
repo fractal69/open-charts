@@ -7,6 +7,7 @@ import { _drawTimeTag } from "./_drawTimeTag";
 import { _updateOHLCVlegend } from "../ui/_updateOHLCVlegend";
 import type { ChartEngine } from "../core/chartEngine";
 import { _renderTimeAxis } from "./_renderTimeAxis";
+import { _updateIndicatorLegend } from "../ui/_updateIndicatorLegend";
 
 /**
  * Renders the interactive overlay layer.
@@ -62,7 +63,7 @@ export function _renderOverlay(engine: ChartEngine): void {
 
   // Draw the time label.
   _drawTimeTag(engine, barIndex);
-
-  // Update the OHLC legend.
-  _updateOHLCVlegend(engine, bar, barIndex);
+  
+  // Update indicator legend.
+  _updateIndicatorLegend(engine, barIndex);
 }

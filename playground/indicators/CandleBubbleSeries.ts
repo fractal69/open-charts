@@ -261,4 +261,52 @@ export const CandleBubbleSeries: SeriesDefinition<
 
     return { lo, hi };
   },
+
+  legend(data: CandleBubble[], values: CandleBubble[], barIndex: number) {
+    const d: CandleBubble = data[barIndex];
+
+    if (!d) {
+      return [];
+    }
+
+    const pct = ((d.close - d.open) / d.open) * 100;
+
+    const bull = d.close >= d.open;
+    const color = bull ? this.params.bullColor : this.params.bearColor;
+
+    return [
+      {
+        label: "O",
+        value: d.open.toFixed(2),
+        color: "red",
+      },
+      {
+        label: "H",
+        value: d.high.toFixed(2),
+        color: "red",
+      },
+      {
+        label: "L",
+        value: d.low.toFixed(2),
+        color: "red",
+      },
+      {
+        label: "C",
+        value: d.close.toFixed(2),
+        color,
+      },
+      {
+        label: "V",
+        value: d.volume.toLocaleString(undefined, {
+          maximumFractionDigits: 2,
+        }),
+        color: "red",
+      },
+      {
+        label: "%",
+        value: `${pct >= 0 ? "+" : ""}${pct.toFixed(2)}%`,
+        color,
+      },
+    ];
+  },
 };

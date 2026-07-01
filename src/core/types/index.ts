@@ -81,6 +81,12 @@ export interface PriceTag {
   label: string;
 }
 
+export interface LegendItem {
+  label: string;
+  value: string;
+  color: string;
+}
+
 export interface SeriesDefinition<
   TData,
   TValue,
@@ -144,6 +150,12 @@ export interface SeriesDefinition<
     start: number,
     end: number,
   ): PriceRange;
+
+  legend(
+    data: readonly TData[],
+    values: readonly TValue[],
+    index: number,
+  ): readonly LegendItem[];
 }
 
 export type AnyChartSeries = ChartSeries<any, any, any>;

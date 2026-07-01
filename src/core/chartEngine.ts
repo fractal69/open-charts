@@ -35,7 +35,6 @@ import { _xOf } from "../utils/_xOf";
 import { _yOf } from "../utils/_yOf";
 import { _indexAtX } from "../utils/_indexAtX";
 import { _recomputeSeries } from "../core/_recomputeSeries";
-import { _updateLegend } from "../ui/_updateLegend";
 import { _isDifferentBar } from "../utils/_isDifferentBar";
 import { _updateSeriesIncremental } from "../core/_updateSeriesIncremental";
 import { ChartApi } from "../api/types";
@@ -328,7 +327,7 @@ export class ChartEngine {
 
     this._pointerClaimed = false;
 
-    this.drawingsDirty = false;
+    this.drawingsDirty = true;
 
     this._dmEventHandlers = {};
 

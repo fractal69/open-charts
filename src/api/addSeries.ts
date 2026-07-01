@@ -4,7 +4,6 @@ import {
   type AnyChartSeries,
   type SeriesDefinition,
 } from "../core/types";
-import { _updateLegend } from "../ui/_updateLegend";
 
 /**
  * Registers a new indicator series.
@@ -39,9 +38,6 @@ export function addSeries<
 
   // Register the series using its unique identifier.
   engine._series.set(def.id, entry);
-
-  // Refresh the legend UI.
-  _updateLegend(engine);
 
   // Enable method chaining.
   return entry;

@@ -30,16 +30,16 @@ const candles2 = chart2.api.addSeries(CandlestickSeries);
 candles2.setData(normalizeCandles(fakeData));
 */
 
-let indicatorLeft1 = createChart(document.getElementById("left-pane-1")!);
+//let indicatorLeft1 = createChart(document.getElementById("left-pane-1")!);
 
-const ADX1 = indicatorLeft1.api.addSeries(ADXSeries);
+//const ADX1 = indicatorLeft1.api.addSeries(ADXSeries);
 
-ADX1.setData(normalizeCandles(fakeData));
+//ADX1.setData(normalizeCandles(fakeData));
 
 //
 
-let indicatorLeft2 = createChart(document.getElementById("left-pane-2")!);
+//let indicatorLeft2 = createChart(document.getElementById("left-pane-2")!);
 
-const SQUEEZE = indicatorLeft2.api.addSeries(SqueezeSeries);
+//const SQUEEZE = indicatorLeft2.api.addSeries(SqueezeSeries);
 
-SQUEEZE.setData(normalizeCandles(fakeData));
+//SQUEEZE.setData(normalizeCandles(fakeData));

@@ -22,7 +22,6 @@ export function _updateOHLCVlegend(engine: ChartEngine, d: any, i: number) {
     `<span class="chart-legend-item"><span class="chart-legend-label">L</span><span class="chart-legend-val">${d.low.toFixed(2)}</span></span>` +
     `<span class="chart-legend-item"><span class="chart-legend-label">C</span><span class="chart-legend-val" style="color:${col}">${d.close.toFixed(2)}</span></span>` +
     `<span class="chart-legend-item"><span class="chart-legend-label">V</span><span class="chart-legend-val">${d.volume.toFixed(2)}</span></span>` +
-    `<span class="chart-legend-item"><span class="chart-legend-label">T</span><span class="chart-legend-val">${d.time}</span></span>` +
     `<span class="chart-legend-item" style="color:${col}">${bull ? "+" : ""}${chg.toFixed(2)} (${bull ? "+" : ""}${pct}%)</span>`;
 
   if (!ohlcContainer) {
