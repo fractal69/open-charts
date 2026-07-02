@@ -1,4 +1,3 @@
-import { PRICE_SCALE_W } from "./config";
 import type { ChartEngine } from "./chartEngine";
 import { _updateScrollThumb } from "../timeScale/_updateScrollThumb";
 import { _buildLegend } from "../ui/_buildLegend";
@@ -55,7 +54,7 @@ function _resizePriceScale(
   height: number,
   dpr: number,
 ): void {
-  const width = Math.ceil(PRICE_SCALE_W * dpr);
+  const width = Math.ceil(engine.options.priceScaleWidth * dpr);
   const scaledHeight = Math.ceil(height * dpr);
 
   engine.pScale.width = width;
@@ -102,6 +101,9 @@ export function _resize(engine: ChartEngine): void {
   // Resize the fixed-width price scale.
   _resizePriceScale(engine, mainRect.height, dpr);
 
+  // Recalculate the drawable chart width.
+  engine.chartW = mainRect.width - engine.options.priceScaleWidth;
+
   // Update the main pane geometry.
   engine.panes.main = {
     x: mainRect.left,
@@ -115,7 +117,9 @@ export function _resize(engine: ChartEngine): void {
 
   // Update the price scale geometry.
   engine.panes.scale = {
-    w: PRICE_SCALE_W,
+    x: engine.chartW,
+    y: 0,
+    w: engine.options.priceScaleWidth,
     h: mainRect.height,
   };
 
@@ -126,9 +130,6 @@ export function _resize(engine: ChartEngine): void {
     w: timeRect.width,
     h: timeRect.height,
   };
-
-  // Recalculate the drawable chart width.
-  engine.chartW = mainRect.width - PRICE_SCALE_W;
 
   // Keep the current viewport valid after the resize.
   engine.timeScale.clampView();

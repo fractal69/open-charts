@@ -210,7 +210,6 @@ export class ChartEngine {
   /**
    * Drawings layer canvas.
    */
-
   public cDrawings!: HTMLCanvasElement;
 
   /**
@@ -277,6 +276,8 @@ export class ChartEngine {
    * Zoom level status label.
    */
   public statusZoomEl!: HTMLElement;
+
+  public crosshairPlusButton!: HTMLElement;
 
   constructor(area: HTMLElement) {
     this.options = { ...DEFAULT_OPTIONS };

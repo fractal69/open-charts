@@ -29,10 +29,7 @@ export interface MainPane extends TimePane {
 /**
  * Price scale dimensions.
  */
-export interface ScalePane {
-  w: number;
-  h: number;
-}
+export interface ScalePane extends TimePane {}
 
 /**
  * Collection of panes managed by the chart engine.

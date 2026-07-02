@@ -39,5 +39,12 @@ export function _buildLayout(engine: ChartEngine): void {
       <span id="status-zoom"></span>
       <span id="status-cursor"></span>
     </div>
+
+
+    <div class="chart-overlay-ui">
+      <button id="crosshair-plus-btn">
+        +
+      </button>
+    </div>
   `;
 }
