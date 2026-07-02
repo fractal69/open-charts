@@ -36,6 +36,9 @@ export function _renderOverlay(engine: ChartEngine): void {
 
   // Nothing else to render if the cursor is outside the chart.
   if (!engine.mouse.inside || !engine.hasData) {
+    if (engine.crosshairPlusButton) {
+      engine.crosshairPlusButton.style.display = "none";
+    }
     return;
   }
 
@@ -62,7 +65,7 @@ export function _renderOverlay(engine: ChartEngine): void {
 
   // Draw the time label.
   _drawTimeTag(engine, barIndex);
-  
+
   // Update indicator legend.
   _updateIndicatorLegend(engine, barIndex);
 }

@@ -19,6 +19,10 @@ export const MAX_BAR_W: number = 40;
 export const DEFAULT_BAR_W: number = 6;
 export const SCROLL_ZOOM_FACTOR: number = 0.1;
 
+export const PRICE_TAG_HEIGHT = 18;
+export const PRICE_SCALE_PADDING = 8;
+export const PRICE_SCALE_BORDER = 1;
+
 export interface ChartColors {
   bg: string;
   bg2: string;

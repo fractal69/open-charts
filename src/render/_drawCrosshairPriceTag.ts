@@ -1,4 +1,6 @@
 import type { ChartEngine } from "../core/chartEngine";
+import { PRICE_SCALE_BORDER, PRICE_TAG_HEIGHT } from "../core/config";
+import { _formatPrice } from "../utils/_formatPrice";
 
 /**
  * Draws the crosshair price tag and positions the HTML "+" button.
@@ -21,30 +23,25 @@ export function _drawCrosshairPriceTag(
   const mainPane = engine.panes.main;
   const scalePane = engine.panes.scale;
 
-  const y = Math.round(
-    engine.utils.yOf(price, mainPane, priceMin, priceMax),
-  );
+  const y = Math.round(engine.utils.yOf(price, mainPane, priceMin, priceMax));
 
-  const tagW = scalePane.w;
-  const tagH = 18;
-  const tagX = scalePane.x;
+  const W = scalePane.w;
+  const H = PRICE_TAG_HEIGHT;
+  const X = scalePane.x;
 
   ctx.save();
 
-  // Price tag.
+  // Draw the tag background.
   ctx.fillStyle = color;
-  ctx.fillRect(tagX, y - tagH / 2, tagW, tagH);
+  ctx.fillRect(X + PRICE_SCALE_BORDER, y - H / 2, W - PRICE_SCALE_BORDER, H);
 
+  // Draw the price label.
   ctx.fillStyle = engine.options.colors.text;
   ctx.font = `${engine.options.fontSizeNormal} ${engine.options.fontFamily}`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
 
-  ctx.fillText(
-    price.toFixed(2),
-    tagX + tagW / 2,
-    y,
-  );
+  ctx.fillText(_formatPrice(price), X + W / 2, y);
 
   ctx.restore();
 
@@ -52,8 +49,12 @@ export function _drawCrosshairPriceTag(
   const button = engine.crosshairPlusButton;
 
   if (button) {
-    button.style.left = `${tagX - 19}px`;
-    button.style.top = `${y - 9}px`;
+    const size = H;
+
+    button.style.left = `${X - size}px`;
+    button.style.top = `${y - size / 2}px`;
+    button.style.width = `${size}px`;
+    button.style.height = `${size}px`;
     button.style.display = "flex";
   }
 }
