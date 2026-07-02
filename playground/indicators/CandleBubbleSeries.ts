@@ -278,17 +278,17 @@ export const CandleBubbleSeries: SeriesDefinition<
       {
         label: "O",
         value: d.open.toFixed(2),
-        color: "red",
+        color,
       },
       {
         label: "H",
         value: d.high.toFixed(2),
-        color: "red",
+        color,
       },
       {
         label: "L",
         value: d.low.toFixed(2),
-        color: "red",
+        color,
       },
       {
         label: "C",
@@ -300,7 +300,7 @@ export const CandleBubbleSeries: SeriesDefinition<
         value: d.volume.toLocaleString(undefined, {
           maximumFractionDigits: 2,
         }),
-        color: "red",
+        color,
       },
       {
         label: "%",

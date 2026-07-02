@@ -13,7 +13,6 @@ export function _updateIndicatorLegend(
     const { def, enabled, data, values } = series;
 
     const id = `chart-indicators-item-${def.id}`;
-
     let item = container.querySelector<HTMLElement>(`#${id}`);
 
     const opacity = enabled ? "1" : "0.4";
@@ -24,15 +23,18 @@ export function _updateIndicatorLegend(
     const legendHtml = legend
       .map(
         (v) => `
-          <span
-            class="chart-indicators-item-value"
-            ${v.color ? `style="color:${v.color}"` : ""}
-          >
-            ${v.label}: ${v.value}
-          </span>
-        `,
+      <span class="chart-indicators-item-label">
+        ${v.label}:
+      </span>
+      <span
+        class="chart-indicators-item-value"
+        ${v.color ? `style="color:${v.color}"` : ""}
+      >
+        ${v.value}
+      </span>
+    `,
       )
-      .join("");
+      .join(" ");
 
     if (!item) {
       item = document.createElement("div");

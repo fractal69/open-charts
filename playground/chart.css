@@ -56,7 +56,7 @@ small	12px
   background: transparent;
   border: 1px solid var(--border);
   border-radius: 3px;
-  color: var(--text-dim);
+  color: var(--textDim);
   font-family: var(--mono);
   font-size: 10px;
   letter-spacing: 0.08em;
@@ -258,7 +258,6 @@ canvas.pricescale-canvas {
   gap: 0.5rem;
   z-index: 10;
   display: flex;
-  font-size: 14px;
   position: absolute;
   flex-direction: column;
   box-sizing: border-box;
@@ -274,4 +273,20 @@ canvas.pricescale-canvas {
 .chart-indicators-item-dot {
   width: 0.5rem;
   height: 0.25rem;
+}
+
+.chart-indicators-item-name {
+  font-size: var(--fontSizeNormal);
+  color: var(--text);
+  margin-right: 0.25rem;
+}
+
+.chart-indicators-item-label {
+  font-size: var(--fontSizeNormal);
+  color: var(--text);
+}
+
+.chart-indicators-item-value {
+  font-size: var(--fontSizeNormal);
+  color: var(--text);
 }
