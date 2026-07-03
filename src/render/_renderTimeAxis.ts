@@ -59,10 +59,13 @@ export function _renderTimeAxis(engine: ChartEngine): void {
       continue;
     }
 
-    const label = _formatDate(
-      engine.utils.timeOf(i),
-      step,
+    const currentTime = engine.utils.timeOf(i);
+
+    const previousTime = engine.utils.timeOf(
+      Math.max(engine.viewStart, i - gridBars),
     );
+
+    const label = _formatDate(currentTime, previousTime, step);
 
     // Measure the label to avoid overlaps.
     const width = ctx.measureText(label).width;
