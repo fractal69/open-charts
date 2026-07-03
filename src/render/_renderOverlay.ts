@@ -55,6 +55,9 @@ export function _renderOverlay(engine: ChartEngine): void {
   // Draw the crosshair.
   _drawCrosshair(engine, barIndex, localY, lo, hi);
 
+  // Draw the crosshair time label.
+  _drawTimeTag(engine, barIndex);
+
   // Nothing else to draw if the cursor is over the right padding.
   if (!bar) {
     return;
@@ -62,9 +65,6 @@ export function _renderOverlay(engine: ChartEngine): void {
 
   // Highlight the selected bar.
   _drawCrosshairPoint(engine, bar.close, barIndex, lo, hi);
-
-  // Draw the time label.
-  _drawTimeTag(engine, barIndex);
 
   // Update indicator legend.
   _updateIndicatorLegend(engine, barIndex);

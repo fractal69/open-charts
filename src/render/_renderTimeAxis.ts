@@ -2,6 +2,7 @@ import { _timeGridStep } from "./_timeGridStep";
 import { _formatDate } from "../utils/time";
 import { _isTimeGridLine } from "./_isTimeGridLine";
 import type { ChartEngine } from "../core/chartEngine";
+import { _timeGridBars } from "./_timeGridBars";
 
 /**
  * Renders the bottom time axis.
@@ -28,11 +29,11 @@ export function _renderTimeAxis(engine: ChartEngine): void {
   ctx.fillStyle = engine.options.colors.bg;
   ctx.fillRect(0, 0, pane.w, pane.h);
 
-  const data: any[] = engine.data;
   const chartW = engine.chartW;
 
-  // Determine the logical spacing between time labels.
+  // Determine the label format and spacing.
   const step = _timeGridStep(engine);
+  const gridBars = _timeGridBars(engine);
 
   ctx.fillStyle = engine.options.colors.textDim;
   ctx.font = `${engine.options.fontSizeNormal} ${engine.options.fontFamily}`;
@@ -45,13 +46,9 @@ export function _renderTimeAxis(engine: ChartEngine): void {
   // Right edge of the last rendered label.
   let lastRight = -Infinity;
 
-  for (
-    let i = engine.viewStart;
-    i < engine.viewEnd && i < data.length;
-    i++
-  ) {
-    // Skip bars that do not align with the current grid interval.
-    if (!_isTimeGridLine(engine, i, step)) {
+  for (let i = engine.viewStart; i < engine.viewEnd; i++) {
+    // Only draw labels on grid bars.
+    if (i % gridBars !== 0) {
       continue;
     }
 
@@ -62,7 +59,10 @@ export function _renderTimeAxis(engine: ChartEngine): void {
       continue;
     }
 
-    const label = _formatDate(data[i].time, step);
+    const label = _formatDate(
+      engine.utils.timeOf(i),
+      step,
+    );
 
     // Measure the label to avoid overlaps.
     const width = ctx.measureText(label).width;

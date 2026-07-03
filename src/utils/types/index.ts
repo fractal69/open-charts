@@ -2,6 +2,7 @@ import type { ChartEngine } from "../../core/chartEngine";
 import type { ChartPane } from "../../core/types";
 import { _indexAtX } from "../_indexAtX";
 import { _priceAtY } from "../_priceAtY";
+import { _timeOf } from "../_timeOf";
 import { _xOf } from "../_xOf";
 import { _yOf } from "../_yOf";
 
@@ -66,5 +67,9 @@ export class ChartUtils {
     priceMax: number,
   ): number {
     return _priceAtY(y, pane, priceMin, priceMax);
+  }
+
+  public timeOf(i: number): number {
+    return _timeOf(this.engine, i);
   }
 }

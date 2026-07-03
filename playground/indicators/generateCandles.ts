@@ -25,7 +25,7 @@ export function generateCandleBubble(
   {
     startPrice = 63332,
     startTs = Date.now(),
-    intervalMs = 30 * 60 * 1000,
+    intervalMs = 60 * 60 * 1000,
     trend = 0.0001,
     volatility = 0.002,
   } = {},

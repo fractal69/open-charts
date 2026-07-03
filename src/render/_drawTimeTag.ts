@@ -5,24 +5,23 @@ import { _formatDateFull } from "../utils/time";
  * Draws the crosshair time label on the time axis.
  *
  * @param engine Chart engine instance.
- * @param index Data index under the crosshair.
+ * @param index Logical bar index under the crosshair.
  */
 export function _drawTimeTag(
   engine: ChartEngine,
   index: number,
 ): void {
-  const data: any = engine.data[index];
-
-  // Nothing to draw if the index is outside the dataset.
-  if (!data) return;
-
   const ctx = engine.ctxTime;
+
   const x = engine.utils.xOf(index);
   const W = 100;
   const H = engine.panes.time.h;
 
+  // Logical timestamp (real or virtual).
+  const time = engine.utils.timeOf(index);
+
   // Format the timestamp according to the current interval.
-  const label = _formatDateFull(data.time, engine.interval);
+  const label = _formatDateFull(time, engine.interval);
 
   ctx.save();
 

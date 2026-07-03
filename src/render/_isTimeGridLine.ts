@@ -13,14 +13,12 @@ export function _isTimeGridLine(
   index: number,
   step: string,
 ): boolean {
-  if (index <= 0 || index >= engine.data.length) {
+  if (index <= 0) {
     return false;
   }
 
-  const data: any = engine.data;
-
-  const current = data[index].time;
-  const previous = data[index - 1].time;
+  const current = engine.utils.timeOf(index);
+  const previous = engine.utils.timeOf(index - 1);
 
   switch (step) {
     case "minute":
@@ -52,7 +50,8 @@ export function _isTimeGridLine(
         case "quarter":
           return (
             c.getUTCFullYear() !== p.getUTCFullYear() ||
-            Math.floor(c.getUTCMonth() / 3) !== Math.floor(p.getUTCMonth() / 3)
+            Math.floor(c.getUTCMonth() / 3) !==
+              Math.floor(p.getUTCMonth() / 3)
           );
 
         case "year":

@@ -261,6 +261,7 @@ canvas.pricescale-canvas {
 .chart-indicators-item-dot {
   width: 0.25rem;
   height: 0.25rem;
+  border-radius: 50%;
 }
 
 .chart-indicators-item-name {
