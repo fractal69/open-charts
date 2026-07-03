@@ -241,6 +241,8 @@ export class ChartSeries<TData, TValue, TParams = Record<string, unknown>> {
 
     this.engine.priceScale.updateLayout();
 
+    this.engine.timeScale.scrollToRealTime();
+
     this.engine.dirty = true;
   }
 
@@ -264,6 +266,8 @@ export class ChartSeries<TData, TValue, TParams = Record<string, unknown>> {
     this.engine.timeScale.resetViewport();
 
     this.engine.priceScale.updateLayout();
+
+    this.engine.timeScale.scrollToRealTime();
 
     this.engine.dirty = true;
 

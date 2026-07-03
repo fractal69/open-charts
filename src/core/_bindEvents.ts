@@ -30,13 +30,14 @@ export function _bindEvents(engine: ChartEngine) {
         const shift = -Math.round(dx / engine.barWidth);
 
         // Calculate how many bars fit in the current viewport.
-        const capacity = Math.floor(engine.chartW / engine.barWidth);
-
-        // Determine the maximum valid start index for the viewport.
-        const maxStart = Math.max(
-          0,
-          engine.data.length + engine.rightPadBars - capacity,
+        const capacity = Math.max(
+          1,
+          Math.floor(engine.chartW / engine.barWidth),
         );
+
+        // Keep the last real bar visible.
+        // The viewport can move until the last bar reaches the left edge.
+        const maxStart = Math.max(0, engine.data.length - 1);
 
         // Update and clamp the viewport start index.
         engine.viewStart = Math.max(
@@ -47,7 +48,7 @@ export function _bindEvents(engine: ChartEngine) {
         // Recalculate the viewport end index.
         engine.viewEnd = engine.viewStart + capacity;
 
-        // Ensure the visible range remains within valid bounds.
+        // Final safety clamp.
         engine.timeScale.clampView();
 
         // Mark the main chart layer for redraw.
@@ -160,8 +161,14 @@ export function _bindEvents(engine: ChartEngine) {
       // Compute cursor position as a ratio of chart width.
       const rel = localX / engine.chartW;
 
+      // Keep the last real bar visible after zooming.
+      const maxStart = Math.max(0, engine.data.length - 1);
+
       // Adjust viewport so the focused bar stays under the cursor.
-      engine.viewStart = Math.max(0, Math.round(focusIdx - rel * capacity));
+      engine.viewStart = Math.max(
+        0,
+        Math.min(maxStart, Math.round(focusIdx - rel * capacity)),
+      );
 
       // Recalculate viewport end based on new capacity.
       engine.viewEnd = engine.viewStart + capacity;
@@ -321,20 +328,17 @@ export function _bindEvents(engine: ChartEngine) {
       // Calculate how many bars fit in the current viewport.
       const capacity = Math.floor(engine.chartW / engine.barWidth);
 
-      // Update and clamp the viewport start index.
+      // Keep the last real bar visible.
+      const maxStart = Math.max(0, engine.data.length - 1);
+
+      // Update and clamp the viewport start.
       engine.viewStart = Math.max(
         0,
-        Math.min(
-          engine.data.length + engine.rightPadBars - capacity,
-          scrollOriginVS + shift,
-        ),
+        Math.min(maxStart, scrollOriginVS + shift),
       );
 
-      // Recalculate the viewport end index.
-      engine.viewEnd = Math.min(
-        engine.data.length + engine.rightPadBars,
-        engine.viewStart + capacity,
-      );
+      // Recalculate the viewport end.
+      engine.viewEnd = engine.viewStart + capacity;
 
       // Ensure the viewport remains within valid bounds.
       engine.timeScale.clampView();

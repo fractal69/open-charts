@@ -2,6 +2,7 @@ import { _clampView } from "../../timeScale/_clampView";
 import { _resetViewport } from "../../timeScale/_resetViewport";
 import type { ChartEngine } from "../../core/chartEngine";
 import { _updateScrollThumb } from "../_updateScrollThumb";
+import { _scrollToRealTime } from "../_scrollToRealTime";
 
 /**
  * Utils API exposed by the chart engine.
@@ -64,5 +65,15 @@ export class ChartTimeScale {
    */
   public updateScrollThumb(): void {
     _updateScrollThumb(this.engine);
+  }
+
+  /**
+   * Scrolls the viewport to the latest available bar.
+   *
+   * The latest candle is positioned using the configured right-side
+   * padding so new incoming bars remain visible.
+   */
+  public scrollToRealTime(): void {
+    _scrollToRealTime(this.engine);
   }
 }
