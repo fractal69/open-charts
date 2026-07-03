@@ -25,6 +25,12 @@ export function _bindEvents(engine: ChartEngine) {
       if (engine.isPanning) {
         // Calculate the horizontal drag distance from the pan start point.
         const dx = e.clientX - engine.panOrigin.x;
+        const dy = e.clientY - engine.panOrigin.y;
+
+        const priceRange =
+          engine.panOrigin.priceMax - engine.panOrigin.priceMin;
+
+        const priceDelta = (dy / engine.panes.main.h) * priceRange;
 
         // Calculate how many bars to shift based on the horizontal pixel movement.
         const shift = -Math.round(dx / engine.barWidth);
@@ -47,6 +53,15 @@ export function _bindEvents(engine: ChartEngine) {
 
         // Recalculate the viewport end index.
         engine.viewEnd = engine.viewStart + capacity;
+
+        // Enable manual vertical panning.
+        if (dy !== 0) {
+          engine.priceViewport.auto = false;
+
+          engine.priceViewport.min = engine.panOrigin.priceMin + priceDelta;
+
+          engine.priceViewport.max = engine.panOrigin.priceMax + priceDelta;
+        }
 
         // Final safety clamp.
         engine.timeScale.clampView();
@@ -100,11 +115,22 @@ export function _bindEvents(engine: ChartEngine) {
 
       if (e.button !== 0) return;
 
+      // Current visible price range.
+      const { lo, hi } = engine.core.visiblePriceRange();
+
       // Mark the chart as being actively panned.
       engine.isPanning = true;
 
-      // Store the initial pointer position and viewport state for panning calculations.
-      engine.panOrigin = { x: e.clientX, viewStart: engine.viewStart };
+      // Store the initial pointer position and viewport state.
+      engine.panOrigin = {
+        x: e.clientX,
+        y: e.clientY,
+
+        viewStart: engine.viewStart,
+
+        priceMin: lo,
+        priceMax: hi,
+      };
 
       // Update the cursor to indicate an active drag operation.
       area.style.cursor = "grabbing";

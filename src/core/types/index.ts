@@ -7,6 +7,12 @@ import { _bindEvents } from "../_bindEvents";
 import { _startLoop } from "../_startLoop";
 import { _visiblePriceRange, type PriceRange } from "../_visiblePriceRange";
 
+export interface PriceViewport {
+  auto: boolean;
+  min: number;
+  max: number;
+}
+
 /**
  * Pane with geometry only.
  */
@@ -68,8 +74,13 @@ export interface PanOrigin {
   /** Pointer X position at the start of the pan. */
   x: number;
 
+  y: number;
+
   /** First visible bar index when the pan started. */
   viewStart: number;
+
+  priceMin: number;
+  priceMax: number;
 }
 
 export interface PriceTag {

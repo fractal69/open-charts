@@ -44,6 +44,7 @@ import {
   type ChartPanes,
   type MouseState,
   type PanOrigin,
+  type PriceViewport,
 } from "./types";
 import { ChartUtils } from "../utils/types";
 import { ChartTimeScale } from "../timeScale/types";
@@ -149,6 +150,13 @@ export class ChartEngine {
    */
   public panOrigin: PanOrigin;
 
+  /**
+   * Defines the visible price range for the chart.
+   * When `auto` is true, the viewport is calculated automatically.
+   * Otherwise, the range is constrained by `min` and `max`.
+   */
+  public priceViewport: PriceViewport;
+  
   /**
    * Whether the viewport automatically follows the latest bar.
    */
@@ -320,7 +328,13 @@ export class ChartEngine {
 
     this.isPanning = false;
 
-    this.panOrigin = { x: 0, viewStart: 0 };
+    this.panOrigin = { x: 0, y: 0, viewStart: 0, priceMin: 0, priceMax: 0 };
+
+    this.priceViewport = {
+      auto: true,
+      min: 0,
+      max: 0,
+    };
 
     this._liveMode = false;
 

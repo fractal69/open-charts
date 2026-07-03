@@ -6,6 +6,14 @@ export type PriceRange = {
 };
 
 export function _visiblePriceRange(engine: ChartEngine): PriceRange {
+  // Use the manually panned price viewport when auto scaling is disabled.
+  if (!engine.priceViewport.auto) {
+    return {
+      lo: engine.priceViewport.min,
+      hi: engine.priceViewport.max,
+    };
+  }
+
   const data = engine.data;
 
   if (!data.length) {
