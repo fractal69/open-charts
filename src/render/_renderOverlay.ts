@@ -3,7 +3,7 @@ import { _drawCrosshair } from "./_drawCrosshair";
 import { _drawCrosshairPoint } from "./_drawCrosshairPoint";
 import { _drawCrosshairPriceTag } from "./_drawCrosshairPriceTag";
 import { _drawLivePulse } from "./_drawLivePulse";
-import { _drawTimeTag } from "./_drawTimeTag";
+import { _drawCrosshairTimeTag } from "./_drawCrosshairTimeTag";
 import type { ChartEngine } from "../core/chartEngine";
 import { _renderTimeAxis } from "./_renderTimeAxis";
 import { _updateIndicatorLegend } from "../ui/_updateIndicatorLegend";
@@ -56,7 +56,7 @@ export function _renderOverlay(engine: ChartEngine): void {
   _drawCrosshair(engine, barIndex, localY, lo, hi);
 
   // Draw the crosshair time label.
-  _drawTimeTag(engine, barIndex);
+  _drawCrosshairTimeTag(engine, barIndex);
 
   // Nothing else to draw if the cursor is over the right padding.
   if (!bar) {

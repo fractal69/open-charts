@@ -7,7 +7,7 @@ import { _formatDateFull } from "../utils/time";
  * @param engine Chart engine instance.
  * @param index Logical bar index under the crosshair.
  */
-export function _drawTimeTag(
+export function _drawCrosshairTimeTag(
   engine: ChartEngine,
   index: number,
 ): void {
