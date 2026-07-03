@@ -13,7 +13,7 @@ const fakeData = generateCandleBubble(500, {
   volatility: 0.010,
 });
 
-let chart1 = createChart(document.getElementById("chart-left")!);
+let chart1 = createChart(document.getElementById("chart-area")!);
 
 chart1.api.applyOptions({ legend: "Bitcoin/Tether USD · 4h" });
 
@@ -25,12 +25,6 @@ candles1.setData(fakeData);
 //const MAseries = chart.api.addSeries(MovingAverageSeries);
 
 //MAseries.setData(normalizeCandles(fakeData));
-
-let chart2 = createChart(document.getElementById("chart-right")!);
-
-const candles2 = chart2.api.addSeries(CandlestickSeries);
-
-candles2.setData(normalizeCandles(fakeData));
 */
 
 //let indicatorLeft1 = createChart(document.getElementById("left-pane-1")!);

@@ -14,7 +14,9 @@ import type { ChartEngine } from "../core/chartEngine";
  */
 export function _renderTimeAxis(engine: ChartEngine): void {
   // Nothing to render if there is no data.
-  if (!engine.hasData) return;
+  if (!engine.hasData) {
+    return;
+  }
 
   const ctx = engine.ctxTime;
   const pane = engine.panes.time;
@@ -37,16 +39,44 @@ export function _renderTimeAxis(engine: ChartEngine): void {
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
 
-  for (let i = engine.viewStart; i < engine.viewEnd && i < data.length; i++) {
+  // Minimum horizontal spacing between adjacent labels.
+  const LABEL_GAP = 10;
+
+  // Right edge of the last rendered label.
+  let lastRight = -Infinity;
+
+  for (
+    let i = engine.viewStart;
+    i < engine.viewEnd && i < data.length;
+    i++
+  ) {
     // Skip bars that do not align with the current grid interval.
-    if (!_isTimeGridLine(engine, i, step)) continue;
+    if (!_isTimeGridLine(engine, i, step)) {
+      continue;
+    }
 
     const x = engine.utils.xOf(i);
 
     // Skip labels too close to the chart edges.
-    if (x < 20 || x > chartW - 20) continue;
+    if (x < 20 || x > chartW - 20) {
+      continue;
+    }
 
-    // Draw the formatted time label.
-    ctx.fillText(_formatDate(data[i].time, step), x, pane.h / 2);
+    const label = _formatDate(data[i].time, step);
+
+    // Measure the label to avoid overlaps.
+    const width = ctx.measureText(label).width;
+
+    const left = x - width / 2;
+    const right = x + width / 2;
+
+    // Skip the label if it overlaps the previous one.
+    if (left <= lastRight + LABEL_GAP) {
+      continue;
+    }
+
+    ctx.fillText(label, x, pane.h / 2);
+
+    lastRight = right;
   }
 }
