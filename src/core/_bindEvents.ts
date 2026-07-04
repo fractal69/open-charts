@@ -3,6 +3,7 @@ import { _resize } from "./_resize";
 import { _updateScrollThumb } from "../timeScale/_updateScrollThumb";
 import { _updateStatusBar } from "../ui/_updateStatusBar";
 import type { ChartEngine } from "./chartEngine";
+import { DragMode, HoverArea } from "./types";
 
 /**
  * Registers all user interaction and lifecycle event handlers
@@ -18,62 +19,116 @@ export function _bindEvents(engine: ChartEngine) {
     (e: any) => {
       if (!engine.hasData) return;
 
+      const localX = e.clientX - engine.panes.main.x;
+      const localY = e.clientY - engine.panes.main.y;
+
+      if (
+        localX >= engine.chartW &&
+        localX <= engine.chartW + engine.options.priceScaleWidth
+      ) {
+        engine.hoverArea = HoverArea.PriceScale;
+      } else if (localY >= engine.panes.main.h) {
+        engine.hoverArea = HoverArea.TimeScale;
+      } else {
+        engine.hoverArea = HoverArea.Chart;
+      }
+
+      switch (engine.hoverArea) {
+        case HoverArea.PriceScale:
+          area.style.cursor = "ns-resize";
+          break;
+
+        case HoverArea.Chart:
+          area.style.cursor =
+            engine.dragMode === DragMode.Pan ? "grabbing" : "grab";
+          break;
+
+        default:
+          area.style.cursor = "default";
+      }
+
       // Update the current mouse position and mark it as inside the chart.
       engine.mouse = { x: e.clientX, y: e.clientY, inside: true };
 
       // Handle horizontal panning while dragging.
-      if (engine.isPanning) {
-        // Calculate the horizontal drag distance from the pan start point.
-        const dx = e.clientX - engine.panOrigin.x;
-        const dy = e.clientY - engine.panOrigin.y;
+      switch (engine.dragMode) {
+        case DragMode.Pan: {
+          // Calculate the horizontal drag distance from the pan start point.
+          const dx = e.clientX - engine.panOrigin.x;
+          const dy = e.clientY - engine.panOrigin.y;
 
-        const priceRange =
-          engine.panOrigin.priceMax - engine.panOrigin.priceMin;
+          const priceRange =
+            engine.panOrigin.priceMax - engine.panOrigin.priceMin;
 
-        const priceDelta = (dy / engine.panes.main.h) * priceRange;
+          const priceDelta = (dy / engine.panes.main.h) * priceRange;
 
-        // Calculate how many bars to shift based on the horizontal pixel movement.
-        const shift = -Math.round(dx / engine.barWidth);
+          // Calculate how many bars to shift based on the horizontal pixel movement.
+          const shift = -Math.round(dx / engine.barWidth);
 
-        // Calculate how many bars fit in the current viewport.
-        const capacity = Math.max(
-          1,
-          Math.floor(engine.chartW / engine.barWidth),
-        );
+          // Calculate how many bars fit in the current viewport.
+          const capacity = Math.max(
+            1,
+            Math.floor(engine.chartW / engine.barWidth),
+          );
 
-        // Keep the last real bar visible.
-        // The viewport can move until the last bar reaches the left edge.
-        const maxStart = Math.max(0, engine.data.length - 1);
+          // Keep the last real bar visible.
+          // The viewport can move until the last bar reaches the left edge.
+          const maxStart = Math.max(0, engine.data.length - 1);
 
-        // Update and clamp the viewport start index.
-        engine.viewStart = Math.max(
-          0,
-          Math.min(maxStart, engine.panOrigin.viewStart + shift),
-        );
+          // Update and clamp the viewport start index.
+          engine.viewStart = Math.max(
+            0,
+            Math.min(maxStart, engine.panOrigin.viewStart + shift),
+          );
 
-        // Recalculate the viewport end index.
-        engine.viewEnd = engine.viewStart + capacity;
+          // Recalculate the viewport end index.
+          engine.viewEnd = engine.viewStart + capacity;
 
-        // Enable manual vertical panning.
-        if (dy !== 0) {
-          engine.priceViewport.auto = false;
+          // Enable manual vertical panning.
+          if (dy !== 0) {
+            engine.priceViewport.auto = false;
 
-          engine.priceViewport.min = engine.panOrigin.priceMin + priceDelta;
+            engine.priceViewport.min = engine.panOrigin.priceMin + priceDelta;
 
-          engine.priceViewport.max = engine.panOrigin.priceMax + priceDelta;
+            engine.priceViewport.max = engine.panOrigin.priceMax + priceDelta;
+          }
+
+          // Final safety clamp.
+          engine.timeScale.clampView();
+
+          // Mark the main chart layer for redraw.
+          engine.dirty = true;
+
+          // Synchronize the scrollbar thumb with the new viewport.
+          engine.timeScale.updateScrollThumb();
+
+          // Refresh status information displayed to the user.
+          _updateStatusBar(engine);
+
+          break;
         }
 
-        // Final safety clamp.
-        engine.timeScale.clampView();
+        case DragMode.VerticalZoom: {
+          const dy = e.clientY - engine.panOrigin.y;
 
-        // Mark the main chart layer for redraw.
-        engine.dirty = true;
+          const factor = Math.exp(dy * 0.003);
 
-        // Synchronize the scrollbar thumb with the new viewport.
-        engine.timeScale.updateScrollThumb();
+          const center =
+            (engine.panOrigin.priceMin + engine.panOrigin.priceMax) / 2;
 
-        // Refresh status information displayed to the user.
-        _updateStatusBar(engine);
+          const halfRange =
+            ((engine.panOrigin.priceMax - engine.panOrigin.priceMin) / 2) *
+            factor;
+
+          engine.priceViewport.auto = false;
+
+          engine.priceViewport.min = center - halfRange;
+          engine.priceViewport.max = center + halfRange;
+
+          engine.dirty = true;
+
+          break;
+        }
       }
 
       // Mark the overlay layer for redraw.
@@ -89,6 +144,8 @@ export function _bindEvents(engine: ChartEngine) {
     () => {
       // Mark the mouse as outside the chart bounds.
       engine.mouse.inside = false;
+      engine.hoverArea = HoverArea.None;
+      area.style.cursor = "default";
 
       // Redraw overlay elements affected by hover state.
       engine.overlayDirty = true;
@@ -118,9 +175,6 @@ export function _bindEvents(engine: ChartEngine) {
       // Current visible price range.
       const { lo, hi } = engine.core.visiblePriceRange();
 
-      // Mark the chart as being actively panned.
-      engine.isPanning = true;
-
       // Store the initial pointer position and viewport state.
       engine.panOrigin = {
         x: e.clientX,
@@ -132,19 +186,20 @@ export function _bindEvents(engine: ChartEngine) {
         priceMax: hi,
       };
 
-      // Update the cursor to indicate an active drag operation.
-      area.style.cursor = "grabbing";
-    },
-    { signal: engine._abortController.signal },
-  );
+      // Start the interaction depending on the hovered area.
+      switch (engine.hoverArea) {
+        case HoverArea.Chart:
+          engine.dragMode = DragMode.Pan;
+          area.style.cursor = "grabbing";
+          break;
 
-  // End the current pan operation when the mouse button is released.
-  window.addEventListener(
-    "mouseup",
-    (e: any) => {
-      if (engine.isPanning) {
-        engine.isPanning = false;
-        area.style.cursor = "";
+        case HoverArea.PriceScale:
+          engine.dragMode = DragMode.VerticalZoom;
+          area.style.cursor = "ns-resize";
+          break;
+
+        default:
+          return;
       }
     },
     { signal: engine._abortController.signal },
@@ -330,6 +385,33 @@ export function _bindEvents(engine: ChartEngine) {
     { signal: engine._abortController.signal },
   );
 
+  // End the current pan operation when the mouse button is released.
+  window.addEventListener(
+    "mouseup",
+    () => {
+      // Stop scrollbar dragging.
+      scrollDragging = false;
+
+      // Finish any active drag operation.
+      engine.dragMode = DragMode.None;
+
+      // Restore the appropriate cursor.
+      switch (engine.hoverArea) {
+        case HoverArea.Chart:
+          area.style.cursor = "grab";
+          break;
+
+        case HoverArea.PriceScale:
+          area.style.cursor = "ns-resize";
+          break;
+
+        default:
+          area.style.cursor = "default";
+      }
+    },
+    { signal: engine._abortController.signal },
+  );
+
   // Handle thumb dragging while the mouse moves.
   window.addEventListener(
     "mousemove",
@@ -377,15 +459,6 @@ export function _bindEvents(engine: ChartEngine) {
 
       // Refresh viewport-related status information.
       _updateStatusBar(engine);
-    },
-    { signal: engine._abortController.signal },
-  );
-
-  // End scrollbar dragging when the mouse button is released.
-  window.addEventListener(
-    "mouseup",
-    () => {
-      scrollDragging = false;
     },
     { signal: engine._abortController.signal },
   );

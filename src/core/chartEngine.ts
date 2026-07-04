@@ -40,6 +40,8 @@ import { _updateSeriesIncremental } from "../core/_updateSeriesIncremental";
 import { ChartApi } from "../api/types";
 import {
   ChartCore,
+  DragMode,
+  HoverArea,
   type AnyChartSeries,
   type ChartPanes,
   type MouseState,
@@ -74,6 +76,10 @@ export class ChartEngine {
 
   /** Root HTML element that hosts the chart. */
   public area: HTMLElement;
+
+  public hoverArea: HoverArea;
+
+  public dragMode: DragMode;
 
   /** Indicates whether the chart currently contains any data. */
   public hasData: boolean;
@@ -139,12 +145,6 @@ export class ChartEngine {
   public mouse: MouseState;
 
   /**
-   * Indicates whether a pan (click-and-drag navigation) interaction
-   * is currently active on the chart.
-   */
-  public isPanning: boolean;
-
-  /**
    * Stores the pointer position and viewport state at the start
    * of a pan operation, used to calculate drag offsets.
    */
@@ -156,7 +156,7 @@ export class ChartEngine {
    * Otherwise, the range is constrained by `min` and `max`.
    */
   public priceViewport: PriceViewport;
-  
+
   /**
    * Whether the viewport automatically follows the latest bar.
    */
@@ -302,6 +302,10 @@ export class ChartEngine {
 
     this.area = area;
 
+    this.hoverArea = HoverArea.None;
+
+    this.dragMode = DragMode.None;
+    
     this.hasData = false;
 
     this._series = new Map<string, AnyChartSeries>();
@@ -325,8 +329,6 @@ export class ChartEngine {
     this.overlayDirty = true;
 
     this.mouse = { x: 0, y: 0, inside: false };
-
-    this.isPanning = false;
 
     this.panOrigin = { x: 0, y: 0, viewStart: 0, priceMin: 0, priceMax: 0 };
 

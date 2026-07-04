@@ -149,20 +149,21 @@ canvas.overlay-canvas {
 
 /* ── SCROLL INDICATOR ── */
 #scrollbar {
-  height: 4px;
+  height: 1px;
   background: var(--bg3);
   flex-shrink: 0;
   position: relative;
   cursor: pointer;
 }
+
 #scrollthumb {
   position: absolute;
-  height: 4px;
-  background: var(--border2);
+  height: 1px;
   border-radius: 2px;
   transition: background 0.15s;
   cursor: grab;
 }
+
 #scrollthumb:hover {
   background: var(--accent);
 }

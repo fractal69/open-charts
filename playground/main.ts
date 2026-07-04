@@ -7,7 +7,7 @@ import {
   normalizeCandles,
 } from "./indicators/generateCandles";
 
-const fakeData = generateCandleBubble(500, {
+const fakeData = generateCandleBubble(700, {
   startPrice: 60_000,
   trend: 0.0002, // alcista
   volatility: 0.010,

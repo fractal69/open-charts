@@ -7,6 +7,20 @@ import { _bindEvents } from "../_bindEvents";
 import { _startLoop } from "../_startLoop";
 import { _visiblePriceRange, type PriceRange } from "../_visiblePriceRange";
 
+export enum DragMode {
+    None,
+    Pan,
+    VerticalZoom,
+}
+
+export enum HoverArea {
+  None,
+  Chart,
+  PriceScale,
+  TimeScale,
+}
+
+
 export interface PriceViewport {
   auto: boolean;
   min: number;
