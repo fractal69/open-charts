@@ -22,16 +22,19 @@ export function _bindEvents(engine: ChartEngine) {
       const localX = e.clientX - engine.panes.main.x;
       const localY = e.clientY - engine.panes.main.y;
 
-      if (
-        localX >= engine.chartW &&
-        localX <= engine.chartW + engine.options.priceScaleWidth
-      ) {
-        engine.hoverArea = HoverArea.PriceScale;
-      } else if (localY >= engine.panes.main.h) {
-        engine.hoverArea = HoverArea.TimeScale;
-      } else {
-        engine.hoverArea = HoverArea.Chart;
-      }
+      const overPriceScale =
+        localX >= engine.panes.scale.x &&
+        localX < engine.panes.scale.x + engine.panes.scale.w;
+
+      const overTimeScale =
+        localY >= engine.panes.time.y &&
+        localY < engine.panes.time.y + engine.panes.time.h;
+
+      engine.hoverArea = overPriceScale
+        ? HoverArea.PriceScale
+        : overTimeScale
+          ? HoverArea.TimeScale
+          : HoverArea.Chart;
 
       switch (engine.hoverArea) {
         case HoverArea.PriceScale:
