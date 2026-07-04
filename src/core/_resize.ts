@@ -84,7 +84,7 @@ function _resizePriceScale(
  */
 export function _resize(engine: ChartEngine): void {
   // Current device pixel ratio.
-  const dpr = window.devicePixelRatio || 1;
+  const dpr: number = window.devicePixelRatio || 1;
 
   // Resize every canvas that follows the main pane.
   _resizeCanvas(engine.cMain, engine.paneMainEl, dpr);
