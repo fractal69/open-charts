@@ -3,15 +3,17 @@ import { _updateScrollThumb } from "../timeScale/_updateScrollThumb";
 import { _buildLegend } from "../ui/_buildLegend";
 
 /**
- * Configures a canvas for HiDPI rendering.
+ * Resizes a canvas to match its container while preserving
+ * sharp rendering on high-DPI displays.
  *
- * The backing-store resolution is synchronized with the container
- * size while the CSS size remains unchanged, producing crisp
- * rendering on high-density displays.
+ * The canvas backing-store is resized using the device pixel ratio (DPR),
+ * while the CSS size remains expressed in logical pixels. The rendering
+ * context is then reset and scaled so all drawing operations continue to
+ * use CSS pixel coordinates transparently.
  *
- * @param canvas Canvas to configure.
- * @param container Element that defines the canvas size.
- * @param dpr Current device pixel ratio.
+ * @param canvas Canvas element to resize.
+ * @param container Container whose dimensions define the canvas size.
+ * @param dpr Device pixel ratio used to scale the backing-store.
  */
 function _resizeCanvas(
   canvas: HTMLCanvasElement,
@@ -19,25 +21,27 @@ function _resizeCanvas(
   dpr: number,
 ): void {
   // Read the current container size.
-  const rect = container.getBoundingClientRect();
+  const rect: DOMRect = container.getBoundingClientRect();
 
-  // Compute the backing-store size in physical pixels.
+  // Compute the canvas backing-store size in physical pixels.
   const width = Math.ceil(rect.width * dpr);
   const height = Math.ceil(rect.height * dpr);
 
-  // Resize the backing-store.
+  // Resize the canvas backing-store. (Internal buffer physical pixels)
   canvas.width = width;
   canvas.height = height;
 
-  // Preserve the visual size in CSS pixels.
+  // Preserve the displayed size in CSS pixels. (CSS visual pixels)
   canvas.style.width = `${width / dpr}px`;
   canvas.style.height = `${height / dpr}px`;
 
-  // Reset the transform before applying the DPR scale.
+  // Reset any previous transform before applying the DPR scale.
   const ctx = canvas.getContext("2d");
 
   if (!ctx) return;
 
+  // Scale the drawing context so rendering code can continue
+  // using logical (CSS) pixel coordinates.
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.scale(dpr, dpr);
 }

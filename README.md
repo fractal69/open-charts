@@ -31,7 +31,7 @@ Designed from the ground up for professional trading applications, the engine fo
 
 ## Architecture
 
-![Architecture](docs/arch.png)
+![Architecture](arch.png)
 
 The engine is organized into independent modules that communicate through the central `ChartEngine` instance.
 
