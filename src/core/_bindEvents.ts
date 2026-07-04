@@ -4,6 +4,193 @@ import { _updateScrollThumb } from "../timeScale/_updateScrollThumb";
 import { _updateStatusBar } from "../ui/_updateStatusBar";
 import type { ChartEngine } from "./ChartEngine";
 import { DragMode, HoverArea } from "./types";
+/**
+ * Handles mouse movement over the chart area.
+ *
+ * This handler is responsible for:
+ *
+ * - Updating the current hover region (chart, price scale, or time scale).
+ * - Updating the mouse cursor to reflect the available interaction.
+ * - Tracking the current mouse position.
+ * - Executing the active drag operation:
+ *   - Free chart panning.
+ *   - Vertical price zoom.
+ *   - Horizontal time zoom.
+ * - Marking the appropriate rendering layers as dirty so they are
+ *   redrawn on the next render cycle.
+ *
+ * @param e Mouse event.
+ * @param engine Chart engine instance.
+ * @param area Root chart container.
+ */
+const mousemoveHandler = (
+  e: MouseEvent,
+  engine: ChartEngine,
+  area: HTMLElement,
+) => {
+  // Ignore mouse interaction until the chart contains data.
+  if (!engine.hasData) return;
+
+  // Convert the mouse position from viewport coordinates
+  // into chart-local coordinates.
+  const localX = e.clientX - engine.panes.main.x;
+  const localY = e.clientY - engine.panes.main.y;
+
+  // Determine whether the pointer is currently over
+  // the price scale.
+  const overPriceScale =
+    localX >= engine.panes.scale.x &&
+    localX < engine.panes.scale.x + engine.panes.scale.w;
+
+  // Determine whether the pointer is currently over
+  // the time scale.
+  const overTimeScale =
+    localY >= engine.panes.time.y &&
+    localY < engine.panes.time.y + engine.panes.time.h;
+
+  // Resolve the hovered chart region.
+  engine.hoverArea = overPriceScale
+    ? HoverArea.PriceScale
+    : overTimeScale
+      ? HoverArea.TimeScale
+      : HoverArea.Chart;
+
+  // Update the mouse cursor according to the active region
+  // and current interaction mode.
+  switch (engine.hoverArea) {
+    case HoverArea.PriceScale:
+      area.style.cursor = "ns-resize";
+      break;
+
+    case HoverArea.TimeScale:
+      area.style.cursor = "ew-resize";
+      break;
+
+    case HoverArea.Chart:
+      area.style.cursor =
+        engine.dragMode === DragMode.Pan ? "grabbing" : "default";
+      break;
+
+    default:
+      area.style.cursor = "default";
+  }
+
+  // Update the current mouse position and mark it as inside the chart.
+  engine.mouse = { x: e.clientX, y: e.clientY, inside: true };
+
+  // Handle horizontal panning while dragging.
+  switch (engine.dragMode) {
+    // Free chart panning.
+    case DragMode.Pan: {
+      // Calculate the horizontal drag distance from the pan start point.
+      const dx = e.clientX - engine.panOrigin.x;
+      const dy = e.clientY - engine.panOrigin.y;
+
+      const priceRange = engine.panOrigin.priceMax - engine.panOrigin.priceMin;
+
+      const priceDelta = (dy / engine.panes.main.h) * priceRange;
+
+      // Calculate how many bars to shift based on the horizontal pixel movement.
+      const shift = -Math.round(dx / engine.barWidth);
+
+      // Calculate how many bars fit in the current viewport.
+      const capacity = Math.max(1, Math.floor(engine.chartW / engine.barWidth));
+
+      // Keep the last real bar visible.
+      // The viewport can move until the last bar reaches the left edge.
+      const maxStart = Math.max(0, engine.data.length - 1);
+
+      // Update and clamp the viewport start index.
+      engine.viewStart = Math.max(
+        0,
+        Math.min(maxStart, engine.panOrigin.viewStart + shift),
+      );
+
+      // Recalculate the viewport end index.
+      engine.viewEnd = engine.viewStart + capacity;
+
+      // Enable manual vertical panning.
+      if (dy !== 0) {
+        engine.priceViewport.auto = false;
+
+        engine.priceViewport.min = engine.panOrigin.priceMin + priceDelta;
+
+        engine.priceViewport.max = engine.panOrigin.priceMax + priceDelta;
+      }
+
+      // Final safety clamp.
+      engine.timeScale.clampView();
+
+      // Mark the main chart layer for redraw.
+      engine.dirty = true;
+
+      // Synchronize the scrollbar thumb with the new viewport.
+      engine.timeScale.updateScrollThumb();
+
+      // Refresh status information displayed to the user.
+      _updateStatusBar(engine);
+
+      break;
+    }
+
+    // Vertical scaling of the price axis.
+    case DragMode.VerticalZoom: {
+      const dy = e.clientY - engine.panOrigin.y;
+
+      const factor = Math.exp(dy * 0.003);
+
+      const center =
+        (engine.panOrigin.priceMin + engine.panOrigin.priceMax) / 2;
+
+      const halfRange =
+        ((engine.panOrigin.priceMax - engine.panOrigin.priceMin) / 2) * factor;
+
+      engine.priceViewport.auto = false;
+
+      engine.priceViewport.min = center - halfRange;
+      engine.priceViewport.max = center + halfRange;
+
+      engine.dirty = true;
+
+      break;
+    }
+
+    // Horizontal scaling of the time axis.
+    case DragMode.HorizontalZoom: {
+      const dx = e.clientX - engine.panOrigin.x;
+
+      // Arrastrar hacia la derecha = zoom in.
+      const factor = Math.exp(-dx * 0.0015);
+
+      engine.barWidth = Math.max(
+        MIN_BAR_W,
+        Math.min(MAX_BAR_W, engine.panOrigin.barWidth * factor),
+      );
+
+      // Recalcular cuántas velas caben.
+      const capacity = Math.max(1, Math.floor(engine.chartW / engine.barWidth));
+
+      // Mantener fijo el borde derecho del viewport.
+      engine.viewEnd = engine.panOrigin.viewEnd;
+
+      engine.viewStart = engine.viewEnd - capacity;
+
+      // Ajustar límites.
+      engine.timeScale.clampView();
+
+      engine.timeScale.updateScrollThumb();
+
+      engine.dirty = true;
+
+      break;
+    }
+  }
+
+  // Mark dependent rendering layers as dirty so
+  // they will be redrawn on the next frame.
+  engine.overlayDirty = true;
+  engine.timeAxisDirty = true;
+};
 
 /**
  * Registers all user interaction and lifecycle event handlers
@@ -16,165 +203,10 @@ export function _bindEvents(engine: ChartEngine) {
   // Track mouse movement within the chart area.
   area.addEventListener(
     "mousemove",
-    (e: any) => {
-      if (!engine.hasData) return;
-
-      const localX = e.clientX - engine.panes.main.x;
-      const localY = e.clientY - engine.panes.main.y;
-
-      const overPriceScale =
-        localX >= engine.panes.scale.x &&
-        localX < engine.panes.scale.x + engine.panes.scale.w;
-
-      const overTimeScale =
-        localY >= engine.panes.time.y &&
-        localY < engine.panes.time.y + engine.panes.time.h;
-
-      engine.hoverArea = overPriceScale
-        ? HoverArea.PriceScale
-        : overTimeScale
-          ? HoverArea.TimeScale
-          : HoverArea.Chart;
-
-      switch (engine.hoverArea) {
-        case HoverArea.PriceScale:
-          area.style.cursor = "ns-resize";
-          break;
-
-        case HoverArea.TimeScale:
-          area.style.cursor = "ew-resize";
-          break;
-
-        case HoverArea.Chart:
-          area.style.cursor =
-            engine.dragMode === DragMode.Pan ? "grabbing" : "default";
-          break;
-
-        default:
-          area.style.cursor = "default";
-      }
-
-      // Update the current mouse position and mark it as inside the chart.
-      engine.mouse = { x: e.clientX, y: e.clientY, inside: true };
-
-      // Handle horizontal panning while dragging.
-      switch (engine.dragMode) {
-        case DragMode.Pan: {
-          // Calculate the horizontal drag distance from the pan start point.
-          const dx = e.clientX - engine.panOrigin.x;
-          const dy = e.clientY - engine.panOrigin.y;
-
-          const priceRange =
-            engine.panOrigin.priceMax - engine.panOrigin.priceMin;
-
-          const priceDelta = (dy / engine.panes.main.h) * priceRange;
-
-          // Calculate how many bars to shift based on the horizontal pixel movement.
-          const shift = -Math.round(dx / engine.barWidth);
-
-          // Calculate how many bars fit in the current viewport.
-          const capacity = Math.max(
-            1,
-            Math.floor(engine.chartW / engine.barWidth),
-          );
-
-          // Keep the last real bar visible.
-          // The viewport can move until the last bar reaches the left edge.
-          const maxStart = Math.max(0, engine.data.length - 1);
-
-          // Update and clamp the viewport start index.
-          engine.viewStart = Math.max(
-            0,
-            Math.min(maxStart, engine.panOrigin.viewStart + shift),
-          );
-
-          // Recalculate the viewport end index.
-          engine.viewEnd = engine.viewStart + capacity;
-
-          // Enable manual vertical panning.
-          if (dy !== 0) {
-            engine.priceViewport.auto = false;
-
-            engine.priceViewport.min = engine.panOrigin.priceMin + priceDelta;
-
-            engine.priceViewport.max = engine.panOrigin.priceMax + priceDelta;
-          }
-
-          // Final safety clamp.
-          engine.timeScale.clampView();
-
-          // Mark the main chart layer for redraw.
-          engine.dirty = true;
-
-          // Synchronize the scrollbar thumb with the new viewport.
-          engine.timeScale.updateScrollThumb();
-
-          // Refresh status information displayed to the user.
-          _updateStatusBar(engine);
-
-          break;
-        }
-
-        case DragMode.VerticalZoom: {
-          const dy = e.clientY - engine.panOrigin.y;
-
-          const factor = Math.exp(dy * 0.003);
-
-          const center =
-            (engine.panOrigin.priceMin + engine.panOrigin.priceMax) / 2;
-
-          const halfRange =
-            ((engine.panOrigin.priceMax - engine.panOrigin.priceMin) / 2) *
-            factor;
-
-          engine.priceViewport.auto = false;
-
-          engine.priceViewport.min = center - halfRange;
-          engine.priceViewport.max = center + halfRange;
-
-          engine.dirty = true;
-
-          break;
-        }
-
-        case DragMode.HorizontalZoom: {
-          const dx = e.clientX - engine.panOrigin.x;
-
-          // Arrastrar hacia la derecha = zoom in.
-          const factor = Math.exp(-dx * 0.0015);
-
-          engine.barWidth = Math.max(
-            MIN_BAR_W,
-            Math.min(MAX_BAR_W, engine.panOrigin.barWidth * factor),
-          );
-
-          // Recalcular cuántas velas caben.
-          const capacity = Math.max(
-            1,
-            Math.floor(engine.chartW / engine.barWidth),
-          );
-
-          // Mantener fijo el borde derecho del viewport.
-          engine.viewEnd = engine.panOrigin.viewEnd;
-
-          engine.viewStart = engine.viewEnd - capacity;
-
-          // Ajustar límites.
-          engine.timeScale.clampView();
-
-          engine.timeScale.updateScrollThumb();
-
-          engine.dirty = true;
-
-          break;
-        }
-      }
-
-      // Mark the overlay layer for redraw.
-      engine.overlayDirty = true;
-      engine.timeAxisDirty = true;
+    (e: MouseEvent) => mousemoveHandler(e, engine, area),
+    {
+      signal: engine._abortController.signal,
     },
-    { signal: engine._abortController.signal },
   );
 
   // Handle pointer exit from the chart area.
