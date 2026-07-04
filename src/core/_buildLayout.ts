@@ -11,7 +11,7 @@ import type { ChartEngine } from "./ChartEngine";
  * - Debug/status bar
  */
 export function _buildLayout(engine: ChartEngine): void {
-  const chartArea = engine.area;
+  const chartArea: HTMLElement = engine.area;
 
   // Create the complete chart DOM structure.
   chartArea.innerHTML = `

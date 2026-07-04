@@ -5,7 +5,7 @@ import type { ChartEngine } from "./ChartEngine";
  * corresponding 2D rendering contexts.
  */
 export function _grabCanvases(engine: ChartEngine): void {
-  const a = engine.area;
+  const a: HTMLElement = engine.area;
 
   // CANVAS
   engine.cMain = a.querySelector("#canvas-main") as HTMLCanvasElement;
@@ -32,5 +32,7 @@ export function _grabCanvases(engine: ChartEngine): void {
   engine.scrollThumbEl = a.querySelector("#scrollthumb") as HTMLElement;
   engine.statusBarsEl = a.querySelector("#status-bars") as HTMLElement;
   engine.statusZoomEl = a.querySelector("#status-zoom") as HTMLElement;
-  engine.crosshairPlusButton =  a.querySelector("#crosshair-plus-btn") as HTMLElement;
+  engine.crosshairPlusButton = a.querySelector(
+    "#crosshair-plus-btn",
+  ) as HTMLElement;
 }
