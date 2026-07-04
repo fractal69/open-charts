@@ -47,27 +47,41 @@ function _resizeCanvas(
 }
 
 /**
- * Resizes the fixed-width price scale canvas.
+ * Resizes the price scale canvas while preserving crisp rendering
+ * on high-DPI displays.
  *
- * @param engine Chart engine.
+ * Unlike the main chart canvas, the price scale has a fixed logical width
+ * defined by the chart options, while its height follows the chart layout.
+ * The backing-store is resized using the device pixel ratio (DPR), then the
+ * rendering context is reset and scaled so all drawing operations continue
+ * to use logical (CSS) pixel coordinates.
+ *
+ * @param engine Chart engine instance.
  * @param height Price scale height in CSS pixels.
- * @param dpr Current device pixel ratio.
+ * @param dpr Device pixel ratio used to scale the backing-store.
  */
 function _resizePriceScale(
   engine: ChartEngine,
   height: number,
   dpr: number,
 ): void {
-  const width = Math.ceil(engine.options.priceScaleWidth * dpr);
-  const scaledHeight = Math.ceil(height * dpr);
+  // Compute the backing-store dimensions in physical pixels.
+  const width: number = Math.ceil(engine.options.priceScaleWidth * dpr);
+  const scaledHeight: number = Math.ceil(height * dpr);
 
+  // Resize the canvas backing-store.
   engine.pScale.width = width;
   engine.pScale.height = scaledHeight;
 
+  // Preserve the displayed size in CSS pixels.
   engine.pScale.style.width = `${width / dpr}px`;
   engine.pScale.style.height = `${scaledHeight / dpr}px`;
 
+  // Reset any previous transform before applying the DPR scale.
   engine.ctxPScale.setTransform(1, 0, 0, 1, 0, 0);
+
+  // Scale the drawing context so rendering code can continue
+  // using logical (CSS) pixel coordinates.
   engine.ctxPScale.scale(dpr, dpr);
 }
 
@@ -99,8 +113,8 @@ export function _resize(engine: ChartEngine): void {
   _resizeCanvas(engine.cTime, engine.timeAxisEl, dpr);
 
   // Read the updated layout.
-  const mainRect = engine.paneMainEl.getBoundingClientRect();
-  const timeRect = engine.timeAxisEl.getBoundingClientRect();
+  const mainRect: DOMRect = engine.paneMainEl.getBoundingClientRect();
+  const timeRect: DOMRect = engine.timeAxisEl.getBoundingClientRect();
 
   // Resize the fixed-width price scale.
   _resizePriceScale(engine, mainRect.height, dpr);
@@ -141,6 +155,7 @@ export function _resize(engine: ChartEngine): void {
   // Synchronize the scrollbar with the new viewport.
   engine.timeScale.updateScrollThumb();
 
+  // Build chart legend
   _buildLegend(engine);
 
   // Schedule a full redraw.
