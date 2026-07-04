@@ -44,7 +44,7 @@ export function _bindEvents(engine: ChartEngine) {
 
         case HoverArea.Chart:
           area.style.cursor =
-            engine.dragMode === DragMode.Pan ? "grabbing" : "grab";
+            engine.dragMode === DragMode.Pan ? "grabbing" : "default";
           break;
 
         default:
