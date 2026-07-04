@@ -138,7 +138,7 @@ export function _bindEvents(engine: ChartEngine) {
           const dx = e.clientX - engine.panOrigin.x;
 
           // Arrastrar hacia la derecha = zoom in.
-          const factor = Math.exp(-dx * 0.003);
+          const factor = Math.exp(-dx * 0.0015);
 
           engine.barWidth = Math.max(
             MIN_BAR_W,
