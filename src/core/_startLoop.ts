@@ -3,7 +3,7 @@ import { _renderMain } from "../render/_renderMain";
 import { _renderPriceScale } from "../render/_renderPriceScale";
 import { _renderTimeAxis } from "../render/_renderTimeAxis";
 import { _renderOverlay } from "../render/_renderOverlay";
-import type { ChartEngine } from "../core/chartEngine";
+import type { ChartEngine } from "./ChartEngine";
 import { _renderDrawingModules } from "../render/_renderDrawingModules";
 
 /**

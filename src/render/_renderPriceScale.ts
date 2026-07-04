@@ -1,4 +1,4 @@
-import type { ChartEngine } from "../core/chartEngine";
+import type { ChartEngine } from "../core/ChartEngine";
 import { PRICE_SCALE_PADDING } from "../core/config";
 import { _formatPrice } from "../utils/_formatPrice";
 import { _nicePriceSteps } from "../utils/_nicePriceSteps";

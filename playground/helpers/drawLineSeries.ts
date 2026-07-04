@@ -1,4 +1,4 @@
-import type { ChartEngine } from "../../src/core/chartEngine";
+import type { ChartEngine } from "../../src/core/ChartEngine";
 import type { MainPane } from "../../src/core/types";
 
 export function drawLineSeries<T>(

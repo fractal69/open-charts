@@ -1,4 +1,4 @@
-import type { ChartEngine } from "./chartEngine";
+import type { ChartEngine } from "./ChartEngine";
 import { _updateScrollThumb } from "../timeScale/_updateScrollThumb";
 import { _buildLegend } from "../ui/_buildLegend";
 

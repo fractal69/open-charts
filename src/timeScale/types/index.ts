@@ -1,6 +1,6 @@
 import { _clampView } from "../../timeScale/_clampView";
 import { _resetViewport } from "../../timeScale/_resetViewport";
-import type { ChartEngine } from "../../core/chartEngine";
+import type { ChartEngine } from "../../core/ChartEngine";
 import { _updateScrollThumb } from "../_updateScrollThumb";
 import { _scrollToRealTime } from "../_scrollToRealTime";
 

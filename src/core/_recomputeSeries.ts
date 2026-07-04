@@ -1,4 +1,4 @@
-import type { ChartEngine } from "./chartEngine";
+import type { ChartEngine } from "./ChartEngine";
 import type { AnyChartSeries } from "./types";
 
 // Recompute values for all registered series (called on full load)

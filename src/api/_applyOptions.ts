@@ -1,7 +1,7 @@
 import { _mergeoptions } from "../utils/_mergeOptions";
 import { _loadCssVariables } from "../core/_loadCssVariables";
 import type { ChartOptions } from "../core/config";
-import type { ChartEngine } from "../core/chartEngine";
+import type { ChartEngine } from "../core/ChartEngine";
 
 /**
  * Applies one or more chart options.

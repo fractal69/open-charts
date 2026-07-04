@@ -4,7 +4,7 @@ import { _drawCrosshairPoint } from "./_drawCrosshairPoint";
 import { _drawCrosshairPriceTag } from "./_drawCrosshairPriceTag";
 import { _drawLivePulse } from "./_drawLivePulse";
 import { _drawCrosshairTimeTag } from "./_drawCrosshairTimeTag";
-import type { ChartEngine } from "../core/chartEngine";
+import type { ChartEngine } from "../core/ChartEngine";
 import { _renderTimeAxis } from "./_renderTimeAxis";
 import { _updateIndicatorLegend } from "../ui/_updateIndicatorLegend";
 

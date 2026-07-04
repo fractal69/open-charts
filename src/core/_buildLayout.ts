@@ -1,4 +1,4 @@
-import type { ChartEngine } from "../core/chartEngine";
+import type { ChartEngine } from "./ChartEngine";
 
 /**
  * Builds and injects the chart DOM structure into the container.

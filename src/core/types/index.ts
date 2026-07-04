@@ -23,4 +23,4 @@ export * from "./LegendItem";
 export * from "./MouseState";
 export * from "./PanOrigin";
 export * from "./PriceTag";
-export * from "../chartEngine";
+export * from "../ChartEngine";

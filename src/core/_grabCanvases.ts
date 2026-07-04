@@ -1,4 +1,4 @@
-import type { ChartEngine } from "../core/chartEngine";
+import type { ChartEngine } from "./ChartEngine";
 
 /**
  * Retrieves all chart DOM elements and initializes their

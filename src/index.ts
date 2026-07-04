@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-import { ChartEngine } from "./core/chartEngine";
+import { ChartEngine } from "./core/ChartEngine";
 
 /**
  * Creates and initializes a new chart instance.

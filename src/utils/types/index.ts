@@ -1,4 +1,4 @@
-import type { ChartEngine } from "../../core/chartEngine";
+import type { ChartEngine } from "../../core/ChartEngine";
 import type { ChartPane } from "../../core/types";
 import { _indexAtX } from "../_indexAtX";
 import { _priceAtY } from "../_priceAtY";

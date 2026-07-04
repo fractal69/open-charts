@@ -1,7 +1,7 @@
 import { _nicePriceSteps } from "../utils/_nicePriceSteps";
 import { _timeGridStep } from "./_timeGridStep";
 import { _isTimeGridLine } from "./_isTimeGridLine";
-import type { ChartEngine } from "../core/chartEngine";
+import type { ChartEngine } from "../core/ChartEngine";
 import type { MainPane } from "../core/types";
 
 /**

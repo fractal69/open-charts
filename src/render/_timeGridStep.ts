@@ -1,5 +1,5 @@
 import { _barsVisible } from "../core/_barsVisible";
-import type { ChartEngine } from "../core/chartEngine";
+import type { ChartEngine } from "../core/ChartEngine";
 
 /**
  * Determines the logical time unit used by the time axis grid.

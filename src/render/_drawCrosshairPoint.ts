@@ -1,4 +1,4 @@
-import type { ChartEngine } from "../core/chartEngine";
+import type { ChartEngine } from "../core/ChartEngine";
 
 /**
  * Draws the highlighted point over the selected bar close.

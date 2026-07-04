@@ -1,4 +1,4 @@
-import type { ChartEngine } from "../core/chartEngine";
+import type { ChartEngine } from "../core/ChartEngine";
 
 /**
  * Converts a data index into its corresponding X pixel coordinate

@@ -1,4 +1,4 @@
-import type { ChartEngine } from "../core/chartEngine";
+import type { ChartEngine } from "../core/ChartEngine";
 import { PRICE_SCALE_BORDER, PRICE_TAG_HEIGHT } from "../core/config";
 import { _formatPrice } from "../utils/_formatPrice";
 

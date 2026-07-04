@@ -1,4 +1,4 @@
-import type { ChartEngine } from "../core/chartEngine";
+import type { ChartEngine } from "../core/ChartEngine";
 
 export function _buildLegend(engine: ChartEngine) {
   let legendContainer = engine.legendDiv.querySelector<HTMLDivElement>(

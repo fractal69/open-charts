@@ -1,4 +1,4 @@
-import type { ChartEngine } from "./chartEngine";
+import type { ChartEngine } from "./ChartEngine";
 
 export type PriceRange = {
   lo: number;

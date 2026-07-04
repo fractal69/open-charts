@@ -2,7 +2,7 @@ import { SCROLL_ZOOM_FACTOR, MIN_BAR_W, MAX_BAR_W } from "./config";
 import { _resize } from "./_resize";
 import { _updateScrollThumb } from "../timeScale/_updateScrollThumb";
 import { _updateStatusBar } from "../ui/_updateStatusBar";
-import type { ChartEngine } from "./chartEngine";
+import type { ChartEngine } from "./ChartEngine";
 import { DragMode, HoverArea } from "./types";
 
 /**

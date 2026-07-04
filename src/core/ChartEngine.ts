@@ -17,16 +17,16 @@ import {
   DEFAULT_OPTIONS,
   DEFAULT_BAR_W,
   type ChartOptions,
-} from "../core/config";
+} from "./config";
 import { _nicePriceSteps } from "../utils/_nicePriceSteps";
 import { _formatDate, _formatDateFull } from "../utils/time";
-import { _loadCssVariables } from "../core/_loadCssVariables";
-import { _resize } from "../core/_resize";
+import { _loadCssVariables } from "./_loadCssVariables";
+import { _resize } from "./_resize";
 import { _bindEvents } from "./_bindEvents";
-import { _startLoop } from "../core/_startLoop";
+import { _startLoop } from "./_startLoop";
 import { _updateScrollThumb } from "../timeScale/_updateScrollThumb";
 import { _updateStatusBar } from "../ui/_updateStatusBar";
-import { _visiblePriceRange } from "../core/_visiblePriceRange";
+import { _visiblePriceRange } from "./_visiblePriceRange";
 import { _renderPriceScale } from "../render/_renderPriceScale";
 import { _renderTimeAxis } from "../render/_renderTimeAxis";
 import { _timeGridStep } from "../render/_timeGridStep";
@@ -34,9 +34,9 @@ import { _isTimeGridLine } from "../render/_isTimeGridLine";
 import { _xOf } from "../utils/_xOf";
 import { _yOf } from "../utils/_yOf";
 import { _indexAtX } from "../utils/_indexAtX";
-import { _recomputeSeries } from "../core/_recomputeSeries";
+import { _recomputeSeries } from "./_recomputeSeries";
 import { _isDifferentBar } from "../utils/_isDifferentBar";
-import { _updateSeriesIncremental } from "../core/_updateSeriesIncremental";
+import { _updateSeriesIncremental } from "./_updateSeriesIncremental";
 import { ChartApi } from "../api/types";
 import {
   ChartCore,

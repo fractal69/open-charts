@@ -1,6 +1,6 @@
 import { _clampView } from "../../timeScale/_clampView";
 import { _resetViewport } from "../../timeScale/_resetViewport";
-import type { ChartEngine } from "../../core/chartEngine";
+import type { ChartEngine } from "../../core/ChartEngine";
 import { _nicePriceSteps } from "../../utils/_nicePriceSteps";
 import { _formatPrice } from "../../utils/_formatPrice";
 

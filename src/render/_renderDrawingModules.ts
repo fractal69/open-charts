@@ -1,5 +1,5 @@
 import { _visiblePriceRange } from "../core/_visiblePriceRange";
-import type { ChartEngine } from "../core/chartEngine";
+import type { ChartEngine } from "../core/ChartEngine";
 
 export function _renderDrawingModules(engine: ChartEngine) {
   const { lo, hi } = _visiblePriceRange(engine);

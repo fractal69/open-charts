@@ -1,7 +1,7 @@
 import { _timeGridStep } from "./_timeGridStep";
 import { _formatDate } from "../utils/time";
 import { _isTimeGridLine } from "./_isTimeGridLine";
-import type { ChartEngine } from "../core/chartEngine";
+import type { ChartEngine } from "../core/ChartEngine";
 import { _timeGridBars } from "./_timeGridBars";
 
 /**

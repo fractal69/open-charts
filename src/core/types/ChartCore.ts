@@ -20,7 +20,7 @@ import { _loadCssVariables } from "../_loadCssVariables";
 import { _resize } from "../_resize";
 import { _startLoop } from "../_startLoop";
 import { _visiblePriceRange, type PriceRange } from "../_visiblePriceRange";
-import type { ChartEngine } from "../chartEngine";
+import type { ChartEngine } from "../ChartEngine";
 
 /**
  * Core API.

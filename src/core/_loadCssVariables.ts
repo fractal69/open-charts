@@ -1,4 +1,4 @@
-import type { ChartEngine } from "../core/chartEngine";
+import type { ChartEngine } from "./ChartEngine";
 
 /**
  * Applies configured values as CSS custom properties

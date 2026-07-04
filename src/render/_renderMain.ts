@@ -1,4 +1,4 @@
-import type { ChartEngine } from "../core/chartEngine";
+import type { ChartEngine } from "../core/ChartEngine";
 import type { MainPane } from "../core/types";
 import { _drawGrid } from "./_drawGrid";
 

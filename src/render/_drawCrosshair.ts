@@ -1,5 +1,5 @@
 import { _drawCrosshairPriceTag } from "./_drawCrosshairPriceTag";
-import type { ChartEngine } from "../core/chartEngine";
+import type { ChartEngine } from "../core/ChartEngine";
 
 /**
  * Draws the chart crosshair.

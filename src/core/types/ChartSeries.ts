@@ -14,7 +14,7 @@
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 import type { PriceRange } from "../_visiblePriceRange";
-import type { ChartEngine } from "../chartEngine";
+import type { ChartEngine } from "../ChartEngine";
 import type { MainPane } from "./ChartPanes";
 import type { LegendItem } from "./LegendItem";
 import type { PriceTag } from "./PriceTag";
