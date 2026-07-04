@@ -13,14 +13,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-export * from "./DragMode";
-export * from "./HoverArea";
-export * from "./PriceViewport";
-export * from "./ChartPanes";
-export * from "./ChartSeries";
-export * from "./ChartCore";
-export * from "./LegendItem";
-export * from "./MouseState";
-export * from "./PanOrigin";
-export * from "./PriceTag";
-export * from "../chartEngine";
+export interface LegendItem {
+  label: string;
+  value: string;
+  color: string;
+}

@@ -13,14 +13,42 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-export * from "./DragMode";
-export * from "./HoverArea";
-export * from "./PriceViewport";
-export * from "./ChartPanes";
-export * from "./ChartSeries";
-export * from "./ChartCore";
-export * from "./LegendItem";
-export * from "./MouseState";
-export * from "./PanOrigin";
-export * from "./PriceTag";
-export * from "../chartEngine";
+/**
+ * Pane with geometry only.
+ */
+export interface TimePane {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+/**
+ * Pane that owns a rendering canvas.
+ */
+export interface MainPane extends TimePane {
+  canvas: HTMLCanvasElement;
+  ctx: CanvasRenderingContext2D;
+  oCtx: CanvasRenderingContext2D;
+}
+
+/**
+ * Price scale dimensions.
+ */
+export interface ScalePane extends TimePane {}
+
+/**
+ * Collection of panes managed by the chart engine.
+ */
+export interface ChartPanes {
+  /** Main chart pane. */
+  main: MainPane;
+
+  /** Right-side price scale. */
+  scale: ScalePane;
+
+  /** Bottom time axis. */
+  time: TimePane;
+}
+
+export type ChartPane = MainPane | ScalePane | TimePane;

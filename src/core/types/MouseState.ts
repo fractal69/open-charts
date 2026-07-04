@@ -13,14 +13,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-export * from "./DragMode";
-export * from "./HoverArea";
-export * from "./PriceViewport";
-export * from "./ChartPanes";
-export * from "./ChartSeries";
-export * from "./ChartCore";
-export * from "./LegendItem";
-export * from "./MouseState";
-export * from "./PanOrigin";
-export * from "./PriceTag";
-export * from "../chartEngine";
+/**
+ * Current mouse state.
+ */
+export interface MouseState {
+  /** Mouse X position in CSS pixels. */
+  x: number;
+
+  /** Mouse Y position in CSS pixels. */
+  y: number;
+
+  /** Whether the pointer is inside the chart area. */
+  inside: boolean;
+}

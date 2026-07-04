@@ -69,9 +69,7 @@ export interface ChartOptions {
   maxBarWidth: number;
   zoomFactor: number;
   colors: ChartColors;
-
   priceScaleWidth: number;
-
   fontSizeLarge: string;
   fontSizeNormal: string;
   fontSizeSmall: string;
@@ -86,9 +84,7 @@ export const DEFAULT_OPTIONS: ChartOptions = {
   minBarWidth: MIN_BAR_W,
   maxBarWidth: MAX_BAR_W,
   zoomFactor: SCROLL_ZOOM_FACTOR,
-
   priceScaleWidth: PRICE_SCALE_W,
-
   fontSizeLarge: "16px",
   fontSizeNormal: "12px",
   fontSizeSmall: "9px",

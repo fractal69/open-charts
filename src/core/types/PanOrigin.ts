@@ -13,14 +13,21 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-export * from "./DragMode";
-export * from "./HoverArea";
-export * from "./PriceViewport";
-export * from "./ChartPanes";
-export * from "./ChartSeries";
-export * from "./ChartCore";
-export * from "./LegendItem";
-export * from "./MouseState";
-export * from "./PanOrigin";
-export * from "./PriceTag";
-export * from "../chartEngine";
+/**
+ * Initial viewport state captured when a pan gesture starts.
+ */
+export interface PanOrigin {
+  /** Pointer X position at the start of the pan. */
+  x: number;
+
+  y: number;
+
+  /** First visible bar index when the pan started. */
+  viewStart: number;
+  viewEnd: number;
+
+  priceMin: number;
+  priceMax: number;
+
+  barWidth: number;
+}
