@@ -11,7 +11,7 @@ import { DragMode, HoverArea } from "./types";
  * zooming, panning, scrollbar dragging, and window resizing.
  */
 export function _bindEvents(engine: ChartEngine) {
-  const area = engine.area;
+  const area: HTMLElement = engine.area;
 
   // Track mouse movement within the chart area.
   area.addEventListener(
