@@ -38,6 +38,10 @@ export function _bindEvents(engine: ChartEngine) {
           area.style.cursor = "ns-resize";
           break;
 
+        case HoverArea.TimeScale:
+          area.style.cursor = "ew-resize";
+          break;
+
         case HoverArea.Chart:
           area.style.cursor =
             engine.dragMode === DragMode.Pan ? "grabbing" : "grab";
@@ -129,6 +133,38 @@ export function _bindEvents(engine: ChartEngine) {
 
           break;
         }
+
+        case DragMode.HorizontalZoom: {
+          const dx = e.clientX - engine.panOrigin.x;
+
+          // Arrastrar hacia la derecha = zoom in.
+          const factor = Math.exp(-dx * 0.003);
+
+          engine.barWidth = Math.max(
+            MIN_BAR_W,
+            Math.min(MAX_BAR_W, engine.panOrigin.barWidth * factor),
+          );
+
+          // Recalcular cuántas velas caben.
+          const capacity = Math.max(
+            1,
+            Math.floor(engine.chartW / engine.barWidth),
+          );
+
+          // Mantener fijo el borde derecho del viewport.
+          engine.viewEnd = engine.panOrigin.viewEnd;
+
+          engine.viewStart = engine.viewEnd - capacity;
+
+          // Ajustar límites.
+          engine.timeScale.clampView();
+
+          engine.timeScale.updateScrollThumb();
+
+          engine.dirty = true;
+
+          break;
+        }
       }
 
       // Mark the overlay layer for redraw.
@@ -181,9 +217,12 @@ export function _bindEvents(engine: ChartEngine) {
         y: e.clientY,
 
         viewStart: engine.viewStart,
+        viewEnd: engine.viewEnd,
 
         priceMin: lo,
         priceMax: hi,
+
+        barWidth: engine.barWidth,
       };
 
       // Start the interaction depending on the hovered area.
@@ -196,6 +235,11 @@ export function _bindEvents(engine: ChartEngine) {
         case HoverArea.PriceScale:
           engine.dragMode = DragMode.VerticalZoom;
           area.style.cursor = "ns-resize";
+          break;
+
+        case HoverArea.TimeScale:
+          engine.dragMode = DragMode.HorizontalZoom;
+          area.style.cursor = "ew-resize";
           break;
 
         default:
@@ -403,6 +447,10 @@ export function _bindEvents(engine: ChartEngine) {
 
         case HoverArea.PriceScale:
           area.style.cursor = "ns-resize";
+          break;
+
+        case HoverArea.TimeScale:
+          area.style.cursor = "ew-resize";
           break;
 
         default:

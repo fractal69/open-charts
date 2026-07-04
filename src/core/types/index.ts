@@ -8,9 +8,10 @@ import { _startLoop } from "../_startLoop";
 import { _visiblePriceRange, type PriceRange } from "../_visiblePriceRange";
 
 export enum DragMode {
-    None,
-    Pan,
-    VerticalZoom,
+  None,
+  Pan,
+  VerticalZoom,
+  HorizontalZoom,
 }
 
 export enum HoverArea {
@@ -19,7 +20,6 @@ export enum HoverArea {
   PriceScale,
   TimeScale,
 }
-
 
 export interface PriceViewport {
   auto: boolean;
@@ -92,9 +92,12 @@ export interface PanOrigin {
 
   /** First visible bar index when the pan started. */
   viewStart: number;
+  viewEnd: number;
 
   priceMin: number;
   priceMax: number;
+
+  barWidth: number;
 }
 
 export interface PriceTag {

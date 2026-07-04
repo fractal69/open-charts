@@ -170,8 +170,8 @@ canvas.overlay-canvas {
 
 /* ── STATUS ── */
 #statusbar {
-  height: 20px;
-  background: var(--bg2);
+  height: 24px;
+  background: var(--bg1);
   border-top: 1px solid var(--border);
   display: flex;
   align-items: center;
