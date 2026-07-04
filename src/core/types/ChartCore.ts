@@ -22,14 +22,12 @@ import { _startLoop } from "../_startLoop";
 import { _visiblePriceRange, type PriceRange } from "../_visiblePriceRange";
 import type { ChartEngine } from "../ChartEngine";
 
-/**
- * Core API.
- */
+/** Internal engine operations and lifecycle methods. */
 export class ChartCore {
   constructor(private readonly engine: ChartEngine) {}
 
   /**
-   * Applies configured color values as CSS custom properties
+   * Applies configured values as CSS custom properties
    * on the document root element.
    */
   public loadCssVariables(): void {

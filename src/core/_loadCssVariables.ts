@@ -5,7 +5,7 @@ import type { ChartEngine } from "./ChartEngine";
  * on the document root element.
  */
 export function _loadCssVariables(engine: ChartEngine): void {
-  const root = document.documentElement;
+  const root: HTMLElement = document.documentElement;
 
   // Colors
   if (engine.options.colors) {
@@ -15,9 +15,10 @@ export function _loadCssVariables(engine: ChartEngine): void {
   }
 
   // Typography
-  const { fontSizeLarge, fontSizeNormal, fontSizeSmall, fontFamily } = engine.options;
+  const { fontSizeLarge, fontSizeNormal, fontSizeSmall, fontFamily } =
+    engine.options;
 
-    if (fontSizeLarge) {
+  if (fontSizeLarge) {
     root.style.setProperty("--fontSizeLarge", fontSizeLarge);
   }
 
