@@ -305,7 +305,7 @@ export class ChartEngine {
     this.hoverArea = HoverArea.None;
 
     this.dragMode = DragMode.None;
-    
+
     this.hasData = false;
 
     this._series = new Map<string, AnyChartSeries>();
@@ -330,7 +330,15 @@ export class ChartEngine {
 
     this.mouse = { x: 0, y: 0, inside: false };
 
-    this.panOrigin = { x: 0, y: 0, viewStart: 0, priceMin: 0, priceMax: 0 };
+    this.panOrigin = {
+      x: 0,
+      y: 0,
+      viewStart: 0,
+      viewEnd: 0,
+      priceMin: 0,
+      priceMax: 0,
+      barWidth: 0,
+    };
 
     this.priceViewport = {
       auto: true,
