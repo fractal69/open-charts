@@ -1,4 +1,4 @@
-import type { ChartEngine } from "../../src/core/chartEngine";
+import type { ChartEngine } from "../../src/core/ChartEngine";
 import type { MainPane, SeriesDefinition } from "../../src/core/types";
 
 /**
@@ -60,6 +60,7 @@ function drawSphere(
 }
 
 export type CandleBubble = {
+  time: number;
   open: number;
   high: number;
   low: number;
@@ -109,7 +110,7 @@ export const CandleBubbleSeries: SeriesDefinition<
     ctx: CanvasRenderingContext2D,
     pane: MainPane,
     engine: ChartEngine,
-    data: CandleBubble[],
+    _data: CandleBubble[],
     values: CandleBubble[], // Mapeado a la estructura de datos OHLC
     priceMin: number,
     priceMax: number,
@@ -128,8 +129,12 @@ export const CandleBubbleSeries: SeriesDefinition<
     ctx.save();
 
     // 3. Bucle de renderizado optimizado para la vista actual
-    for (let i = engine.viewStart; i < engine.viewEnd && i < data.length; i++) {
-      const d: CandleBubble = data[i]; // Estructura OHLC: { o, h, l, c }
+    for (
+      let i = engine.viewStart;
+      i < engine.viewEnd && i < values.length;
+      i++
+    ) {
+      const d: CandleBubble = values[i]; // Estructura OHLC: { o, h, l, c }
       if (!d) continue;
 
       // Conversión de coordenadas usando los métodos del engine
@@ -179,7 +184,7 @@ export const CandleBubbleSeries: SeriesDefinition<
         ctx.stroke();
       }
 
-      if (d.show_bubble) {
+      if (d?.show_bubble) {
         const radius = Math.max(2, d.bubble_size * 0.5);
 
         const bubbleOffset = 20;
@@ -191,10 +196,9 @@ export const CandleBubbleSeries: SeriesDefinition<
     ctx.restore();
   },
 
-  // No requiere lógica incremental compleja ya que el engine refresca la data OHLC nativamente
   updateIncremental(
+    data: readonly CandleBubble[],
     values: CandleBubble[],
-    data: CandleBubble[],
     isNewBar: boolean,
   ): void {
     if (isNewBar) {

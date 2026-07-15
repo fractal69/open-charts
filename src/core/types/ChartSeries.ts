@@ -19,15 +19,19 @@ import type { MainPane } from "./ChartPanes";
 import type { LegendItem } from "./LegendItem";
 import type { PriceTag } from "./PriceTag";
 
+export interface TimePoint {
+  time: number;
+}
+
 export type AnySeriesDefinition = SeriesDefinition<
-  unknown,
+  TimePoint,
   unknown,
   unknown,
   unknown
 >;
 
 export interface SeriesDefinition<
-  TData,
+  TData extends TimePoint,
   TValue,
   TParams = Record<string, unknown>,
   TTooltip = unknown,
@@ -63,8 +67,8 @@ export interface SeriesDefinition<
 
   /** Updates the cached values incrementally. */
   updateIncremental(
-    values: TValue[],
     data: readonly TData[],
+    values: TValue[],
     isNewBar: boolean,
   ): void;
 
@@ -105,7 +109,11 @@ export type AnyChartSeries = ChartSeries<any, any, any>;
  * A series owns its data, computed values, parameters,
  * and exposes the public API used by consumers.
  */
-export class ChartSeries<TData, TValue, TParams = Record<string, unknown>> {
+export class ChartSeries<
+  TData extends TimePoint,
+  TValue,
+  TParams = Record<string, unknown>,
+> {
   /** Indicator definition. */
   public readonly def: SeriesDefinition<TData, TValue, TParams>;
 
@@ -181,16 +189,29 @@ export class ChartSeries<TData, TValue, TParams = Record<string, unknown>> {
     this.engine.dirty = true;
   }
 
-  /**
-   * Appends or updates the latest data point.
-   *
-   * @param bar New bar.
-   * @returns The series instance.
-   */
   public update(bar: TData): boolean {
-    this.data.push(bar);
+    let isNewBar = false;
 
-    this.values = this.def.compute(this.data);
+    if (this.data.length === 0) {
+      this.data.push(bar);
+      this.values = this.def.compute(this.data);
+    } else {
+      const last = this.data[this.data.length - 1];
+
+      if (bar.time < last.time) {
+        return false;
+      }
+
+      isNewBar = bar.time > last.time;
+
+      if (isNewBar) {
+        this.data.push(bar);
+      } else {
+        this.data[this.data.length - 1] = bar;
+      }
+
+      this.def.updateIncremental(this.data, this.values, isNewBar);
+    }
 
     this.engine.hasData = this.data.length > 0;
 
@@ -199,9 +220,7 @@ export class ChartSeries<TData, TValue, TParams = Record<string, unknown>> {
     this.interval = this.getInterval();
 
     this.engine.timeScale.resetViewport();
-
     this.engine.priceScale.updateLayout();
-
     this.engine.timeScale.scrollToRealTime();
 
     this.engine.dirty = true;

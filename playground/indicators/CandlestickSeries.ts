@@ -1,4 +1,4 @@
-import { ChartEngine } from "../../src/core/chartEngine";
+import { ChartEngine } from "../../src/core/ChartEngine";
 import { MainPane, SeriesDefinition } from "../../src/core/types";
 
 export interface OHLCV {
