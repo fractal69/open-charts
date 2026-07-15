@@ -1,28 +1,15 @@
 import { createChart } from "../src/index";
 import { CandleBubbleSeries } from "./indicators/CandleBubbleSeries";
 
-const fakeData: any = [
-  {
-    close: 63062.1,
-    end_ts: 1783209660000,
-    high: 63114.9,
-    low: 63059.4,
-    open: 63114.9,
-    start_ts: 1783209600000,
-    time: 1783209600,
-    volume: 79.28300000000009,
-  },
-];
-
 let chart1 = createChart(document.getElementById("chart-area")!);
 
 chart1.api.applyOptions({ legend: "Bitcoin/Tether USD · 4h" });
 
 const candles1 = chart1.api.addSeries(CandleBubbleSeries);
 
-//candles1.setData(fakeData);
-
 //------------------------------------------------------------------------------------
+
+let init = false;
 
 const ws = new WebSocket("ws://localhost:3000/master/ws");
 
@@ -35,10 +22,17 @@ ws.addEventListener("message", (event) => {
   try {
     const data = JSON.parse(event.data);
 
-    const candleData =
-      data.engine_state.timeframes["1m"].series["CandleSeries"].live;
+    if (init === false) {
+      candles1.setData(
+        data.engine_state.timeframes["1m"].series["CandleSeries"].history,
+      );
 
-    candles1.update(candleData);
+      init = true;
+    }
+
+    candles1.update(
+      data.engine_state.timeframes["1m"].series["CandleSeries"].live,
+    );
   } catch {
     // No era JSON
   }
@@ -51,6 +45,7 @@ ws.addEventListener("close", (event) => {
 ws.addEventListener("error", (event) => {
   console.error("Error en el WebSocket:", event);
 });
+
 
 /** 
 //const MAseries = chart.api.addSeries(MovingAverageSeries);
