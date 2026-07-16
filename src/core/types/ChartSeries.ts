@@ -219,7 +219,9 @@ export class ChartSeries<
 
     if (!this.engine.hasData) return false;
 
-    this.interval = this.getInterval();
+    if (!this.interval && this.data.length >= 2) {
+      this.interval = this.getInterval();
+    }
 
     this.engine.timeScale.resetViewport();
     this.engine.priceScale.updateLayout();
