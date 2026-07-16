@@ -76,6 +76,7 @@ export type CandleBubble = {
   bubble_color: "green" | "red" | "gray";
   bubble_size: number;
   show_bubble: boolean;
+  tick_count: number;
 };
 
 interface CandlestickParams {
@@ -90,7 +91,7 @@ export const CandleBubbleSeries: SeriesDefinition<
 > = {
   id: "candlestick",
   label: "Candlesticks",
-  layer: "background", 
+  layer: "background",
   color: "red",
   priceTagColor: "#F23645",
   params: {
@@ -180,7 +181,7 @@ export const CandleBubbleSeries: SeriesDefinition<
         ctx.stroke();
       }
 
-      if (d?.show_bubble) {
+      if (d?.show_bubble && d?.tick_count >= 30) {
         const radius = Math.max(2, d.bubble_size * 0.5);
 
         const bubbleOffset = 20;
