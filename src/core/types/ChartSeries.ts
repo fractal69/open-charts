@@ -190,6 +190,8 @@ export class ChartSeries<
   }
 
   public update(bar: TData): boolean {
+    if (!bar) return false;
+
     let isNewBar = false;
 
     if (this.data.length === 0) {
