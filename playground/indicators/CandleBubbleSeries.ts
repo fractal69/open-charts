@@ -66,16 +66,13 @@ export type CandleBubble = {
   low: number;
   close: number;
   volume: number;
-
   start_ts: number;
   end_ts: number;
 
   buy_qty: number;
   sell_qty: number;
-
   delta_pct: number;
   signal: number;
-
   bubble_color: "green" | "red" | "gray";
   bubble_size: number;
   show_bubble: boolean;
@@ -93,7 +90,7 @@ export const CandleBubbleSeries: SeriesDefinition<
 > = {
   id: "candlestick",
   label: "Candlesticks",
-  layer: "background", // Se suele renderizar atrás de los indicadores como las MA
+  layer: "background", 
   color: "red",
   priceTagColor: "#F23645",
   params: {
@@ -101,7 +98,6 @@ export const CandleBubbleSeries: SeriesDefinition<
     bearColor: "#F23645",
   },
 
-  // Las velas no calculan un indicador nuevo, devuelven directamente el clon de la data OHLC
   compute(data: CandleBubble[]): any[] {
     return data;
   },

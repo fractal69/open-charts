@@ -24,14 +24,14 @@ ws.addEventListener("message", (event) => {
 
     if (init === false) {
       candles1.setData(
-        data.engine_state.timeframes["1m"].series["CandleSeries"].history,
+        data.engine_state.timeframes["1m"].series["CandleBubbleSeries"].history,
       );
 
       init = true;
     }
 
     candles1.update(
-      data.engine_state.timeframes["1m"].series["CandleSeries"].live,
+      data.engine_state.timeframes["1m"].series["CandleBubbleSeries"].live,
     );
   } catch {
     // No era JSON
