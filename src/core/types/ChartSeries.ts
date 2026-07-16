@@ -196,7 +196,6 @@ export class ChartSeries<
 
     if (this.data.length === 0) {
       this.data.push(bar);
-      this.values = this.def.compute(this.data);
     } else {
       const last = this.data[this.data.length - 1];
 
@@ -211,9 +210,10 @@ export class ChartSeries<
       } else {
         this.data[this.data.length - 1] = bar;
       }
-
-      this.def.updateIncremental(this.data, this.values, isNewBar);
     }
+
+    // Recalcular completamente la serie (prueba de diagnóstico)
+    this.values = this.def.compute(this.data);
 
     this.engine.hasData = this.data.length > 0;
 
