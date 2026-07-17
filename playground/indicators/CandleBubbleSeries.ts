@@ -19,15 +19,34 @@ function drawSphere(
   radius: number,
   color: string,
 ) {
-  const isGreen = color === "green";
-  const dark = isGreen ? "#06301A" : "#3A0907";
-  const mid = isGreen ? "#13A35C" : "#D8362A";
-  const light = isGreen ? "#9CFFC4" : "#FFB2A6";
+  let dark: string;
+  let mid: string;
+  let light: string;
 
-  const lx = x - radius * 0.35,
-    ly = y - radius * 0.4; // punto de luz
+  switch (color) {
+    case "green":
+      dark = "#06301A";
+      mid = "#13A35C";
+      light = "#9CFFC4";
+      break;
 
-  // cuerpo: degradado radial centrado en el punto de luz
+    case "gray":
+      dark = "rgba(47, 52, 56, 0.5)";
+      mid = "rgba(122, 130, 138, 0)";
+      light = "rgba(215, 220, 225, 0)";
+      break;
+
+    default: // red
+      dark = "#3A0907";
+      mid = "#D8362A";
+      light = "#FFB2A6";
+      break;
+  }
+
+  const lx = x - radius * 0.35;
+  const ly = y - radius * 0.4;
+
+  // cuerpo
   const body = ctx.createRadialGradient(
     lx,
     ly,
@@ -44,7 +63,7 @@ function drawSphere(
   ctx.arc(x, y, radius, 0, Math.PI * 2);
   ctx.fillStyle = body;
   ctx.fill();
-  ctx.lineWidth = Math.max(0.25, radius * 0.02);
+  ctx.lineWidth = Math.max(0.25, radius * 0.015);
   ctx.strokeStyle = dark;
   ctx.stroke();
 
@@ -181,7 +200,7 @@ export const CandleBubbleSeries: SeriesDefinition<
         ctx.stroke();
       }
 
-      if (d?.show_bubble && d?.tick_count >= 30) {
+      if (d?.show_bubble) {
         const radius = Math.max(2, d.bubble_size); // ← quitar el * 0.5
 
         const bubbleOffset = 20;
