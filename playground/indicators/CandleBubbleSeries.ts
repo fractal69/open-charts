@@ -182,10 +182,9 @@ export const CandleBubbleSeries: SeriesDefinition<
       }
 
       if (d?.show_bubble && d?.tick_count >= 30) {
-        const radius = Math.max(2, d.bubble_size * 0.5);
+        const radius = Math.max(2, d.bubble_size); // ← quitar el * 0.5
 
         const bubbleOffset = 20;
-
         drawSphere(ctx, x, yL + radius + bubbleOffset, radius, d.bubble_color);
       }
     }
