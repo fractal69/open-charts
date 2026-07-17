@@ -20,19 +20,19 @@ ws.addEventListener("open", () => {
 ws.addEventListener("message", (event) => {
   // Si el servidor envía JSON:
   try {
-    const data = JSON.parse(event.data);
+    const series = JSON.parse(event.data).engine_state.timeframes["1m"].series[
+      "CandleBubbleSeries"
+    ];
 
-    if (init === false) {
-      candles1.setData(
-        data.engine_state.timeframes["1m"].series["CandleBubbleSeries"].history,
-      );
+    const history = series.history;
+    const last = history[history.length - 1];
 
+    if (!init) {
+      candles1.setData(history);
       init = true;
     }
 
-    candles1.update(
-      data.engine_state.timeframes["1m"].series["CandleBubbleSeries"].live,
-    );
+    candles1.update(last);
   } catch {
     // No era JSON
   }
@@ -45,7 +45,6 @@ ws.addEventListener("close", (event) => {
 ws.addEventListener("error", (event) => {
   console.error("Error en el WebSocket:", event);
 });
-
 
 /** 
 //const MAseries = chart.api.addSeries(MovingAverageSeries);
