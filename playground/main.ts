@@ -3,12 +3,15 @@ import { CandleBubbleSeries } from "./indicators/CandleBubbleSeries/CandleBubble
 import { EMASeries } from "./indicators/EMASeries/EMASeries";
 
 let chart1 = createChart(document.getElementById("chart-area")!);
+let chart2 = createChart(document.getElementById("chart-area-2")!);
 
 chart1.api.applyOptions({ legend: "Bitcoin/Tether USD · 4h" });
+chart2.api.applyOptions({ legend: "Bitcoin/Tether USD · 30m" });
 
-const candleBubble = chart1.api.addSeries(CandleBubbleSeries);
+const chart1_candles = chart1.api.addSeries(CandleBubbleSeries);
+const chart2_candles = chart2.api.addSeries(CandleBubbleSeries);
 
-const ema55 = chart1.api.addSeries(
+const chart1_ema55 = chart1.api.addSeries(
   EMASeries({
     id: "ema55",
     label: "EMA 55",
@@ -20,7 +23,34 @@ const ema55 = chart1.api.addSeries(
     },
   }),
 );
-const ema25 = chart1.api.addSeries(
+
+const chart2_ema55 = chart2.api.addSeries(
+  EMASeries({
+    id: "ema55",
+    label: "EMA 55",
+    color: "#ffb830",
+    layer: "foreground",
+    priceTagColor: "#ffb830",
+    params: {
+      lineWidth: 2,
+    },
+  }),
+);
+
+const chart1_ema25 = chart1.api.addSeries(
+  EMASeries({
+    id: "ema25",
+    label: "EMA 25",
+    color: "white",
+    layer: "foreground",
+    priceTagColor: "white",
+    params: {
+      lineWidth: 1,
+    },
+  }),
+);
+
+const chart2_ema25 = chart2.api.addSeries(
   EMASeries({
     id: "ema25",
     label: "EMA 25",
@@ -45,22 +75,41 @@ ws.addEventListener("open", () => {
 
 ws.addEventListener("message", (event) => {
   try {
-    const data = JSON.parse(event.data).engine_state.timeframes["1m"];
+    const data = JSON.parse(event.data);
 
-    const candles1data = data.series["CandleBubbleSeries1"];
-    const ema55data = data.series["EmaSeries_55"];
-    const ema25data = data.series["EmaSeries_25"];
+    const tf1 = {
+      candles: data.engine_state.timeframes["4h"].series["CandleBubbleSeries1"],
+      ema55: data.engine_state.timeframes["4h"].series["EmaSeries_55"],
+      ema25: data.engine_state.timeframes["4h"].series["EmaSeries_25"],
+    };
+
+    const tf2 = {
+      candles:
+        data.engine_state.timeframes["30m"].series["CandleBubbleSeries2"],
+      ema55: data.engine_state.timeframes["30m"].series["EmaSeries_55"],
+      ema25: data.engine_state.timeframes["30m"].series["EmaSeries_25"],
+    };
 
     if (!init) {
-      candleBubble.setData(candles1data.history);
-      ema55.setData(ema55data.history);
-      ema25.setData(ema25data.history);
+      chart1_candles.setData(tf1.candles.history);
+      chart2_candles.setData(tf2.candles.history);
+
+      chart1_ema55.setData(tf1.ema55.history);
+      chart2_ema55.setData(tf2.ema55.history);
+
+      chart1_ema25.setData(tf1.ema25.history);
+      chart2_ema25.setData(tf2.ema25.history);
       init = true;
     }
 
-    candleBubble.update(candles1data.history[candles1data.history.length - 1]);
-    ema55.update(ema55data.history[ema55data.history.length - 1]);
-    ema25.update(ema25data.history[ema25data.history.length - 1]);
+    chart1_candles.update(tf1.candles.history[tf1.candles.history.length - 1]);
+    chart2_candles.update(tf2.candles.history[tf2.candles.history.length - 1]);
+
+    chart1_ema55.update(tf1.candles.history[tf1.candles.history.length - 1]);
+    chart2_ema55.update(tf2.candles.history[tf2.candles.history.length - 1]);
+
+    chart1_ema25.update(tf1.candles.history[tf1.candles.history.length - 1]);
+    chart2_ema25.update(tf2.candles.history[tf2.candles.history.length - 1]);
   } catch {
     // No era JSON
   }
