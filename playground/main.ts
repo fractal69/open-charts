@@ -1,6 +1,6 @@
 import { createChart } from "../src/index";
-import { CandleBubbleSeries } from "./indicators/CandleBubbleSeries";
-import { EMASeries } from "./indicators/EMASeries";
+import { CandleBubbleSeries } from "./indicators/CandleBubbleSeries/CandleBubbleSeries";
+import { EMASeries } from "./indicators/EMASeries/EMASeries";
 
 let chart1 = createChart(document.getElementById("chart-area")!);
 

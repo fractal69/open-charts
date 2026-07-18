@@ -3,8 +3,8 @@ import type {
   MainPane,
   PriceTag,
   SeriesDefinition,
-} from "../../src/core/types";
-import { drawLineSeries } from "../helpers/drawLineSeries";
+} from "../../../src/core/types";
+import { drawLineSeries } from "../../helpers/drawLineSeries";
 
 export interface Candle {
   high: number;

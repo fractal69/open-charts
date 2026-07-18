@@ -1,11 +1,11 @@
-import { PriceRange } from "../../src/core/_visiblePriceRange";
+import { PriceRange } from "../../../src/core/_visiblePriceRange";
 import type { ChartEngine } from "../../src/core/chartEngine";
 import type {
   MainPane,
   PriceTag,
   SeriesDefinition,
-} from "../../src/core/types";
-import { drawHistogramSeries } from "../helpers/drawHistogramSeries";
+} from "../../../src/core/types";
+import { drawHistogramSeries } from "../../helpers/drawHistogramSeries";
 
 export interface Candle {
   high: number;

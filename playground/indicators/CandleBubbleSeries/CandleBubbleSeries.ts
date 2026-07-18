@@ -1,5 +1,5 @@
-import type { ChartEngine } from "../../src/core/ChartEngine";
-import type { MainPane, SeriesDefinition } from "../../src/core/types";
+import type { ChartEngine } from "../../../src/core/ChartEngine";
+import type { MainPane, SeriesDefinition } from "../../../src/core/types";
 
 /**
  * Dibuja una esfera pulida (verde o roja) sobre un contexto 2D.

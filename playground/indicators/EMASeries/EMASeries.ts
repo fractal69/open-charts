@@ -2,7 +2,7 @@ import type {
   ChartEngine,
   MainPane,
   SeriesDefinition,
-} from "../../src/core/types";
+} from "../../../src/core/types";
 
 export type EMAValue = {
   time: number;

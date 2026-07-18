@@ -1,5 +1,5 @@
-import { ChartEngine } from "../../src/core/ChartEngine";
-import { MainPane, SeriesDefinition } from "../../src/core/types";
+import { ChartEngine } from "../../../src/core/ChartEngine";
+import { MainPane, SeriesDefinition } from "../../../src/core/types";
 
 export interface OHLCV {
   time: number;
