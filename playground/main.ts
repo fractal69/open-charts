@@ -6,7 +6,7 @@ let chart1 = createChart(document.getElementById("chart-area")!);
 
 chart1.api.applyOptions({ legend: "Bitcoin/Tether USD · 4h" });
 
-const candles1 = chart1.api.addSeries(CandleBubbleSeries);
+const candleBubble = chart1.api.addSeries(CandleBubbleSeries);
 
 const ema55 = chart1.api.addSeries(EMASeries);
 
@@ -21,20 +21,19 @@ ws.addEventListener("open", () => {
 });
 
 ws.addEventListener("message", (event) => {
-  // Si el servidor envía JSON:
   try {
     const data = JSON.parse(event.data).engine_state.timeframes["1m"];
 
-    const candles1data = data.series["CandleBubbleSeries"];
-    const ema55data = data.series["EmaSeries"];
+    const candles1data = data.series["CandleBubbleSeries1"];
+    const ema55data = data.series["EmaSeries_55"];
 
     if (!init) {
-      candles1.setData(candles1data.history);
+      candleBubble.setData(candles1data.history);
       ema55.setData(ema55data.history);
       init = true;
     }
 
-    candles1.update(candles1data.history[candles1data.history.length - 1]);
+    candleBubble.update(candles1data.history[candles1data.history.length - 1]);
     ema55.update(ema55data.history[ema55data.history.length - 1]);
   } catch {
     // No era JSON
