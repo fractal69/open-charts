@@ -150,7 +150,7 @@ export const CandleBubbleSeries: SeriesDefinition<
       i < engine.viewEnd && i < values.length;
       i++
     ) {
-      const d: CandleBubble = values[i]; // Estructura OHLC: { o, h, l, c }
+      const d: CandleBubble = values[i];
       if (!d) continue;
 
       // Conversión de coordenadas usando los métodos del engine

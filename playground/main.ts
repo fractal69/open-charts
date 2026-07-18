@@ -8,7 +8,30 @@ chart1.api.applyOptions({ legend: "Bitcoin/Tether USD · 4h" });
 
 const candleBubble = chart1.api.addSeries(CandleBubbleSeries);
 
-const ema55 = chart1.api.addSeries(EMASeries);
+const ema55 = chart1.api.addSeries(
+  EMASeries({
+    id: "ema55",
+    label: "EMA 55",
+    color: "#ffb830",
+    layer: "foreground",
+    priceTagColor: "#ffb830",
+    params: {
+      lineWidth: 2,
+    },
+  }),
+);
+const ema25 = chart1.api.addSeries(
+  EMASeries({
+    id: "ema25",
+    label: "EMA 25",
+    color: "white",
+    layer: "foreground",
+    priceTagColor: "white",
+    params: {
+      lineWidth: 1,
+    },
+  }),
+);
 
 //------------------------------------------------------------------------------------
 
@@ -26,15 +49,18 @@ ws.addEventListener("message", (event) => {
 
     const candles1data = data.series["CandleBubbleSeries1"];
     const ema55data = data.series["EmaSeries_55"];
+    const ema25data = data.series["EmaSeries_25"];
 
     if (!init) {
       candleBubble.setData(candles1data.history);
       ema55.setData(ema55data.history);
+      ema25.setData(ema25data.history);
       init = true;
     }
 
     candleBubble.update(candles1data.history[candles1data.history.length - 1]);
     ema55.update(ema55data.history[ema55data.history.length - 1]);
+    ema25.update(ema25data.history[ema25data.history.length - 1]);
   } catch {
     // No era JSON
   }

@@ -48,6 +48,9 @@ export interface SeriesDefinition<
   /** Rendering layer. */
   layer: "background" | "foreground";
 
+  /** Optional price tag color. */
+  priceTagColor?: string;
+
   /** Series parameters. */
   params: TParams;
 
@@ -79,9 +82,6 @@ export interface SeriesDefinition<
     data: readonly TData[],
     values: readonly TValue[],
   ): readonly PriceTag[];
-
-  /** Optional price tag color. */
-  priceTagColor?: string;
 
   /**
    * Returns the visible value range used to scale the chart.
@@ -212,7 +212,6 @@ export class ChartSeries<
       }
     }
 
-    // Recalcular completamente la serie (prueba de diagnóstico)
     this.values = this.def.compute(this.data);
 
     this.engine.hasData = this.data.length > 0;
