@@ -50,11 +50,6 @@ export function _updateIndicatorLegend(
     }
 
     item.innerHTML = `
-      <div
-        class="chart-indicators-item-dot"
-        style="background:${def.color}"
-      ></div>
-
       <span class="chart-indicators-item-name">
         ${def.label}
       </span>

@@ -258,12 +258,6 @@ canvas.pricescale-canvas {
   gap: 0.25rem;
 }
 
-.chart-indicators-item-dot {
-  width: 0.25rem;
-  height: 0.25rem;
-  border-radius: 50%;
-}
-
 .chart-indicators-item-name {
   font-size: var(--fontSizeNormal);
   color: var(--text);
