@@ -26,7 +26,7 @@ const chart1_ema55 = chart1.api.addSeries(
 
 const chart2_ema55 = chart2.api.addSeries(
   EMASeries({
-    id: "ema55",
+    id: "ema55_2",
     label: "EMA 55",
     color: "#ffb830",
     layer: "foreground",
@@ -52,7 +52,7 @@ const chart1_ema25 = chart1.api.addSeries(
 
 const chart2_ema25 = chart2.api.addSeries(
   EMASeries({
-    id: "ema25",
+    id: "ema25_2",
     label: "EMA 25",
     color: "white",
     layer: "foreground",
