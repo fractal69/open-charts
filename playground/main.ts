@@ -10,6 +10,8 @@ let chart1_pane1 = createChart(document.getElementById("pane-1")!);
 chart1.api.applyOptions({ legend: "Bitcoin/Tether USD · 4h" });
 chart2.api.applyOptions({ legend: "Bitcoin/Tether USD · 30m" });
 
+chart1_pane1.api.applyOptions({ legend: "ADX" });
+
 const chart1_candles = chart1.api.addSeries(CandleBubbleSeries);
 const chart2_candles = chart2.api.addSeries(CandleBubbleSeries);
 
