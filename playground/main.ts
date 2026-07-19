@@ -65,8 +65,6 @@ const chart2_ema25 = chart2.api.addSeries(
 
 //------------------------------------------------------------------------------------
 
-let init = false;
-
 const ws = new WebSocket("ws://localhost:3000/master/ws");
 
 ws.addEventListener("open", () => {
@@ -90,26 +88,14 @@ ws.addEventListener("message", (event) => {
       ema25: data.engine_state.timeframes["30m"].series["EmaSeries_25"],
     };
 
-    if (!init) {
-      chart1_candles.setData(tf1.candles.history);
-      chart2_candles.setData(tf2.candles.history);
+    chart1_candles.patchData(tf1.candles.history);
+    chart2_candles.patchData(tf2.candles.history);
 
-      chart1_ema55.setData(tf1.ema55.history);
-      chart2_ema55.setData(tf2.ema55.history);
+    chart1_ema55.patchData(tf1.ema55.history);
+    chart2_ema55.patchData(tf2.ema55.history);
 
-      chart1_ema25.setData(tf1.ema25.history);
-      chart2_ema25.setData(tf2.ema25.history);
-      init = true;
-    }
-
-    chart1_candles.update(tf1.candles.history[tf1.candles.history.length - 1]);
-    chart2_candles.update(tf2.candles.history[tf2.candles.history.length - 1]);
-
-    chart1_ema55.update(tf1.ema55.history[tf1.ema55.history.length - 1]);
-    chart2_ema55.update(tf2.ema55.history[tf2.ema55.history.length - 1]);
-
-    chart1_ema25.update(tf1.ema25.history[tf1.ema25.history.length - 1]);
-    chart2_ema25.update(tf2.ema25.history[tf2.ema25.history.length - 1]);
+    chart1_ema25.patchData(tf1.ema25.history);
+    chart2_ema25.patchData(tf2.ema25.history);
   } catch {
     // No era JSON
   }

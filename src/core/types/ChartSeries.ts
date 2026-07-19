@@ -193,6 +193,34 @@ export class ChartSeries<
     this.engine.dirty = true;
   }
 
+  public patchData(data: readonly TData[]): void {
+    if (data.length === 0) {
+      return;
+    }
+
+    const existingTimes = new Set(this.data.map((d) => d.time));
+
+    const newData = data.filter((d) => !existingTimes.has(d.time));
+
+    if (newData.length === 0) {
+      return;
+    }
+
+    this.data.push(...newData);
+
+    this.values = this.def.compute(this.data);
+
+    this.engine.hasData = true;
+
+    this.interval = this.getInterval();
+
+    this.engine.timeScale.resetViewport();
+
+    this.engine.priceScale.updateLayout();
+
+    this.engine.dirty = true;
+  }
+
   public update(bar: TData): boolean {
     if (!bar) return false;
 
