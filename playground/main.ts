@@ -1,9 +1,11 @@
 import { createChart } from "../src/index";
+import { ADXSeries } from "./indicators/ADXSeries/ADXSeries";
 import { CandleBubbleSeries } from "./indicators/CandleBubbleSeries/CandleBubbleSeries";
 import { EMASeries } from "./indicators/EMASeries/EMASeries";
 
 let chart1 = createChart(document.getElementById("chart-area")!);
 let chart2 = createChart(document.getElementById("chart-area-2")!);
+let chart1_pane1 = createChart(document.getElementById("pane-1")!);
 
 chart1.api.applyOptions({ legend: "Bitcoin/Tether USD · 4h" });
 chart2.api.applyOptions({ legend: "Bitcoin/Tether USD · 30m" });
@@ -63,6 +65,21 @@ const chart2_ema25 = chart2.api.addSeries(
   }),
 );
 
+const chart1_adx = chart1_pane1.api.addSeries(
+  ADXSeries({
+    id: "adx",
+    label: "ADX",
+    color: "white",
+    layer: "background",
+    priceTagColor: "white",
+    params: {
+      diLength: 14,
+      adxLength: 14,
+      keyLevel: 21,
+    },
+  }),
+);
+
 //------------------------------------------------------------------------------------
 
 const ws = new WebSocket("ws://localhost:3000/master/ws");
@@ -79,6 +96,7 @@ ws.addEventListener("message", (event) => {
       candles: data.engine_state.timeframes["4h"].series["CandleBubbleSeries1"],
       ema55: data.engine_state.timeframes["4h"].series["EmaSeries_55"],
       ema25: data.engine_state.timeframes["4h"].series["EmaSeries_25"],
+      adx: data.engine_state.timeframes["4h"].series["ADXSeries"],
     };
 
     const tf2 = {
@@ -96,6 +114,8 @@ ws.addEventListener("message", (event) => {
 
     chart1_ema25.patchData(tf1.ema25.history);
     chart2_ema25.patchData(tf2.ema25.history);
+
+    chart1_adx.patchData(tf1.adx.history);
   } catch {
     // No era JSON
   }
@@ -108,23 +128,3 @@ ws.addEventListener("close", (event) => {
 ws.addEventListener("error", (event) => {
   console.error("Error en el WebSocket:", event);
 });
-
-/** 
-//const MAseries = chart.api.addSeries(MovingAverageSeries);
-
-//MAseries.setData(normalizeCandles(fakeData));
-*/
-
-//let indicatorLeft1 = createChart(document.getElementById("left-pane-1")!);
-
-//const ADX1 = indicatorLeft1.api.addSeries(ADXSeries);
-
-//ADX1.setData(normalizeCandles(fakeData));
-
-//
-
-//let indicatorLeft2 = createChart(document.getElementById("left-pane-2")!);
-
-//const SQUEEZE = indicatorLeft2.api.addSeries(SqueezeSeries);
-
-//SQUEEZE.setData(normalizeCandles(fakeData));
