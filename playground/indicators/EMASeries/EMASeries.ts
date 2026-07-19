@@ -85,8 +85,7 @@ export const EMASeries = (config: EMAConfig) => {
     },
 
     priceTags(data: EMAValue[], values: EMAValue[]) {
-      const last = data.at(-1);
-
+      const last = values.at(-1);
       if (!last) {
         return [];
       }
