@@ -170,6 +170,10 @@ export class ChartSeries<
    * @returns The series instance.
    */
   public setData(data: readonly TData[]): void {
+    if (data.length === 0) {
+      return;
+    }
+
     this.data = [...data];
 
     this.values = this.def.compute(data);

@@ -53,7 +53,7 @@ export const EMASeries = (config: EMAConfig) => {
       let started = false;
       for (
         let i = engine.viewStart;
-        i < engine.viewEnd && i < engine.data.length;
+        i < engine.viewEnd && i < values.length;
         i++
       ) {
         if (values[i] === null) continue;
