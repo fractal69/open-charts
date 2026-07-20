@@ -2,15 +2,18 @@ import { createChart } from "../src/index";
 import { ADXSeries } from "./indicators/ADXSeries/ADXSeries";
 import { CandleBubbleSeries } from "./indicators/CandleBubbleSeries/CandleBubbleSeries";
 import { EMASeries } from "./indicators/EMASeries/EMASeries";
+import { SqueezeSeries } from "./indicators/Squeeze/SqueezeSeries";
 
 let chart1 = createChart(document.getElementById("chart-area")!);
 let chart2 = createChart(document.getElementById("chart-area-2")!);
 let chart1_pane1 = createChart(document.getElementById("pane-1")!);
+let chart1_pane2 = createChart(document.getElementById("pane-2")!);
 
 chart1.api.applyOptions({ legend: "Bitcoin/Tether USD · 4h" });
 chart2.api.applyOptions({ legend: "Bitcoin/Tether USD · 30m" });
 
 chart1_pane1.api.applyOptions({ legend: "ADX" });
+chart1_pane2.api.applyOptions({ legend: "Squeeze" });
 
 const chart1_candles = chart1.api.addSeries(CandleBubbleSeries);
 const chart2_candles = chart2.api.addSeries(CandleBubbleSeries);
@@ -82,6 +85,22 @@ const chart1_adx = chart1_pane1.api.addSeries(
   }),
 );
 
+const chart1_squeeze = chart1_pane2.api.addSeries(
+  SqueezeSeries({
+    id: "SqueezeSeries",
+    label: "Squeeze",
+    color: "white",
+    layer: "background",
+    priceTagColor: "white",
+    params: {
+      length: 20,
+      mult: 2,
+      lengthKC: 20,
+      multKC: 1.5,
+      useTrueRange: true,
+    },
+  }),
+);
 //------------------------------------------------------------------------------------
 
 const ws = new WebSocket("ws://localhost:3000/master/ws");
@@ -99,6 +118,7 @@ ws.addEventListener("message", (event) => {
       ema55: data.engine_state.timeframes["4h"].series["EmaSeries_55"],
       ema25: data.engine_state.timeframes["4h"].series["EmaSeries_25"],
       adx: data.engine_state.timeframes["4h"].series["ADXSeries"],
+      squeeze: data.engine_state.timeframes["4h"].series["SqueezeSeries"],
     };
 
     const tf2 = {
@@ -118,6 +138,8 @@ ws.addEventListener("message", (event) => {
     chart2_ema25.patchData(tf2.ema25.history);
 
     chart1_adx.patchData(tf1.adx.history);
+
+    chart1_squeeze.patchData(tf1.squeeze.history);
   } catch {
     // No era JSON
   }
