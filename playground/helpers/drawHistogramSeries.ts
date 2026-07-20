@@ -33,8 +33,6 @@ export function drawHistogramSeries<T>(
   for (let i = engine.viewStart; i < engine.viewEnd && i < values.length; i++) {
     const value = getValue(values[i], i);
 
-    console.log(i, value, getColor(values[i], i));
-
     if (!Number.isFinite(value)) {
       continue;
     }

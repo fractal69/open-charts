@@ -23,12 +23,20 @@ import { drawLineSeries } from "../../helpers/drawLineSeries";
 
 interface ADXValue {
   adx: number;
+  adx_color: string;
+  close: number;
   end_ts: number;
+  high: number;
+  is_reversal: boolean;
+  low: number;
   minus_di: number;
+  minus_dm_rma: number;
   plus_di: number;
-  reversal: boolean;
+  plus_dm_rma: number;
+  reversal_level: null | number;
   start_ts: number;
   time: number;
+  tr_rma: number;
 }
 
 interface ADXParams {
@@ -134,7 +142,7 @@ export const ADXSeries = (config: ADXConfig) => {
       for (let i = start; i < end; i++) {
         const v = values[i];
 
-        if (!v.reversal || !Number.isFinite(v.adx)) {
+        if (!v.is_reversal || !Number.isFinite(v.adx)) {
           continue;
         }
 
