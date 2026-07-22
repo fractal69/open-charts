@@ -80,7 +80,7 @@ const chart1_adx = chart1_pane1.api.addSeries(
     params: {
       diLength: 14,
       adxLength: 14,
-      keyLevel: 21,
+      keyLevel: 23,
     },
   }),
 );
@@ -120,22 +120,22 @@ ws.addEventListener("message", (event) => {
       adx: data.engine_state.timeframes["4h"].series["ADXSeries"],
       squeeze: data.engine_state.timeframes["4h"].series["SqueezeSeries"],
     };
-
+/** 
     const tf2 = {
       candles:
         data.engine_state.timeframes["30m"].series["CandleBubbleSeries2"],
       ema55: data.engine_state.timeframes["30m"].series["EmaSeries_55"],
       ema25: data.engine_state.timeframes["30m"].series["EmaSeries_25"],
     };
-
+*/
     chart1_candles.patchData(tf1.candles.history);
-    chart2_candles.patchData(tf2.candles.history);
+    //chart2_candles.patchData(tf2.candles.history);
 
     chart1_ema55.patchData(tf1.ema55.history);
-    chart2_ema55.patchData(tf2.ema55.history);
+    //chart2_ema55.patchData(tf2.ema55.history);
 
     chart1_ema25.patchData(tf1.ema25.history);
-    chart2_ema25.patchData(tf2.ema25.history);
+    //chart2_ema25.patchData(tf2.ema25.history);
 
     chart1_adx.patchData(tf1.adx.history);
 
