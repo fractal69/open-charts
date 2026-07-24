@@ -5,18 +5,18 @@ import { EMASeries } from "./indicators/EMASeries/EMASeries";
 import { SqueezeSeries } from "./indicators/Squeeze/SqueezeSeries";
 
 let chart1 = createChart(document.getElementById("chart-area")!);
-let chart2 = createChart(document.getElementById("chart-area-2")!);
+//let chart2 = createChart(document.getElementById("chart-area-2")!);
 let chart1_pane1 = createChart(document.getElementById("pane-1")!);
 let chart1_pane2 = createChart(document.getElementById("pane-2")!);
 
 chart1.api.applyOptions({ legend: "Bitcoin/Tether USD · 4h" });
-chart2.api.applyOptions({ legend: "Bitcoin/Tether USD · 30m" });
+//chart2.api.applyOptions({ legend: "Bitcoin/Tether USD · 30m" });
 
 chart1_pane1.api.applyOptions({ legend: "ADX" });
 chart1_pane2.api.applyOptions({ legend: "Squeeze" });
 
 const chart1_candles = chart1.api.addSeries(CandleBubbleSeries);
-const chart2_candles = chart2.api.addSeries(CandleBubbleSeries);
+//const chart2_candles = chart2.api.addSeries(CandleBubbleSeries);
 
 const chart1_ema55 = chart1.api.addSeries(
   EMASeries({
@@ -31,6 +31,7 @@ const chart1_ema55 = chart1.api.addSeries(
   }),
 );
 
+/** 
 const chart2_ema55 = chart2.api.addSeries(
   EMASeries({
     id: "ema55_2",
@@ -43,6 +44,7 @@ const chart2_ema55 = chart2.api.addSeries(
     },
   }),
 );
+*/
 
 const chart1_ema25 = chart1.api.addSeries(
   EMASeries({
@@ -57,6 +59,7 @@ const chart1_ema25 = chart1.api.addSeries(
   }),
 );
 
+/** 
 const chart2_ema25 = chart2.api.addSeries(
   EMASeries({
     id: "ema25_2",
@@ -69,7 +72,7 @@ const chart2_ema25 = chart2.api.addSeries(
     },
   }),
 );
-
+ */
 const chart1_adx = chart1_pane1.api.addSeries(
   ADXSeries({
     id: "adx",
@@ -120,7 +123,7 @@ ws.addEventListener("message", (event) => {
       adx: data.engine_state.timeframes["4h"].series["ADXSeries"],
       squeeze: data.engine_state.timeframes["4h"].series["SqueezeSeries"],
     };
-/** 
+    /** 
     const tf2 = {
       candles:
         data.engine_state.timeframes["30m"].series["CandleBubbleSeries2"],
