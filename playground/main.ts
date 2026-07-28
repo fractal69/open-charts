@@ -1,3 +1,4 @@
+import { decode } from "@msgpack/msgpack";
 import { createChart } from "../src/index";
 import { ADXSeries } from "./indicators/ADXSeries/ADXSeries";
 import { CandleBubbleSeries } from "./indicators/CandleBubbleSeries/CandleBubbleSeries";
@@ -5,17 +6,73 @@ import { EMASeries } from "./indicators/EMASeries/EMASeries";
 import { SqueezeSeries } from "./indicators/Squeeze/SqueezeSeries";
 
 let chart1 = createChart(document.getElementById("chart-area")!);
+chart1.api.applyOptions({ legend: "Bitcoin/Tether USD · 4h" });
+const chart1_candles = chart1.api.addSeries(CandleBubbleSeries);
+
+const fakeData = [
+  {
+    time: 1785280680,
+    open: 63604.0,
+    high: 63611.9,
+    low: 63604.0,
+    close: 63611.9,
+    volume: 13.385999999999965,
+    start_ts: 1785280680000,
+    end_ts: 1785280740000,
+  },
+  {
+    time: 1785280740,
+    open: 63611.9,
+    high: 63612.0,
+    low: 63600.0,
+    close: 63600.1,
+    volume: 74.86900000000011,
+    start_ts: 1785280740000,
+    end_ts: 1785280800000,
+  },
+  {
+    time: 1785280800,
+    open: 63600.1,
+    high: 63630.9,
+    low: 63596.8,
+    close: 63607.5,
+    volume: 140.6930000000017,
+    start_ts: 1785280800000,
+    end_ts: 1785280860000,
+  },
+  {
+    time: 1785280860,
+    open: 63607.6,
+    high: 63607.6,
+    low: 63607.5,
+    close: 63607.5,
+    volume: 40.31200000000004,
+    start_ts: 1785280860000,
+    end_ts: 1785280920000,
+  },
+  {
+    time: 1785280920,
+    open: 63607.6,
+    high: 63607.6,
+    low: 63607.5,
+    close: 63607.6,
+    volume: 23.334000000000042,
+    start_ts: 1785280920000,
+    end_ts: 1785280980000,
+  },
+];
+
+//chart1_candles.setData(fakeData);
+
 //let chart2 = createChart(document.getElementById("chart-area-2")!);
 let chart1_pane1 = createChart(document.getElementById("pane-1")!);
 let chart1_pane2 = createChart(document.getElementById("pane-2")!);
 
-chart1.api.applyOptions({ legend: "Bitcoin/Tether USD · 4h" });
 //chart2.api.applyOptions({ legend: "Bitcoin/Tether USD · 30m" });
 
 chart1_pane1.api.applyOptions({ legend: "ADX" });
 chart1_pane2.api.applyOptions({ legend: "Squeeze" });
 
-const chart1_candles = chart1.api.addSeries(CandleBubbleSeries);
 //const chart2_candles = chart2.api.addSeries(CandleBubbleSeries);
 
 const chart1_ema55 = chart1.api.addSeries(
@@ -106,45 +163,33 @@ const chart1_squeeze = chart1_pane2.api.addSeries(
 );
 //------------------------------------------------------------------------------------
 
-const ws = new WebSocket("ws://localhost:3000/master/ws");
+const ws = new WebSocket("ws://localhost:3000/api/market/ws");
+ws.binaryType = "arraybuffer";
 
 ws.addEventListener("open", () => {
   console.log("Conectado al WebSocket");
+
+  ws.send(
+    JSON.stringify({
+      action: "subscribe",
+      engine_id: "binance-BTCUSDT",
+    }),
+  );
 });
 
 ws.addEventListener("message", (event) => {
-  try {
-    const data = JSON.parse(event.data);
+  if (event.data instanceof ArrayBuffer) {
+    const bytes = new Uint8Array(event.data);
 
-    const tf1 = {
-      candles: data.engine_state.timeframes["4h"].series["CandleBubbleSeries1"],
-      ema55: data.engine_state.timeframes["4h"].series["EmaSeries_55"],
-      ema25: data.engine_state.timeframes["4h"].series["EmaSeries_25"],
-      adx: data.engine_state.timeframes["4h"].series["ADXSeries"],
-      squeeze: data.engine_state.timeframes["4h"].series["SqueezeSeries"],
-    };
-    /** 
-    const tf2 = {
-      candles:
-        data.engine_state.timeframes["30m"].series["CandleBubbleSeries2"],
-      ema55: data.engine_state.timeframes["30m"].series["EmaSeries_55"],
-      ema25: data.engine_state.timeframes["30m"].series["EmaSeries_25"],
-    };
-*/
-    chart1_candles.patchData(tf1.candles.history);
-    //chart2_candles.patchData(tf2.candles.history);
+    const message: any = decode(bytes);
 
-    chart1_ema55.patchData(tf1.ema55.history);
-    //chart2_ema55.patchData(tf2.ema55.history);
+    const CandleSeries = message.series["CandleSeries-1"];
 
-    chart1_ema25.patchData(tf1.ema25.history);
-    //chart2_ema25.patchData(tf2.ema25.history);
+    //console.log(CandleSeries);
 
-    chart1_adx.patchData(tf1.adx.history);
-
-    chart1_squeeze.patchData(tf1.squeeze.history);
-  } catch {
-    // No era JSON
+    chart1_candles.update(CandleSeries);
+  } else {
+    console.log(event.data);
   }
 });
 
