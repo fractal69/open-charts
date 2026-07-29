@@ -25,7 +25,6 @@ import { _resize } from "./_resize";
 import { _bindEvents } from "./_bindEvents";
 import { _startLoop } from "./_startLoop";
 import { _updateScrollThumb } from "../timeScale/_updateScrollThumb";
-import { _updateStatusBar } from "../ui/_updateStatusBar";
 import { _visiblePriceRange } from "./_visiblePriceRange";
 import { _renderPriceScale } from "../render/_renderPriceScale";
 import { _renderTimeAxis } from "../render/_renderTimeAxis";
@@ -274,16 +273,6 @@ export class ChartEngine {
    * Scrollbar thumb element.
    */
   public scrollThumbEl!: HTMLElement;
-
-  /**
-   * Visible bars status label.
-   */
-  public statusBarsEl!: HTMLElement;
-
-  /**
-   * Zoom level status label.
-   */
-  public statusZoomEl!: HTMLElement;
 
   public crosshairPlusButton!: HTMLElement;
 

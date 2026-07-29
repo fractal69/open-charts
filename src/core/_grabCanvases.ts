@@ -30,8 +30,7 @@ export function _grabCanvases(engine: ChartEngine): void {
   engine.timeAxisEl = a.querySelector("#time-axis") as HTMLElement;
   engine.scrollbarEl = a.querySelector("#scrollbar") as HTMLElement;
   engine.scrollThumbEl = a.querySelector("#scrollthumb") as HTMLElement;
-  engine.statusBarsEl = a.querySelector("#status-bars") as HTMLElement;
-  engine.statusZoomEl = a.querySelector("#status-zoom") as HTMLElement;
+
   engine.crosshairPlusButton = a.querySelector(
     "#crosshair-plus-btn",
   ) as HTMLElement;

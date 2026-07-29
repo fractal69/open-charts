@@ -1,7 +1,6 @@
 import { SCROLL_ZOOM_FACTOR, MIN_BAR_W, MAX_BAR_W } from "./config";
 import { _resize } from "./_resize";
 import { _updateScrollThumb } from "../timeScale/_updateScrollThumb";
-import { _updateStatusBar } from "../ui/_updateStatusBar";
 import type { ChartEngine } from "./ChartEngine";
 import { DragMode, HoverArea } from "./types";
 /**
@@ -126,9 +125,6 @@ const mousemoveHandler = (
 
       // Synchronize the scrollbar thumb with the new viewport.
       engine.timeScale.updateScrollThumb();
-
-      // Refresh status information displayed to the user.
-      _updateStatusBar(engine);
 
       break;
     }
@@ -342,8 +338,6 @@ export function _bindEvents(engine: ChartEngine) {
       // Sync scrollbar thumb with new viewport.
       engine.timeScale.updateScrollThumb();
 
-      // Update UI status indicators.
-      _updateStatusBar(engine);
     },
     { passive: false, signal: engine._abortController.signal },
   );
@@ -540,8 +534,6 @@ export function _bindEvents(engine: ChartEngine) {
       // Synchronize the scrollbar thumb position and size.
       engine.timeScale.updateScrollThumb();
 
-      // Refresh viewport-related status information.
-      _updateStatusBar(engine);
     },
     { signal: engine._abortController.signal },
   );

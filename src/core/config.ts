@@ -62,7 +62,6 @@ export interface ChartColors {
 
 export interface ChartOptions {
   legend: string;
-  showStatusBar: boolean;
   rightPadBars: number;
   barWidth: number;
   minBarWidth: number;
@@ -78,7 +77,6 @@ export interface ChartOptions {
 
 export const DEFAULT_OPTIONS: ChartOptions = {
   legend: "CHART",
-  showStatusBar: true,
   rightPadBars: 20,
   barWidth: DEFAULT_BAR_W,
   minBarWidth: MIN_BAR_W,
