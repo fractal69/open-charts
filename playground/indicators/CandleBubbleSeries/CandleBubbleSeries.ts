@@ -113,234 +113,255 @@ export type CandleBubble = {
   tick_count: number;
 };
 
-interface CandlestickParams {
+interface CandleBubbleParams {
   bullColor: string;
   bearColor: string;
 }
 
-export const CandleBubbleSeries: SeriesDefinition<
-  CandleBubble,
-  CandleBubble,
-  CandlestickParams
-> = {
-  id: "candlestick",
-  label: "Candlesticks",
-  layer: "background",
-  color: "red",
-  priceTagColor: "#F23645",
-  params: {
-    bullColor: "#089981",
-    bearColor: "#F23645",
-  },
+interface CandleBubbleConfig {
+  id: string;
+  label: string;
+  color: string;
+  layer: "background" | "foreground";
+  priceTagColor: string;
+  params: CandleBubbleParams;
+}
+export const CandleBubbleSeries = (config: CandleBubbleConfig) => {
+  const series: SeriesDefinition<
+    CandleBubble,
+    CandleBubble,
+    CandleBubbleParams
+  > = {
+    id: config.id,
+    label: config.label,
+    color: config.color,
+    layer: config.layer,
+    priceTagColor: config.priceTagColor,
+    params: config.params,
 
-  compute(data: CandleBubble[]): any[] {
-    return data;
-  },
+    compute(data: CandleBubble[]): any[] {
+      return data;
+    },
 
-  render(
-    ctx: CanvasRenderingContext2D,
-    pane: MainPane,
-    engine: ChartEngine,
-    _data: CandleBubble[],
-    values: CandleBubble[], // Mapeado a la estructura de datos OHLC
-    priceMin: number,
-    priceMax: number,
-  ): void {
-    // 1. Extraer configuraciones dinámicas de los params o usar defaults
-    const bullCol = this.params.bullColor;
-    const bearCol = this.params.bearColor;
-    const fancyFill = false;
+    render(
+      ctx: CanvasRenderingContext2D,
+      pane: MainPane,
+      engine: ChartEngine,
+      _data: CandleBubble[],
+      values: CandleBubble[], // Mapeado a la estructura de datos OHLC
+      priceMin: number,
+      priceMax: number,
+    ): void {
+      // 1. Extraer configuraciones dinámicas de los params o usar defaults
+      const bullCol = this.params.bullColor;
+      const bearCol = this.params.bearColor;
+      const fancyFill = false;
 
-    // 2. Extraer propiedades de dibujo desde el motor (engine)
-    // Nota: Adapté 'this.barWidth' a 'engine.barWidth' (común en estas librerías)
-    const barWidth = engine.barWidth ?? 6;
-    const bw = Math.max(1, barWidth - 1);
-    const hw = Math.max(1, Math.floor(bw / 2));
+      // 2. Extraer propiedades de dibujo desde el motor (engine)
+      // Nota: Adapté 'this.barWidth' a 'engine.barWidth' (común en estas librerías)
+      const barWidth = engine.barWidth ?? 6;
+      const bw = Math.max(1, barWidth - 1);
+      const hw = Math.max(1, Math.floor(bw / 2));
 
-    ctx.save();
+      ctx.save();
 
-    // 3. Bucle de renderizado optimizado para la vista actual
-    for (
-      let i = engine.viewStart;
-      i < engine.viewEnd && i < values.length;
-      i++
-    ) {
-      const d: CandleBubble = values[i];
-      if (!d) continue;
+      // 3. Bucle de renderizado optimizado para la vista actual
+      for (
+        let i = engine.viewStart;
+        i < engine.viewEnd && i < values.length;
+        i++
+      ) {
+        const d: CandleBubble = values[i];
+        if (!d) continue;
 
-      // Conversión de coordenadas usando los métodos del engine
-      const x = Math.round(engine.utils.xOf(i));
-      const yH = Math.round(engine.utils.yOf(d.high, pane, priceMin, priceMax));
-      const yL = Math.round(engine.utils.yOf(d.low, pane, priceMin, priceMax));
-      const yO = Math.round(engine.utils.yOf(d.open, pane, priceMin, priceMax));
-      const yC = Math.round(
-        engine.utils.yOf(d.close, pane, priceMin, priceMax),
-      );
+        // Conversión de coordenadas usando los métodos del engine
+        const x = Math.round(engine.utils.xOf(i));
+        const yH = Math.round(
+          engine.utils.yOf(d.high, pane, priceMin, priceMax),
+        );
+        const yL = Math.round(
+          engine.utils.yOf(d.low, pane, priceMin, priceMax),
+        );
+        const yO = Math.round(
+          engine.utils.yOf(d.open, pane, priceMin, priceMax),
+        );
+        const yC = Math.round(
+          engine.utils.yOf(d.close, pane, priceMin, priceMax),
+        );
 
-      const bull = d.close >= d.open;
-      const col = bull ? bullCol : bearCol;
+        const bull = d.close >= d.open;
+        const col = bull ? bullCol : bearCol;
 
-      // --- Dibujo de las Mechas (Wicks) ---
-      // +0.5 alinea el trazo de 1px exactamente al centro de los píxeles de la pantalla
-      ctx.strokeStyle = col;
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(x + 0.5, yH);
-      ctx.lineTo(x + 0.5, yL);
-      ctx.stroke();
-
-      // --- Dibujo del Cuerpo (Body) ---
-      const bodyTop = Math.min(yO, yC);
-      const bodyH = Math.max(1, Math.abs(yC - yO));
-
-      if (bw >= 2) {
-        // Cuerpo sólido exterior
-        ctx.fillStyle = col;
-        ctx.fillRect(x - hw + 1, bodyTop, bw - 1, bodyH);
-
-        // Efecto visual/relleno translúcido si hay suficiente espacio (Fancy Fill)
-        if (fancyFill && bw >= 5 && bodyH > 2) {
-          ctx.fillStyle = bull
-            ? "rgba(0, 200, 122, 0.25)"
-            : "rgba(255, 64, 96, 0.25)";
-          ctx.fillRect(x - hw + 2, bodyTop + 1, bw - 3, bodyH - 2);
-        }
-      } else {
-        // Si el zoom es muy lejano, dibuja el cuerpo como una línea vertical de 1px
+        // --- Dibujo de las Mechas (Wicks) ---
+        // +0.5 alinea el trazo de 1px exactamente al centro de los píxeles de la pantalla
         ctx.strokeStyle = col;
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.moveTo(x + 0.5, bodyTop);
-        ctx.lineTo(x + 0.5, bodyTop + bodyH);
+        ctx.moveTo(x + 0.5, yH);
+        ctx.lineTo(x + 0.5, yL);
         ctx.stroke();
+
+        // --- Dibujo del Cuerpo (Body) ---
+        const bodyTop = Math.min(yO, yC);
+        const bodyH = Math.max(1, Math.abs(yC - yO));
+
+        if (bw >= 2) {
+          // Cuerpo sólido exterior
+          ctx.fillStyle = col;
+          ctx.fillRect(x - hw + 1, bodyTop, bw - 1, bodyH);
+
+          // Efecto visual/relleno translúcido si hay suficiente espacio (Fancy Fill)
+          if (fancyFill && bw >= 5 && bodyH > 2) {
+            ctx.fillStyle = bull
+              ? "rgba(0, 200, 122, 0.25)"
+              : "rgba(255, 64, 96, 0.25)";
+            ctx.fillRect(x - hw + 2, bodyTop + 1, bw - 3, bodyH - 2);
+          }
+        } else {
+          // Si el zoom es muy lejano, dibuja el cuerpo como una línea vertical de 1px
+          ctx.strokeStyle = col;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(x + 0.5, bodyTop);
+          ctx.lineTo(x + 0.5, bodyTop + bodyH);
+          ctx.stroke();
+        }
+
+        if (d?.show_bubble) {
+          const radius = Math.max(2, d.bubble_size); // ← quitar el * 0.5
+
+          const bubbleOffset = 50;
+          drawSphere(
+            ctx,
+            x,
+            yL + radius + bubbleOffset,
+            radius,
+            d.bubble_color,
+          );
+        }
       }
 
-      if (d?.show_bubble) {
-        const radius = Math.max(2, d.bubble_size); // ← quitar el * 0.5
+      ctx.restore();
+    },
 
-        const bubbleOffset = 50;
-        drawSphere(ctx, x, yL + radius + bubbleOffset, radius, d.bubble_color);
+    updateIncremental(
+      data: readonly CandleBubble[],
+      values: CandleBubble[],
+      isNewBar: boolean,
+    ): void {
+      if (isNewBar) {
+        values.push(data[data.length - 1]);
+      } else {
+        values[values.length - 1] = data[data.length - 1];
       }
-    }
+    },
 
-    ctx.restore();
-  },
+    // Fila del Tooltip para mostrar los valores OHLC en un formato legible
+    tooltipRow(values: CandleBubble[], i: number): any {
+      const d = values[i];
+      if (!d) return null;
 
-  updateIncremental(
-    data: readonly CandleBubble[],
-    values: CandleBubble[],
-    isNewBar: boolean,
-  ): void {
-    if (isNewBar) {
-      values.push(data[data.length - 1]);
-    } else {
-      values[values.length - 1] = data[data.length - 1];
-    }
-  },
+      const bull = d.close >= d.open;
+      const col = bull ? this.params.bullColor : this.params.bearColor;
 
-  // Fila del Tooltip para mostrar los valores OHLC en un formato legible
-  tooltipRow(values: CandleBubble[], i: number): any {
-    const d = values[i];
-    if (!d) return null;
+      return {
+        label: "OHLC",
+        value: `O:${d.open.toFixed(2)} H:${d.high.toFixed(2)} L:${d.low.toFixed(2)} C:${d.close.toFixed(2)}`,
+        color: col,
+      };
+    },
 
-    const bull = d.close >= d.open;
-    const col = bull ? this.params.bullColor : this.params.bearColor;
+    priceTags(data: CandleBubble[], values: CandleBubble[]) {
+      const last = data.at(-1);
 
-    return {
-      label: "OHLC",
-      value: `O:${d.open.toFixed(2)} H:${d.high.toFixed(2)} L:${d.low.toFixed(2)} C:${d.close.toFixed(2)}`,
-      color: col,
-    };
-  },
-
-  priceTags(data: CandleBubble[], values: CandleBubble[]) {
-    const last = data.at(-1);
-
-    if (!last) {
-      return [];
-    }
-
-    return [
-      {
-        value: last.close,
-        color: this.priceTagColor!,
-        label: "",
-      },
-    ];
-  },
-
-  valueRange(
-    data: CandleBubble[],
-    values: CandleBubble[],
-    start: number,
-    end: number,
-  ) {
-    let lo = Infinity;
-    let hi = -Infinity;
-
-    for (let i = start; i < end; i++) {
-      const bar = data[i];
-
-      if (!bar) {
-        continue;
+      if (!last) {
+        return [];
       }
 
-      lo = Math.min(lo, bar.low);
-      hi = Math.max(hi, bar.high);
-    }
+      return [
+        {
+          value: last.close,
+          color: this.priceTagColor!,
+          label: "",
+        },
+      ];
+    },
 
-    if (!Number.isFinite(lo) || !Number.isFinite(hi)) {
-      return { lo: 0, hi: 1 };
-    }
+    valueRange(
+      data: CandleBubble[],
+      values: CandleBubble[],
+      start: number,
+      end: number,
+    ) {
+      let lo = Infinity;
+      let hi = -Infinity;
 
-    return { lo, hi };
-  },
+      for (let i = start; i < end; i++) {
+        const bar = data[i];
 
-  legend(data: CandleBubble[], values: CandleBubble[], barIndex: number) {
-    const d: CandleBubble = data[barIndex];
+        if (!bar) {
+          continue;
+        }
 
-    if (!d) {
-      return [];
-    }
+        lo = Math.min(lo, bar.low);
+        hi = Math.max(hi, bar.high);
+      }
 
-    const pct = ((d.close - d.open) / d.open) * 100;
+      if (!Number.isFinite(lo) || !Number.isFinite(hi)) {
+        return { lo: 0, hi: 1 };
+      }
 
-    const bull = d.close >= d.open;
-    const color = bull ? this.params.bullColor : this.params.bearColor;
+      return { lo, hi };
+    },
 
-    return [
-      {
-        label: "O",
-        value: d.open.toFixed(2),
-        color,
-      },
-      {
-        label: "H",
-        value: d.high.toFixed(2),
-        color,
-      },
-      {
-        label: "L",
-        value: d.low.toFixed(2),
-        color,
-      },
-      {
-        label: "C",
-        value: d.close.toFixed(2),
-        color,
-      },
-      {
-        label: "V",
-        value: d.volume.toLocaleString(undefined, {
-          maximumFractionDigits: 2,
-        }),
-        color,
-      },
-      {
-        label: "%",
-        value: `${pct >= 0 ? "+" : ""}${pct.toFixed(2)}%`,
-        color,
-      },
-    ];
-  },
+    legend(data: CandleBubble[], values: CandleBubble[], barIndex: number) {
+      const d: CandleBubble = data[barIndex];
+
+      if (!d) {
+        return [];
+      }
+
+      const pct = ((d.close - d.open) / d.open) * 100;
+
+      const bull = d.close >= d.open;
+      const color = bull ? this.params.bullColor : this.params.bearColor;
+
+      return [
+        {
+          label: "O",
+          value: d.open.toFixed(2),
+          color,
+        },
+        {
+          label: "H",
+          value: d.high.toFixed(2),
+          color,
+        },
+        {
+          label: "L",
+          value: d.low.toFixed(2),
+          color,
+        },
+        {
+          label: "C",
+          value: d.close.toFixed(2),
+          color,
+        },
+        {
+          label: "V",
+          value: d.volume.toLocaleString(undefined, {
+            maximumFractionDigits: 2,
+          }),
+          color,
+        },
+        {
+          label: "%",
+          value: `${pct >= 0 ? "+" : ""}${pct.toFixed(2)}%`,
+          color,
+        },
+      ];
+    },
+  };
+
+  return series;
 };
