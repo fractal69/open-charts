@@ -1,10 +1,8 @@
 import type { ChartEngine } from "../../core/ChartEngine";
 import type { ChartOptions } from "../../core/config";
-import type {
-  AnyChartSeries,
-  AnySeriesDefinition
-} from "../../core/types";
+import type { AnyChartSeries, AnySeriesDefinition } from "../../core/types";
 import { _applyOptions } from "../_applyOptions";
+import { _destroy } from "../_detroy";
 import { addSeries } from "../addSeries";
 
 /**
@@ -37,5 +35,9 @@ export class ChartApi {
    */
   public applyOptions(newOptions: Partial<ChartOptions>) {
     _applyOptions(this.engine, newOptions);
+  }
+
+  public destroy() {
+    _destroy(this.engine);
   }
 }

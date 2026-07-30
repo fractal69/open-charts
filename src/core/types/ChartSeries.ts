@@ -278,7 +278,7 @@ export class ChartSeries<
   /**
    * Removes the series from the chart.
    */
-  public remove(): void {
+  public destroy(): void {
     this.engine._series.delete(this.def.id);
     this.engine.dirty = true;
     this.engine.hasData = false;
