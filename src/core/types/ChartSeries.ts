@@ -206,15 +206,13 @@ export class ChartSeries<
       return;
     }
 
-    this.data.push(...newData);
+    this.data = [...this.data, ...newData];
 
     this.values = this.def.compute(this.data);
 
     this.engine.hasData = true;
 
     this.interval = this.getInterval();
-
-    this.engine.timeScale.resetViewport();
 
     this.engine.priceScale.updateLayout();
 
